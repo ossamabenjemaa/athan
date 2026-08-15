@@ -145,6 +145,23 @@
     word-break: break-all;
     line-height: 1.5;
   }
+  /* Valeurs à recopier dans Raccourcis : une touche = copié */
+  .copyrow {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    margin-top: 8px; padding: 10px 12px; text-align: left;
+    border: 1.5px solid var(--line); border-radius: 12px;
+    background: var(--mono-bg); color: var(--text); font: inherit; cursor: pointer;
+  }
+  .copyrow .k { display: block; font-size: 0.76rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+  .copyrow .v {
+    display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.84rem; word-break: break-all; line-height: 1.4;
+  }
+  .copyrow .ico { margin-left: auto; flex: none; font-size: 1rem; opacity: 0.65; }
+  .copyrow.done { border-color: var(--ok); }
+  .copyrow.done .ico { opacity: 1; }
+  .copyrow .sp { opacity: 0.5; }
+
   ol.steps { margin: 0; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; }
   ol.steps li { margin-bottom: 8px; }
   ol.steps b { color: var(--green); }
@@ -300,15 +317,14 @@
       on les voit apparaître puis disparaître. Vérifie aussi que l'entrée de l'action de suppression
       est bien le résultat de <b>Rechercher des alarmes</b> : sans entrée explicite, une action
       reprend le résultat de celle qui la précède.</p>
-    <p class="hint">L'adresse renvoie exactement les mêmes horaires que cette page (méthode et madhhab compris) :</p>
-    <div class="urlbox" id="apiUrl">—</div>
-    <p class="hint">⚠️ Dans le raccourci, remplace la date <code id="dateSample">—</code> par la variable
+    <h2 style="margin-top:20px">📋 Valeurs à copier <span class="tag">touche = copié</span></h2>
+    <p class="hint" style="margin-top:-6px">Tout ce qui se tape dans Raccourcis est là. Touche une
+      ligne, puis colle dans le champ correspondant de l'action.</p>
+    <div id="copyList"></div>
+    <p class="hint">⚠️ Dans l'URL, remplace la date <code id="dateSample">—</code> par la variable
       <b>Date actuelle</b> au format perso <code>dd-MM-yyyy</code> — sinon toutes les nuits
       reprogrammeront les horaires d'aujourd'hui.</p>
-    <div class="row" style="margin-top:10px">
-      <button id="copyUrl" type="button">📋 Copier l'adresse</button>
-      <button id="copyRecipe" type="button">📋 Copier la recette</button>
-    </div>
+    <button id="copyRecipe" class="wide" type="button" style="margin-top:10px">📋 Copier la recette entière</button>
     <details>
       <summary>Variante sans coordonnées (par ville)</summary>
       <p class="hint" style="margin-top:0">Plus facile à taper à la main sur le téléphone : AlAdhan
@@ -426,11 +442,48 @@
     }
     $('times').innerHTML = html;
 
-    var url = PT.aladhanUrl(options(), today.date);
-    $('apiUrl').textContent = url;
-    $('dateSample').textContent = (url.match(/timings\/([\d-]+)/) || [])[1] || '';
-    $('apiUrlCity').textContent = cityUrl(url);
+    apiUrl = PT.aladhanUrl(options(), today.date);
+    $('dateSample').textContent = (apiUrl.match(/timings\/([\d-]+)/) || [])[1] || '';
+    $('apiUrlCity').textContent = cityUrl(apiUrl);
+    renderCopyList();
     tick();
+  }
+
+  /*
+   * Les valeurs à recopier dans Raccourcis, chacune sur une ligne touchable.
+   * `show` sert quand l'affichage doit différer de ce qu'on copie : sauts de
+   * ligne rendus visibles, espace final matérialisé.
+   */
+  var apiUrl = '';
+  var PRAYER_KEYS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+  function copyValues() {
+    return [
+      { k: '1 · Filtre : étiquette contient', v: 'Athan' },
+      { k: '3 · Adresse à interroger', v: apiUrl },
+      { k: '3 · Format de date personnalisé', v: 'dd-MM-yyyy' },
+      { k: '4 · Texte des cinq prières (une par ligne)', v: PRAYER_KEYS.join('\n'),
+        show: PRAYER_KEYS.join('<br>') },
+      { k: '6a · Clé, puis variable « Élément de répétition »', v: 'data.timings.' },
+      { k: '6b · Étiquette, puis variable « Élément de répétition »', v: 'Athan ',
+        show: 'Athan<span class="sp">␣</span>' }
+    ];
+  }
+
+  function renderCopyList() {
+    var rows = copyValues();
+    var html = '';
+    for (var i = 0; i < rows.length; i++) {
+      html += '<button class="copyrow" type="button" data-i="' + i + '">' +
+        '<span><span class="k">' + rows[i].k + '</span>' +
+        '<span class="v">' + (rows[i].show || escapeHtml(rows[i].v)) + '</span></span>' +
+        '<span class="ico">⧉</span></button>';
+    }
+    $('copyList').innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   /*
@@ -666,7 +719,7 @@
       '1. Rechercher des alarmes  (Étiquette contient « Athan »)',
       '2. Supprimer les alarmes   (entrée = les alarmes trouvées)',
       '3. Obtenir le contenu de l’URL :',
-      '   ' + $('apiUrl').textContent,
+      '   ' + apiUrl,
       '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',
       '     « Date actuelle » au format personnalisé dd-MM-yyyy',
       '4. Texte : Fajr / Dhuhr / Asr / Maghrib / Isha (un par ligne)',
@@ -683,14 +736,28 @@
     ].join('\n');
   }
 
+  function writeClipboard(text) {
+    if (navigator.clipboard) return navigator.clipboard.writeText(text);
+    return Promise.reject(new Error('presse-papiers indisponible'));
+  }
+
   function copy(text, button) {
-    var done = function () {
+    writeClipboard(text).then(function () {
       var old = button.textContent;
       button.textContent = '✓ Copié';
       setTimeout(function () { button.textContent = old; }, 1600);
-    };
-    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { prompt('Copie manuelle :', text); });
-    else prompt('Copie manuelle :', text);
+    }, function () { prompt('Copie manuelle :', text); });
+  }
+
+  /* Même chose pour une ligne de valeur : on ne touche qu'à l'icône, pour ne
+     pas détruire le contenu de la ligne. */
+  function copyRow(text, row) {
+    var ico = row.querySelector('.ico');
+    writeClipboard(text).then(function () {
+      row.classList.add('done');
+      ico.textContent = '✓';
+      setTimeout(function () { row.classList.remove('done'); ico.textContent = '⧉'; }, 1400);
+    }, function () { prompt('Copie manuelle :', text); });
   }
 
   function init() {
@@ -776,7 +843,12 @@
     });
 
     $('test').addEventListener('click', function () { playAthan('test'); });
-    $('copyUrl').addEventListener('click', function () { copy($('apiUrl').textContent, this); });
+    $('copyList').addEventListener('click', function (e) {
+      var row = e.target.closest ? e.target.closest('.copyrow') : null;
+      if (!row) return;
+      var value = copyValues()[Number(row.dataset.i)];
+      if (value) copyRow(value.v, row);
+    });
     $('copyUrlCity').addEventListener('click', function () { copy($('apiUrlCity').textContent, this); });
     $('copyRecipe').addEventListener('click', function () { copy(recipe(), this); });
 

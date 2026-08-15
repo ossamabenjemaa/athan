@@ -86,6 +86,10 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 | 6a | **Obtenir la valeur du dictionnaire** | clé `data.timings.` + variable **Élément de répétition**, dans *Contenu de l'URL* |
 | 6b | **Ajouter une alarme** | à cette valeur, étiquette `Athan ` + **Élément de répétition** |
 
+La page réunit toutes ces valeurs dans un bloc **📋 Valeurs à copier** : une touche sur une ligne
+la met dans le presse-papiers (adresse, `dd-MM-yyyy`, `Athan`, la liste des cinq prières avec ses
+sauts de ligne, `data.timings.`, `Athan ` espace final compris). Plus rien à retaper à la main.
+
 La boucle remplace cinq copies des deux mêmes actions : six actions au total, et cinq occasions
 de faute de frappe en moins. Attention à la clé — `timings` prend un **s**, et une clé fausse
 ne lève aucune erreur : elle rend une valeur vide, et l'alarme n'est simplement pas créée.
