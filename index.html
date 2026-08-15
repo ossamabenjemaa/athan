@@ -300,9 +300,9 @@
       <li><b>Première action</b> : <b>Rechercher des alarmes</b> (Étiquette <i>contient</i>
         <code>Athan</code>), puis <b>Supprimer les alarmes</b> pour balayer celles de la veille.</li>
       <li>Ensuite seulement : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
-      <li>Action <b>Texte</b> contenant les cinq noms, un par ligne :<br>
-        <code>Fajr</code> <code>Dhuhr</code> <code>Asr</code> <code>Maghrib</code> <code>Isha</code><br>
-        puis <b>Diviser le texte</b> (séparateur : <i>nouvelle ligne</i>).</li>
+      <li>Action <b>Texte</b> contenant <code>Fajr,Dhuhr,Asr,Maghrib,Isha</code>, puis
+        <b>Diviser le texte</b> → séparateur <b>Personnalisé</b> → une <b>virgule</b>.
+        Pas d'espace après les virgules : il resterait collé au nom et la clé serait fausse.</li>
       <li><b>Répéter pour chaque</b> élément, et dedans deux actions seulement :
         <b>Obtenir la valeur du dictionnaire</b> avec la clé <code>data.timings.</code> suivie de la
         variable <b>Élément de répétition</b>, dans <b>Contenu de l'URL</b> ; puis
@@ -462,8 +462,8 @@
       { k: '1 · Filtre : étiquette contient', v: 'Athan' },
       { k: '3 · Adresse à interroger', v: apiUrl },
       { k: '3 · Format de date personnalisé', v: 'dd-MM-yyyy' },
-      { k: '4 · Texte des cinq prières (une par ligne)', v: PRAYER_KEYS.join('\n'),
-        show: PRAYER_KEYS.join('<br>') },
+      { k: '4 · Texte des cinq prières (sans espace après la virgule)', v: PRAYER_KEYS.join(',') },
+      { k: '5 · Séparateur personnalisé — une virgule, rien d’autre', v: ',' },
       { k: '6a · Clé, puis variable « Élément de répétition »', v: 'data.timings.' },
       { k: '6b · Étiquette, puis variable « Élément de répétition »', v: 'Athan ',
         show: 'Athan<span class="sp">␣</span>' }
@@ -722,8 +722,8 @@
       '   ' + apiUrl,
       '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',
       '     « Date actuelle » au format personnalisé dd-MM-yyyy',
-      '4. Texte : Fajr / Dhuhr / Asr / Maghrib / Isha (un par ligne)',
-      '5. Diviser le texte (séparateur : nouvelle ligne)',
+      '4. Texte : Fajr,Dhuhr,Asr,Maghrib,Isha   (sans espace)',
+      '5. Diviser le texte → séparateur Personnalisé → une virgule',
       '6. Répéter pour chaque élément :',
       '     a. Obtenir la valeur du dictionnaire',
       '        clé : data.timings.[Élément de répétition]   (timings avec un s)',

@@ -79,16 +79,16 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 |---|---|---|
 | 1 | **Rechercher des alarmes** | Étiquette *contient* `Athan` |
 | 2 | **Supprimer les alarmes** | entrée = les alarmes trouvées |
-| 3 | **Obtenir le contenu de l'URL** | l'adresse donnée par la page (bouton *Copier l'adresse*), **date remplacée par une variable** (voir plus bas) |
-| 4 | **Texte** | `Fajr`, `Dhuhr`, `Asr`, `Maghrib`, `Isha` — un par ligne |
-| 5 | **Diviser le texte** | séparateur : *nouvelle ligne* |
+| 3 | **Obtenir le contenu de l'URL** | l'adresse donnée par la page (bloc *Valeurs à copier*), **date remplacée par une variable** (voir plus bas) |
+| 4 | **Texte** | `Fajr,Dhuhr,Asr,Maghrib,Isha` — sans espace après les virgules |
+| 5 | **Diviser le texte** | séparateur **Personnalisé** : une virgule |
 | 6 | **Répéter pour chaque** | et dedans, seulement deux actions ↓ |
 | 6a | **Obtenir la valeur du dictionnaire** | clé `data.timings.` + variable **Élément de répétition**, dans *Contenu de l'URL* |
 | 6b | **Ajouter une alarme** | à cette valeur, étiquette `Athan ` + **Élément de répétition** |
 
 La page réunit toutes ces valeurs dans un bloc **📋 Valeurs à copier** : une touche sur une ligne
-la met dans le presse-papiers (adresse, `dd-MM-yyyy`, `Athan`, la liste des cinq prières avec ses
-sauts de ligne, `data.timings.`, `Athan ` espace final compris). Plus rien à retaper à la main.
+la met dans le presse-papiers (adresse, `dd-MM-yyyy`, `Athan`, la liste des cinq prières, la virgule
+séparatrice, `data.timings.`, `Athan ` espace final compris). Plus rien à retaper à la main.
 
 La boucle remplace cinq copies des deux mêmes actions : six actions au total, et cinq occasions
 de faute de frappe en moins. Attention à la clé — `timings` prend un **s**, et une clé fausse
@@ -125,7 +125,7 @@ l'action *Obtenir le contenu de l'URL*, efface `15-08-2026` et insère à la pla
 À éviter : l'adresse `/v1/timings/today`, dont le « aujourd'hui » est calculé en UTC —
 à 00:05 à Paris, il renvoie encore la veille.)
 
-Le bouton **📋 Copier la recette** de la page en donne la version texte, prête à suivre.
+Le bouton **📋 Copier la recette entière** de la page en donne la version texte, prête à suivre.
 
 ### c. Trouver son lieu sans installer quoi que ce soit
 
