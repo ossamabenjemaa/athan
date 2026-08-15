@@ -80,9 +80,15 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 | 1 | **Rechercher des alarmes** | Étiquette *contient* `Athan` |
 | 2 | **Supprimer les alarmes** | entrée = les alarmes trouvées |
 | 3 | **Obtenir le contenu de l'URL** | l'adresse donnée par la page (bouton *Copier l'adresse*), **date remplacée par une variable** (voir plus bas) |
-| 4 | **Obtenir la valeur du dictionnaire** | clé `data.timings.Fajr` |
-| 5 | **Ajouter une alarme** | à cette heure, étiquette `Athan Fajr` |
-| 6 | Répéter 4–5 | `Dhuhr`, `Asr`, `Maghrib`, `Isha` |
+| 4 | **Texte** | `Fajr`, `Dhuhr`, `Asr`, `Maghrib`, `Isha` — un par ligne |
+| 5 | **Diviser le texte** | séparateur : *nouvelle ligne* |
+| 6 | **Répéter pour chaque** | et dedans, seulement deux actions ↓ |
+| 6a | **Obtenir la valeur du dictionnaire** | clé `data.timings.` + variable **Élément de répétition**, dans *Contenu de l'URL* |
+| 6b | **Ajouter une alarme** | à cette valeur, étiquette `Athan ` + **Élément de répétition** |
+
+La boucle remplace cinq copies des deux mêmes actions : six actions au total, et cinq occasions
+de faute de frappe en moins. Attention à la clé — `timings` prend un **s**, et une clé fausse
+ne lève aucune erreur : elle rend une valeur vide, et l'alarme n'est simplement pas créée.
 
 > ⚠️ **Deux pièges, dans cet ordre précis.**
 >

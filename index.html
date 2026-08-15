@@ -283,10 +283,18 @@
       <li><b>Première action</b> : <b>Rechercher des alarmes</b> (Étiquette <i>contient</i>
         <code>Athan</code>), puis <b>Supprimer les alarmes</b> pour balayer celles de la veille.</li>
       <li>Ensuite seulement : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
-      <li><b>Obtenir la valeur du dictionnaire</b> <code>data.timings.Fajr</code> → <b>Ajouter une alarme</b>
-        à cette heure, étiquette <code>Athan Fajr</code>. Répète pour <code>Dhuhr</code>, <code>Asr</code>,
-        <code>Maghrib</code>, <code>Isha</code>.</li>
+      <li>Action <b>Texte</b> contenant les cinq noms, un par ligne :<br>
+        <code>Fajr</code> <code>Dhuhr</code> <code>Asr</code> <code>Maghrib</code> <code>Isha</code><br>
+        puis <b>Diviser le texte</b> (séparateur : <i>nouvelle ligne</i>).</li>
+      <li><b>Répéter pour chaque</b> élément, et dedans deux actions seulement :
+        <b>Obtenir la valeur du dictionnaire</b> avec la clé <code>data.timings.</code> suivie de la
+        variable <b>Élément de répétition</b>, dans <b>Contenu de l'URL</b> ; puis
+        <b>Ajouter une alarme</b> à cette valeur, étiquette <code>Athan </code> + <b>Élément de répétition</b>.</li>
     </ol>
+    <p class="hint">💡 La boucle évite de recopier cinq fois les deux mêmes actions — et donc cinq
+      occasions de faire une faute de frappe. Attention à la clé : <code>timings</code> prend un
+      <b>s</b>, et une clé erronée ne provoque pas d'erreur, elle rend juste une valeur vide et
+      l'alarme n'est pas créée.</p>
     <p class="hint">⚠️ L'ordre n'est pas décoratif : si <b>Supprimer les alarmes</b> se retrouve
       <i>après</i> les <b>Ajouter une alarme</b>, il efface les alarmes qui viennent d'être créées —
       on les voit apparaître puis disparaître. Vérifie aussi que l'entrée de l'action de suppression
@@ -661,9 +669,14 @@
       '   ' + $('apiUrl').textContent,
       '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',
       '     « Date actuelle » au format personnalisé dd-MM-yyyy',
-      '4. Obtenir la valeur du dictionnaire « data.timings.Fajr »',
-      '5. Ajouter une alarme à cette heure, étiquette « Athan Fajr »',
-      '6. Répéter les étapes 4–5 pour Dhuhr, Asr, Maghrib, Isha',
+      '4. Texte : Fajr / Dhuhr / Asr / Maghrib / Isha (un par ligne)',
+      '5. Diviser le texte (séparateur : nouvelle ligne)',
+      '6. Répéter pour chaque élément :',
+      '     a. Obtenir la valeur du dictionnaire',
+      '        clé : data.timings.[Élément de répétition]   (timings avec un s)',
+      '        dans : Contenu de l’URL',
+      '     b. Ajouter une alarme à cette valeur,',
+      '        étiquette : Athan [Élément de répétition]',
       '',
       'La sonnerie utilisée est celle par défaut de l’app Horloge :',
       'crée une alarme à la main une fois, choisis-y ton athan (importé via GarageBand).'
