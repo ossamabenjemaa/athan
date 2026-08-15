@@ -81,9 +81,9 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 | 2 | **Supprimer les alarmes** | entrée = les alarmes trouvées |
 | 3 | **Obtenir le contenu de l'URL** | l'adresse donnée par la page (bloc *Valeurs à copier*), **date remplacée par une variable** (voir plus bas) |
 | 4 | **Texte** | `Fajr,Dhuhr,Asr,Maghrib,Isha` — sans espace après les virgules |
-| 5 | **Diviser le texte** | séparateur **Personnalisé** : une virgule |
-| 6 | **Répéter pour chaque** | et dedans, seulement deux actions ↓ |
-| 6a | **Obtenir la valeur du dictionnaire** | clé `data.timings.` + variable **Élément de répétition**, dans *Contenu de l'URL* |
+| 5 | **Scinder le texte** | séparateur **Personnalisé** : une virgule |
+| 6 | **Répéter avec chaque élément dans** | **Texte scindé** (le résultat de *Scinder*, pas *Contenu de l'URL*) ; dedans, deux actions ↓ |
+| 6a | **Obtenir la valeur du dictionnaire** | clé `data.timings.` **suivie de la variable Élément de répétition** (la clé seule renvoie tout le dictionnaire), dans *Contenu de l'URL* |
 | 6b | **Ajouter une alarme** | à cette valeur, étiquette `Athan ` + **Élément de répétition** |
 
 La page réunit toutes ces valeurs dans un bloc **📋 Valeurs à copier** : une touche sur une ligne

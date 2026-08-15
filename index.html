@@ -301,9 +301,11 @@
         <code>Athan</code>), puis <b>Supprimer les alarmes</b> pour balayer celles de la veille.</li>
       <li>Ensuite seulement : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
       <li>Action <b>Texte</b> contenant <code>Fajr,Dhuhr,Asr,Maghrib,Isha</code>, puis
-        <b>Diviser le texte</b> → séparateur <b>Personnalisé</b> → une <b>virgule</b>.
+        <b>Scinder le texte</b> → séparateur <b>Personnalisé</b> → une <b>virgule</b>.
         Pas d'espace après les virgules : il resterait collé au nom et la clé serait fausse.</li>
-      <li><b>Répéter pour chaque</b> élément, et dedans deux actions seulement :
+      <li><b>Répéter avec chaque élément dans</b> → vérifie que c'est bien <b>Texte scindé</b>
+        (le résultat de <i>Scinder</i>) et non <i>Contenu de l'URL</i> : par défaut l'action reprend
+        le résultat de celle qui la précède. Dedans, deux actions seulement :
         <b>Obtenir la valeur du dictionnaire</b> avec la clé <code>data.timings.</code> suivie de la
         variable <b>Élément de répétition</b>, dans <b>Contenu de l'URL</b> ; puis
         <b>Ajouter une alarme</b> à cette valeur, étiquette <code>Athan </code> + <b>Élément de répétition</b>.</li>
@@ -723,8 +725,8 @@
       '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',
       '     « Date actuelle » au format personnalisé dd-MM-yyyy',
       '4. Texte : Fajr,Dhuhr,Asr,Maghrib,Isha   (sans espace)',
-      '5. Diviser le texte → séparateur Personnalisé → une virgule',
-      '6. Répéter pour chaque élément :',
+      '5. Scinder le texte → séparateur Personnalisé → une virgule',
+      '6. Répéter avec chaque élément dans : Texte scindé  (PAS Contenu de l’URL)',
       '     a. Obtenir la valeur du dictionnaire',
       '        clé : data.timings.[Élément de répétition]   (timings avec un s)',
       '        dans : Contenu de l’URL',
