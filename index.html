@@ -181,11 +181,12 @@
   <section class="card">
     <h2>🧭 Lieu &amp; méthode</h2>
     <div class="field">
-      <label for="place">Ville (juste une étiquette pour toi)</label>
+      <label for="place">Ville, pays (ou code postal)</label>
       <div class="row">
-        <input id="place" type="text" placeholder="Paris" autocomplete="off">
-        <button id="geo" type="button" style="flex: none;">📍 Me localiser</button>
+        <input id="place" type="text" placeholder="Marseille, France" autocomplete="off" enterkeyhint="search">
+        <button id="find" type="button" style="flex: none;">🔎 Chercher</button>
       </div>
+      <button id="geo" class="wide" type="button" style="margin-top: 8px;">📍 Ou me localiser</button>
     </div>
     <div class="row field">
       <div>
@@ -219,7 +220,9 @@
         </select>
       </div>
     </div>
-    <p class="hint">Tout est calculé hors ligne, sur l'appareil. Réglages mémorisés dans le navigateur.</p>
+    <p class="hint">Les horaires sont calculés hors ligne, sur l'appareil, et les réglages mémorisés
+      dans le navigateur. Seule la recherche de ville interroge le réseau (géocodage AlAdhan) —
+      une fois les coordonnées trouvées, tu peux couper les données.</p>
     <div id="geoStatus" class="status"></div>
   </section>
 
@@ -289,6 +292,14 @@
       <button id="copyUrl" type="button">📋 Copier l'adresse</button>
       <button id="copyRecipe" type="button">📋 Copier la recette</button>
     </div>
+    <details>
+      <summary>Variante sans coordonnées (par ville)</summary>
+      <p class="hint" style="margin-top:0">Plus facile à taper à la main sur le téléphone : AlAdhan
+        accepte directement un nom de ville. Les horaires visent alors le centre de la ville —
+        quelques secondes d'écart avec tes coordonnées exactes, sans conséquence.</p>
+      <div class="urlbox" id="apiUrlCity">—</div>
+      <button id="copyUrlCity" type="button" style="margin-top:10px">📋 Copier cette adresse</button>
+    </details>
     <details>
       <summary>Pourquoi pas une simple notification ?</summary>
       <p class="hint" style="margin-top:0">
@@ -401,7 +412,23 @@
     var url = PT.aladhanUrl(options(), today.date);
     $('apiUrl').textContent = url;
     $('dateSample').textContent = (url.match(/timings\/([\d-]+)/) || [])[1] || '';
+    $('apiUrlCity').textContent = cityUrl(url);
     tick();
+  }
+
+  /*
+   * Même adresse, mais avec « Ville, Pays » au lieu des coordonnées : plus court
+   * à taper à la main dans le raccourci. On réutilise la date et les réglages de
+   * l'adresse principale pour que les deux ne divergent jamais.
+   */
+  function cityUrl(url) {
+    var parts = settings.place.split(',');
+    var country = parts.length > 1 ? parts.pop().trim() : '';
+    var city = parts.join(',').trim();
+    if (!city || !country) return 'Écris « Ville, Pays » dans le champ du haut (ex. Marseille, France) pour obtenir cette variante.';
+    return url
+      .replace('/timings/', '/timingsByCity/')
+      .replace(/\?latitude=[^&]*&longitude=[^&]*/, '?city=' + encodeURIComponent(city) + '&country=' + encodeURIComponent(country));
   }
 
   function tick() {
@@ -656,6 +683,41 @@
       $(id).addEventListener('change', readForm);
     });
 
+    /*
+     * Recherche de ville : AlAdhan expose un géocodage public (sans clé, CORS
+     * ouvert) qui rend latitude et longitude. Ça évite d'aller les pêcher dans
+     * une app de cartes.
+     */
+    function findCity() {
+      var el = $('geoStatus');
+      var q = $('place').value.trim();
+      if (!q) { el.className = 'status show warn'; el.textContent = 'Écris d’abord une ville, par exemple « Marseille, France ».'; return; }
+      el.className = 'status show'; el.textContent = 'Recherche de « ' + q + ' »…';
+      fetch('https://api.aladhan.com/v1/addressInfo?address=' + encodeURIComponent(q))
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j || j.code !== 200 || !j.data || !isFinite(j.data.latitude)) {
+            throw new Error((j && j.data) ? String(j.data) : 'ville introuvable');
+          }
+          settings.latitude = Math.round(j.data.latitude * 10000) / 10000;
+          settings.longitude = Math.round(j.data.longitude * 10000) / 10000;
+          settings.place = q;
+          saveSettings(); fillForm(); render();
+          el.className = 'status show ok';
+          el.textContent = '📍 ' + q + ' → ' + settings.latitude + ', ' + settings.longitude +
+            (j.data.timezone ? ' (' + j.data.timezone + ')' : '');
+        })
+        .catch(function (e) {
+          el.className = 'status show err';
+          el.textContent = 'Ville introuvable (' + e.message + '). Essaie « Ville, Pays », ou saisis les coordonnées à la main.';
+        });
+    }
+
+    $('find').addEventListener('click', findCity);
+    $('place').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); this.blur(); findCity(); }
+    });
+
     $('geo').addEventListener('click', function () {
       var el = $('geoStatus');
       if (!navigator.geolocation) { el.className = 'status show err'; el.textContent = 'Géolocalisation indisponible.'; return; }
@@ -687,6 +749,7 @@
 
     $('test').addEventListener('click', function () { playAthan('test'); });
     $('copyUrl').addEventListener('click', function () { copy($('apiUrl').textContent, this); });
+    $('copyUrlCity').addEventListener('click', function () { copy($('apiUrlCity').textContent, this); });
     $('copyRecipe').addEventListener('click', function () { copy(recipe(), this); });
 
     readAudio().then(function (blob) {

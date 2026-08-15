@@ -102,6 +102,28 @@ l'action *Obtenir le contenu de l'URL*, efface `15-08-2026` et insère à la pla
 
 Le bouton **📋 Copier la recette** de la page en donne la version texte, prête à suivre.
 
+### c. Trouver son lieu sans installer quoi que ce soit
+
+Trois façons, de la plus simple à la plus précise :
+
+- **Taper sa ville dans la page** — champ du haut, `Marseille, France`, bouton **🔎 Chercher**.
+  La page interroge le géocodeur public d'AlAdhan (pas de clé, pas de compte) et remplit
+  latitude et longitude toute seule. Elle accepte aussi un code postal (`75015 Paris`).
+- **Se passer complètement de coordonnées** — AlAdhan sait travailler par ville. Le dépliant
+  *Variante sans coordonnées* de la page donne l'adresse correspondante, plus courte à taper
+  sur un téléphone :
+
+  ```
+  https://api.aladhan.com/v1/timingsByCity/16-08-2026?city=Marseille&country=France&method=3&school=0
+  ```
+
+  Les horaires visent alors le centre de la ville : quelques secondes d'écart avec ton adresse
+  exacte, invisible à l'échelle d'une minute d'affichage.
+- **📍 Ou me localiser** — le GPS du téléphone, le plus précis, mais il demande l'autorisation
+  de localisation.
+
+Une fois les coordonnées inscrites, la page n'a plus besoin de réseau : le calcul est local.
+
 > 💡 Volume : les alarmes suivent le curseur **Réglages → Sons et vibrations → Sonnerie et
 > alertes**, pas le volume multimédia. Monte-le une bonne fois.
 
