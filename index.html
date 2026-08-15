@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Athan — horaires de prière & appel sonore</title>
+<meta name="description" content="Horaires de prière calculés hors ligne, athan qui sonne même en mode silencieux (mode veilleur + réveils Horloge via Raccourcis).">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Athan">
+<meta name="theme-color" content="#0f1512">
+<style>
+  :root {
+    --gold: #c9a227;
+    --green: #0f8b6c;
+    --bg: #f3f6f4;
+    --card: #ffffff;
+    --text: #16201c;
+    --muted: #63736c;
+    --line: #e2ebe6;
+    --mono-bg: #f0f5f2;
+    --ok: #12833b;
+    --ok-bg: #e3f6ea;
+    --warn: #8a6100;
+    --warn-bg: #fdf3d7;
+    --err: #b3261e;
+    --err-bg: #fdecea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c1210;
+      --card: #16201c;
+      --text: #eef5f1;
+      --muted: #93a49c;
+      --line: #24332d;
+      --mono-bg: #1d2925;
+      --ok: #5ad189;
+      --ok-bg: #123324;
+      --warn: #f0c34e;
+      --warn-bg: #332a10;
+      --err: #ff8a80;
+      --err-bg: #3a1512;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 16px 40px;
+    background:
+      radial-gradient(60% 40% at 15% 0%, color-mix(in srgb, var(--green) 16%, transparent), transparent 70%),
+      radial-gradient(60% 40% at 85% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%),
+      var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100dvh;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 20px; }
+  h1 { font-size: 1.65rem; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .sub { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 10px 30px rgba(10, 40, 30, 0.08);
+    margin-bottom: 16px;
+  }
+  h2 { font-size: 1.02rem; margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
+  h2 .tag {
+    margin-left: auto; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--muted); background: var(--mono-bg);
+    border: 1px solid var(--line); padding: 4px 8px; border-radius: 999px;
+  }
+  label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  .row { display: flex; gap: 8px; }
+  .row > * { flex: 1; min-width: 0; }
+  .field { margin-bottom: 12px; }
+  input, select {
+    width: 100%;
+    padding: 12px 13px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: var(--mono-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: right 16px center, right 11px center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 34px; }
+  input:focus, select:focus { border-color: var(--green); }
+  button {
+    font: inherit;
+    border: 1.5px solid var(--line);
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--mono-bg);
+  }
+  button:active { transform: scale(0.98); }
+  button.primary { color: #fff; border: none; background: linear-gradient(90deg, var(--green), #14a884); }
+  button.wide { width: 100%; }
+  button.danger { color: var(--err); }
+  .hint { font-size: 0.82rem; color: var(--muted); margin: 8px 0 0; line-height: 1.45; }
+  .hint code, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; background: var(--mono-bg); padding: 1px 5px; border-radius: 6px; }
+
+  /* Prochaine prière */
+  .next { text-align: center; padding: 6px 0 4px; }
+  .next .who { font-size: 1.15rem; font-weight: 700; }
+  .next .who .ar { color: var(--gold); font-weight: 600; }
+  .next .count { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; margin: 2px 0; }
+  .next .at { color: var(--muted); font-size: 0.92rem; }
+
+  ul.times { list-style: none; margin: 14px 0 0; padding: 0; }
+  ul.times li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 12px; border-radius: 12px; border: 1.5px solid transparent;
+  }
+  ul.times li + li { margin-top: 2px; }
+  ul.times li.now { background: var(--ok-bg); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+  ul.times li.past { opacity: 0.5; }
+  ul.times li.info { opacity: 0.65; font-style: italic; }
+  ul.times .name { font-weight: 700; }
+  ul.times .ar { color: var(--muted); font-size: 0.88rem; }
+  ul.times .t { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.05rem; }
+
+  .status { font-size: 0.9rem; padding: 11px 13px; border-radius: 12px; margin-top: 12px; display: none; line-height: 1.45; }
+  .status.show { display: block; }
+  .status.ok { background: var(--ok-bg); color: var(--ok); }
+  .status.warn { background: var(--warn-bg); color: var(--warn); }
+  .status.err { background: var(--err-bg); color: var(--err); }
+
+  .urlbox {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.76rem;
+    background: var(--mono-bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 11px 12px;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+  ol.steps { margin: 0; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; }
+  ol.steps li { margin-bottom: 8px; }
+  ol.steps b { color: var(--green); }
+  @media (prefers-color-scheme: dark) { ol.steps b { color: #4fd3ae; } }
+  details { border-top: 1px dashed var(--line); margin-top: 14px; padding-top: 12px; }
+  summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--muted); }
+  details[open] summary { margin-bottom: 12px; }
+  footer { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 22px; line-height: 1.6; }
+  footer a { color: inherit; }
+  .switch { display: flex; align-items: center; gap: 12px; }
+  .switch .lbl { font-weight: 700; }
+  .switch .lbl span { display: block; font-weight: 400; font-size: 0.83rem; color: var(--muted); margin-top: 2px; }
+  .switch input[type="checkbox"] {
+    width: 52px; height: 31px; flex: none; margin: 0; border-radius: 999px;
+    background: var(--line); border: none; position: relative; transition: background 0.2s;
+  }
+  .switch input[type="checkbox"]::after {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.3); transition: transform 0.2s;
+  }
+  .switch input[type="checkbox"]:checked { background: var(--green); }
+  .switch input[type="checkbox"]:checked::after { transform: translateX(21px); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>🕌 Athan</h1>
+    <p class="sub">Les horaires de prière calculés sur ton téléphone, et l'appel qui sonne <b>même en mode silencieux</b>.</p>
+  </header>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section class="card">
+    <h2>🧭 Lieu &amp; méthode</h2>
+    <div class="field">
+      <label for="place">Ville (juste une étiquette pour toi)</label>
+      <div class="row">
+        <input id="place" type="text" placeholder="Paris" autocomplete="off">
+        <button id="geo" type="button" style="flex: none;">📍 Me localiser</button>
+      </div>
+    </div>
+    <div class="row field">
+      <div>
+        <label for="lat">Latitude</label>
+        <input id="lat" type="number" step="0.0001" inputmode="decimal" placeholder="48.8566">
+      </div>
+      <div>
+        <label for="lon">Longitude</label>
+        <input id="lon" type="number" step="0.0001" inputmode="decimal" placeholder="2.3522">
+      </div>
+    </div>
+    <div class="field">
+      <label for="method">Méthode de calcul</label>
+      <select id="method"></select>
+    </div>
+    <div class="row field">
+      <div>
+        <label for="madhab">Asr</label>
+        <select id="madhab">
+          <option value="standard">Majorité (ombre ×1)</option>
+          <option value="hanafi">Hanafi (ombre ×2)</option>
+        </select>
+      </div>
+      <div>
+        <label for="highlats">Hautes latitudes</label>
+        <select id="highlats">
+          <option value="angle">Angle (défaut)</option>
+          <option value="seventh">1/7 de nuit</option>
+          <option value="night">Milieu de nuit</option>
+          <option value="none">Aucune</option>
+        </select>
+      </div>
+    </div>
+    <p class="hint">Tout est calculé hors ligne, sur l'appareil. Réglages mémorisés dans le navigateur.</p>
+    <div id="geoStatus" class="status"></div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section class="card">
+    <h2>🕰️ Aujourd'hui <span class="tag" id="dayTag">—</span></h2>
+    <div class="next">
+      <div class="who" id="nextWho">—</div>
+      <div class="count" id="nextCount">--:--:--</div>
+      <div class="at" id="nextAt">&nbsp;</div>
+    </div>
+    <ul class="times" id="times"></ul>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section class="card">
+    <h2>🔊 Mode veilleur <span class="tag">page ouverte</span></h2>
+    <div class="switch">
+      <input type="checkbox" id="watch">
+      <div class="lbl">Faire sonner l'athan ici
+        <span>L'onglet reste ouvert et l'écran allumé ; le son passe le bouton silencieux.</span>
+      </div>
+    </div>
+    <div id="watchStatus" class="status"></div>
+
+    <div class="field" style="margin-top: 14px;">
+      <label for="file">Fichier de l'athan (mp3 / m4a)</label>
+      <div class="row">
+        <input id="file" type="file" accept="audio/*">
+        <button id="test" type="button" style="flex: none;">▶︎ Tester</button>
+      </div>
+    </div>
+    <p class="hint" id="fileHint">Aucun fichier : un simple carillon de secours est utilisé. Le fichier choisi est gardé sur l'appareil (rien n'est envoyé nulle part).</p>
+    <button id="forget" class="danger" type="button" style="display:none; margin-top:8px;">Oublier le fichier</button>
+    <audio id="player" preload="auto" playsinline></audio>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section class="card">
+    <h2>🔕 Téléphone rangé <span class="tag">recommandé</span></h2>
+    <p class="hint" style="margin-top:0">
+      Une page web ne peut sonner que si elle est ouverte. Pour un athan qui part tout seul,
+      on s'appuie sur les <b>réveils de l'app Horloge</b> : ce sont les seuls sons qu'iOS laisse
+      passer le bouton silencieux <i>et</i> les modes de concentration. Un raccourci les recrée
+      chaque nuit avec les horaires du jour.
+    </p>
+    <ol class="steps">
+      <li>Apporte l'athan en sonnerie : <b>GarageBand</b> → importe ton mp3 → coupe à 30 s →
+        <b>Partager → Sonnerie</b>. (Ou une sonnerie achetée / déjà installée.)</li>
+      <li>Crée une alarme dans <b>Horloge</b>, choisis cette sonnerie : les alarmes créées ensuite
+        reprennent ce son par défaut.</li>
+      <li><b>Raccourcis → Automatisation → Heure de la journée → 00:05</b>, tous les jours,
+        <b>Exécuter immédiatement</b> (sans confirmation).</li>
+      <li>Dans le raccourci : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
+      <li><b>Obtenir la valeur du dictionnaire</b> <code>data.timings.Fajr</code> → <b>Ajouter une alarme</b>
+        à cette heure, étiquette <code>Athan Fajr</code>. Répète pour <code>Dhuhr</code>, <code>Asr</code>,
+        <code>Maghrib</code>, <code>Isha</code>.</li>
+      <li>En tête de raccourci, ajoute <b>Rechercher des alarmes</b> (étiquette contient
+        <code>Athan</code>) → <b>Supprimer les alarmes</b>, pour balayer celles de la veille.</li>
+    </ol>
+    <p class="hint">L'adresse renvoie exactement les mêmes horaires que cette page (méthode et madhhab compris) :</p>
+    <div class="urlbox" id="apiUrl">—</div>
+    <p class="hint">⚠️ Dans le raccourci, remplace la date <code id="dateSample">—</code> par la variable
+      <b>Date actuelle</b> au format perso <code>dd-MM-yyyy</code> — sinon toutes les nuits
+      reprogrammeront les horaires d'aujourd'hui.</p>
+    <div class="row" style="margin-top:10px">
+      <button id="copyUrl" type="button">📋 Copier l'adresse</button>
+      <button id="copyRecipe" type="button">📋 Copier la recette</button>
+    </div>
+    <details>
+      <summary>Pourquoi pas une simple notification ?</summary>
+      <p class="hint" style="margin-top:0">
+        Les notifications (web ou app) sont muettes quand le bouton silencieux est mis : seules les
+        <i>alertes critiques</i> passent, et elles demandent une autorisation spéciale d'Apple réservée
+        aux apps natives. Les alarmes de l'app Horloge, elles, sonnent toujours — d'où le détour.
+        À noter : leur volume suit le curseur <b>Sonnerie et alertes</b>, pas le volume multimédia.
+      </p>
+    </details>
+  </section>
+
+  <footer>
+    Calcul astronomique local (algorithme PrayTimes), aligné à ±1 min sur l'API AlAdhan.<br>
+    Vérifie toujours avec le calendrier de ta mosquée. 🤲
+  </footer>
+</div>
+
+<script src="prayer-times.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var PT = window.PrayerTimes;
+  var $ = function (id) { return document.getElementById(id); };
+  var STORE = 'athan.settings.v1';
+  var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  var settings = {
+    place: '', latitude: 48.8566, longitude: 2.3522,
+    methodId: 3, madhab: 'standard', highLats: 'angle', watch: false
+  };
+
+  /* ---------------------------------------------------------------- */
+  /* Réglages : URL (?lat=…) puis localStorage                          */
+  /* ---------------------------------------------------------------- */
+
+  function loadSettings() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE) || '{}');
+      for (var k in saved) if (k in settings) settings[k] = saved[k];
+    } catch (e) { /* stockage indisponible : on garde les défauts */ }
+    var q = new URLSearchParams(location.search);
+    if (q.get('lat')) settings.latitude = Number(q.get('lat'));
+    if (q.get('lon')) settings.longitude = Number(q.get('lon'));
+    if (q.get('method')) settings.methodId = Number(q.get('method'));
+    if (q.get('madhab')) settings.madhab = q.get('madhab');
+    if (q.get('place')) settings.place = q.get('place');
+  }
+
+  function saveSettings() {
+    try { localStorage.setItem(STORE, JSON.stringify(settings)); } catch (e) {}
+  }
+
+  function readForm() {
+    settings.place = $('place').value.trim();
+    var lat = parseFloat($('lat').value), lon = parseFloat($('lon').value);
+    if (isFinite(lat) && Math.abs(lat) <= 90) settings.latitude = lat;
+    if (isFinite(lon) && Math.abs(lon) <= 180) settings.longitude = lon;
+    settings.methodId = Number($('method').value);
+    settings.madhab = $('madhab').value;
+    settings.highLats = $('highlats').value;
+    saveSettings();
+    render();
+  }
+
+  function fillForm() {
+    $('place').value = settings.place;
+    $('lat').value = settings.latitude;
+    $('lon').value = settings.longitude;
+    $('method').value = settings.methodId;
+    $('madhab').value = settings.madhab;
+    $('highlats').value = settings.highLats;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Affichage                                                         */
+  /* ---------------------------------------------------------------- */
+
+  function options() {
+    return {
+      latitude: settings.latitude, longitude: settings.longitude,
+      methodId: settings.methodId, madhab: settings.madhab,
+      highLats: settings.highLats, timeZone: TZ
+    };
+  }
+
+  var today = null;
+
+  function render() {
+    var now = new Date();
+    today = PT.computeTimes(assign(options(), { date: now }));
+
+    $('dayTag').textContent = new Intl.DateTimeFormat('fr-FR', {
+      weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ
+    }).format(now);
+
+    var next = PT.nextPrayer(options(), now);
+    var html = '';
+    for (var i = 0; i < today.list.length; i++) {
+      var p = today.list[i];
+      var isNext = next && !next.tomorrow && next.key === p.key;
+      var cls = p.silent ? 'info' : (isNext ? 'now' : (p.date && p.date < now ? 'past' : ''));
+      html += '<li class="' + cls + '">' +
+        '<span class="name">' + p.label + '</span>' +
+        '<span class="ar">' + p.ar + '</span>' +
+        '<span class="t">' + PT.formatTime(p.date, TZ) + '</span></li>';
+    }
+    $('times').innerHTML = html;
+
+    var url = PT.aladhanUrl(options(), today.date);
+    $('apiUrl').textContent = url;
+    $('dateSample').textContent = (url.match(/timings\/([\d-]+)/) || [])[1] || '';
+    tick();
+  }
+
+  function tick() {
+    var now = new Date();
+    var next = PT.nextPrayer(options(), now);
+    if (!next) { $('nextWho').textContent = '—'; return; }
+
+    $('nextWho').innerHTML = 'Prochaine : <b>' + next.label + '</b> <span class="ar">' + next.ar + '</span>';
+    $('nextAt').textContent = PT.formatTime(next.date, TZ) +
+      (next.tomorrow ? ' (demain)' : '') + (settings.place ? ' · ' + settings.place : '');
+
+    var left = Math.max(0, Math.round((next.date - now) / 1000));
+    var h = Math.floor(left / 3600), m = Math.floor((left % 3600) / 60), s = left % 60;
+    $('nextCount').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+
+    if (settings.watch) checkDue(now);
+    if (lastDay !== dayKey(now)) { lastDay = dayKey(now); fired = {}; render(); }
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function dayKey(d) { return d.toISOString().slice(0, 10); }
+  function assign(a, b) { for (var k in b) a[k] = b[k]; return a; }
+
+  /* ---------------------------------------------------------------- */
+  /* Déclenchement de l'athan (mode veilleur)                           */
+  /* ---------------------------------------------------------------- */
+
+  var fired = {};
+  var lastDay = dayKey(new Date());
+
+  /*
+   * On ne se fie pas au timer seul : un onglet mis en veille par iOS peut
+   * « sauter » quelques secondes. On regarde donc si une prière est tombée
+   * dans les 2 dernières minutes sans avoir encore sonné.
+   */
+  function checkDue(now) {
+    if (!today) return;
+    for (var i = 0; i < today.list.length; i++) {
+      var p = today.list[i];
+      if (p.silent || !p.date) continue;
+      var late = (now - p.date) / 1000;
+      var id = dayKey(p.date) + ':' + p.key;
+      if (late >= 0 && late < 120 && !fired[id]) {
+        fired[id] = true;
+        playAthan(p.label);
+      }
+    }
+  }
+
+  function playAthan(label) {
+    var player = $('player');
+    player.currentTime = 0;
+    player.play().then(function () {
+      watchStatus('ok', '🔊 Athan — ' + (label || '') + ' (' + PT.formatTime(new Date(), TZ) + ')');
+    }).catch(function (err) {
+      watchStatus('err', 'Lecture refusée par le navigateur : ' + err.message + '. Touche « Tester » une fois pour l’autoriser.');
+    });
+  }
+
+  function watchStatus(kind, msg) {
+    var el = $('watchStatus');
+    el.className = 'status show ' + kind;
+    el.textContent = msg;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Écran allumé + onglet vivant                                      */
+  /* ---------------------------------------------------------------- */
+
+  var wakeLock = null;
+
+  function requestWakeLock() {
+    if (!('wakeLock' in navigator)) return Promise.resolve(null);
+    return navigator.wakeLock.request('screen').then(function (lock) {
+      wakeLock = lock;
+      lock.addEventListener('release', function () { wakeLock = null; });
+      return lock;
+    }).catch(function () { return null; });
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+      if (settings.watch && !wakeLock) requestWakeLock();
+      render(); // rattrapage après un retour d'arrière-plan
+    }
+  });
+
+  $('watch').addEventListener('change', function () {
+    settings.watch = $('watch').checked;
+    saveSettings();
+    if (!settings.watch) {
+      if (wakeLock) { wakeLock.release(); wakeLock = null; }
+      watchStatus('warn', 'Veilleur arrêté.');
+      return;
+    }
+    // Le geste de l'utilisateur sert à « débloquer » la lecture audio :
+    // Safari n'autorise le son que s'il a été amorcé par une interaction.
+    unlockAudio().then(function (ok) {
+      requestWakeLock().then(function (lock) {
+        watchStatus(ok ? 'ok' : 'warn',
+          (ok ? 'Veilleur actif. ' : 'Veilleur actif, mais le son n’a pas pu être amorcé — touche « Tester ». ') +
+          (lock ? 'L’écran restera allumé tant que la page est au premier plan.'
+                : 'Garde la page ouverte et l’écran allumé (réglage Verrouillage auto : Jamais).'));
+      });
+    });
+  });
+
+  function unlockAudio() {
+    var player = $('player');
+    player.muted = true;
+    return player.play().then(function () {
+      player.pause();
+      player.currentTime = 0;
+      player.muted = false;
+      return true;
+    }).catch(function () { player.muted = false; return false; });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Le son : fichier choisi (gardé en IndexedDB) ou carillon de secours */
+  /* ---------------------------------------------------------------- */
+
+  var DB = 'athan-db', SHELF = 'files';
+
+  function withDB(mode, fn) {
+    return new Promise(function (resolve, reject) {
+      var req = indexedDB.open(DB, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(SHELF); };
+      req.onerror = function () { reject(req.error); };
+      req.onsuccess = function () {
+        var db = req.result;
+        var tx = db.transaction(SHELF, mode);
+        var out = fn(tx.objectStore(SHELF));
+        tx.oncomplete = function () { db.close(); resolve(out && out.result); };
+        tx.onerror = function () { db.close(); reject(tx.error); };
+      };
+    });
+  }
+
+  function saveAudio(file) { return withDB('readwrite', function (s) { return s.put(file, 'athan'); }); }
+  function readAudio() { return withDB('readonly', function (s) { return s.get('athan'); }); }
+  function dropAudio() { return withDB('readwrite', function (s) { return s.delete('athan'); }); }
+
+  function useBlob(blob, name) {
+    var player = $('player');
+    if (player.dataset.objectUrl) URL.revokeObjectURL(player.dataset.objectUrl);
+    var url = URL.createObjectURL(blob);
+    player.dataset.objectUrl = url;
+    player.src = url;
+    $('fileHint').textContent = '🎵 ' + (name || 'athan enregistré') + ' — gardé sur cet appareil.';
+    $('forget').style.display = '';
+  }
+
+  function useFallback() {
+    var player = $('player');
+    if (player.dataset.objectUrl) { URL.revokeObjectURL(player.dataset.objectUrl); delete player.dataset.objectUrl; }
+    player.src = chimeDataUri();
+    $('fileHint').textContent = 'Aucun fichier : un simple carillon de secours est utilisé. Le fichier choisi est gardé sur l’appareil (rien n’est envoyé nulle part).';
+    $('forget').style.display = 'none';
+  }
+
+  /*
+   * Carillon de secours : un petit WAV fabriqué en JavaScript. On passe par un
+   * <audio> (et pas par la Web Audio API) car sur iPhone seuls les éléments
+   * média franchissent le bouton silencieux.
+   */
+  var chimeCache = null;
+  function chimeDataUri() {
+    if (chimeCache) return chimeCache;
+    var rate = 22050, seconds = 4, n = rate * seconds;
+    var notes = [[0, 587.33], [0.55, 440], [1.1, 587.33], [1.9, 293.66]]; // ré–la–ré–ré grave
+    var pcm = new Int16Array(n);
+    for (var i = 0; i < n; i++) {
+      var t = i / rate, v = 0;
+      for (var k = 0; k < notes.length; k++) {
+        var dt = t - notes[k][0];
+        if (dt < 0) continue;
+        var env = Math.exp(-dt * 1.6);
+        var f = notes[k][1];
+        v += env * (Math.sin(2 * Math.PI * f * dt) + 0.35 * Math.sin(4 * Math.PI * f * dt));
+      }
+      pcm[i] = Math.max(-1, Math.min(1, v * 0.28)) * 32767;
+    }
+    var head = new DataView(new ArrayBuffer(44));
+    var bytes = pcm.length * 2;
+    writeStr(head, 0, 'RIFF'); head.setUint32(4, 36 + bytes, true); writeStr(head, 8, 'WAVE');
+    writeStr(head, 12, 'fmt '); head.setUint32(16, 16, true); head.setUint16(20, 1, true);
+    head.setUint16(22, 1, true); head.setUint32(24, rate, true); head.setUint32(28, rate * 2, true);
+    head.setUint16(32, 2, true); head.setUint16(34, 16, true);
+    writeStr(head, 36, 'data'); head.setUint32(40, bytes, true);
+    var all = new Uint8Array(44 + bytes);
+    all.set(new Uint8Array(head.buffer), 0);
+    all.set(new Uint8Array(pcm.buffer), 44);
+    var bin = '';
+    for (var j = 0; j < all.length; j += 8192) bin += String.fromCharCode.apply(null, all.subarray(j, j + 8192));
+    chimeCache = 'data:audio/wav;base64,' + btoa(bin);
+    return chimeCache;
+  }
+
+  function writeStr(view, at, s) { for (var i = 0; i < s.length; i++) view.setUint8(at + i, s.charCodeAt(i)); }
+
+  /* ---------------------------------------------------------------- */
+  /* Câblage de l'interface                                            */
+  /* ---------------------------------------------------------------- */
+
+  function recipe() {
+    return [
+      'Athan — réveils automatiques (Raccourcis iOS)',
+      '',
+      'Automatisation : Heure de la journée → 00:05 → Tous les jours → Exécuter immédiatement.',
+      '',
+      '1. Rechercher des alarmes  (Étiquette contient « Athan »)',
+      '2. Supprimer les alarmes   (les alarmes trouvées)',
+      '3. Obtenir le contenu de l’URL :',
+      '   ' + $('apiUrl').textContent,
+      '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',
+      '     « Date actuelle » au format personnalisé dd-MM-yyyy',
+      '4. Obtenir la valeur du dictionnaire « data.timings.Fajr »',
+      '5. Ajouter une alarme à cette heure, étiquette « Athan Fajr »',
+      '6. Répéter les étapes 4–5 pour Dhuhr, Asr, Maghrib, Isha',
+      '',
+      'La sonnerie utilisée est celle par défaut de l’app Horloge :',
+      'crée une alarme à la main une fois, choisis-y ton athan (importé via GarageBand).'
+    ].join('\n');
+  }
+
+  function copy(text, button) {
+    var done = function () {
+      var old = button.textContent;
+      button.textContent = '✓ Copié';
+      setTimeout(function () { button.textContent = old; }, 1600);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { prompt('Copie manuelle :', text); });
+    else prompt('Copie manuelle :', text);
+  }
+
+  function init() {
+    var sel = $('method');
+    PT.METHODS.forEach(function (m) {
+      var o = document.createElement('option');
+      o.value = m.id; o.textContent = m.name;
+      sel.appendChild(o);
+    });
+
+    loadSettings();
+    fillForm();
+    $('watch').checked = false; // on ne réactive jamais le son sans geste de l'utilisateur
+    render();
+    setInterval(tick, 1000);
+
+    ['place', 'lat', 'lon', 'method', 'madhab', 'highlats'].forEach(function (id) {
+      $(id).addEventListener('change', readForm);
+    });
+
+    $('geo').addEventListener('click', function () {
+      var el = $('geoStatus');
+      if (!navigator.geolocation) { el.className = 'status show err'; el.textContent = 'Géolocalisation indisponible.'; return; }
+      el.className = 'status show'; el.textContent = 'Localisation en cours…';
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        settings.latitude = Math.round(pos.coords.latitude * 10000) / 10000;
+        settings.longitude = Math.round(pos.coords.longitude * 10000) / 10000;
+        saveSettings(); fillForm(); render();
+        el.className = 'status show ok';
+        el.textContent = 'Position enregistrée (' + settings.latitude + ', ' + settings.longitude + ').';
+      }, function (err) {
+        el.className = 'status show err';
+        el.textContent = 'Position refusée ou indisponible (' + err.message + '). Saisis la latitude et la longitude à la main.';
+      }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+    });
+
+    $('file').addEventListener('change', function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      useBlob(f, f.name);
+      saveAudio(f).catch(function () { /* pas de stockage : le fichier vaut pour la session */ });
+    });
+
+    $('forget').addEventListener('click', function () {
+      dropAudio().catch(function () {});
+      $('file').value = '';
+      useFallback();
+    });
+
+    $('test').addEventListener('click', function () { playAthan('test'); });
+    $('copyUrl').addEventListener('click', function () { copy($('apiUrl').textContent, this); });
+    $('copyRecipe').addEventListener('click', function () { copy(recipe(), this); });
+
+    readAudio().then(function (blob) {
+      if (blob) useBlob(blob, blob.name);
+      else useFallback();
+    }).catch(useFallback);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
