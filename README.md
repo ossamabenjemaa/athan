@@ -78,7 +78,7 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 | # | Action | Réglage |
 |---|---|---|
 | 1 | **Rechercher des alarmes** | Étiquette *contient* `Athan` |
-| 2 | **Supprimer les alarmes** | entrée = les alarmes trouvées ; chevron **⌄** → **Demander avant de supprimer : désactivé** |
+| 2 | **Supprimer les alarmes** | entrée = les alarmes trouvées |
 | 3 | **Obtenir le contenu de l'URL** | l'adresse donnée par la page (bouton *Copier l'adresse*), **date remplacée par une variable** (voir plus bas) |
 | 4 | **Obtenir la valeur du dictionnaire** | clé `data.timings.Fajr` |
 | 5 | **Ajouter une alarme** | à cette heure, étiquette `Athan Fajr` |
@@ -92,10 +92,12 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 > le résultat de celle qui la précède — donc, placée après *Ajouter une alarme*, elle supprime
 > l'alarme fraîchement créée. Elle doit pointer sur le résultat de *Rechercher des alarmes*.
 >
-> **Une confirmation de suppression est demandée** → normal, c'est une action destructive. Touche
-> le chevron **⌄** de *Supprimer les alarmes* et désactive **Demander avant de supprimer**. Sans ça
-> l'automatisation de 00:05 reste plantée sur la question pendant que tu dors, et aucune alarme
-> n'est créée.
+> **Une confirmation « Autoriser … à supprimer 1 alarme ? » s'affiche** → le réglage n'est pas dans
+> l'action mais dans les préférences de l'app : **Réglages → Apps → Raccourcis → Avancé →
+> Autoriser la suppression sans confirmation** (sur les iOS plus anciens :
+> *Réglages → Raccourcis → Avancé*). Sans ça, l'automatisation de 00:05 reste plantée sur la
+> question pendant que tu dors, et aucune alarme n'est créée. Vérifie aussi que l'automatisation
+> elle-même est en **Exécuter immédiatement**, sans « Demander avant d'exécuter ».
 
 L'adresse pointe sur l'API publique **AlAdhan** avec *tes* coordonnées, *ta* méthode et
 *ton* madhhab — donc exactement les horaires affichés par la page :
