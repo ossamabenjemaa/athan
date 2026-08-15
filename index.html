@@ -276,13 +276,20 @@
         reprennent ce son par défaut.</li>
       <li><b>Raccourcis → Automatisation → Heure de la journée → 00:05</b>, tous les jours,
         <b>Exécuter immédiatement</b> (sans confirmation).</li>
-      <li>Dans le raccourci : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
+      <li><b>Première action</b> : <b>Rechercher des alarmes</b> (Étiquette <i>contient</i>
+        <code>Athan</code>), puis <b>Supprimer les alarmes</b> pour balayer celles de la veille.
+        Sur cette action, touche le chevron <b>⌄</b> et désactive <b>Demander avant de supprimer</b>,
+        sinon la nuit l'automatisation reste bloquée sur la demande de confirmation.</li>
+      <li>Ensuite seulement : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
       <li><b>Obtenir la valeur du dictionnaire</b> <code>data.timings.Fajr</code> → <b>Ajouter une alarme</b>
         à cette heure, étiquette <code>Athan Fajr</code>. Répète pour <code>Dhuhr</code>, <code>Asr</code>,
         <code>Maghrib</code>, <code>Isha</code>.</li>
-      <li>En tête de raccourci, ajoute <b>Rechercher des alarmes</b> (étiquette contient
-        <code>Athan</code>) → <b>Supprimer les alarmes</b>, pour balayer celles de la veille.</li>
     </ol>
+    <p class="hint">⚠️ L'ordre n'est pas décoratif : si <b>Supprimer les alarmes</b> se retrouve
+      <i>après</i> les <b>Ajouter une alarme</b>, il efface les alarmes qui viennent d'être créées —
+      on les voit apparaître puis disparaître. Vérifie aussi que l'entrée de l'action de suppression
+      est bien le résultat de <b>Rechercher des alarmes</b> : sans entrée explicite, une action
+      reprend le résultat de celle qui la précède.</p>
     <p class="hint">L'adresse renvoie exactement les mêmes horaires que cette page (méthode et madhhab compris) :</p>
     <div class="urlbox" id="apiUrl">—</div>
     <p class="hint">⚠️ Dans le raccourci, remplace la date <code id="dateSample">—</code> par la variable
@@ -640,8 +647,12 @@
       '',
       'Automatisation : Heure de la journée → 00:05 → Tous les jours → Exécuter immédiatement.',
       '',
+      'L’ordre compte : la suppression doit venir AVANT les créations, sinon',
+      'elle efface les alarmes qui viennent d’être créées.',
+      '',
       '1. Rechercher des alarmes  (Étiquette contient « Athan »)',
-      '2. Supprimer les alarmes   (les alarmes trouvées)',
+      '2. Supprimer les alarmes   (entrée = les alarmes trouvées)',
+      '   → chevron ⌄ sur l’action : désactive « Demander avant de supprimer »',
       '3. Obtenir le contenu de l’URL :',
       '   ' + $('apiUrl').textContent,
       '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',

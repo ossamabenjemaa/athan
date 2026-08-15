@@ -78,11 +78,24 @@ Exécuter immédiatement** (décoche « Demander avant d'exécuter »), puis :
 | # | Action | Réglage |
 |---|---|---|
 | 1 | **Rechercher des alarmes** | Étiquette *contient* `Athan` |
-| 2 | **Supprimer les alarmes** | les alarmes trouvées (nettoie la veille) |
+| 2 | **Supprimer les alarmes** | entrée = les alarmes trouvées ; chevron **⌄** → **Demander avant de supprimer : désactivé** |
 | 3 | **Obtenir le contenu de l'URL** | l'adresse donnée par la page (bouton *Copier l'adresse*), **date remplacée par une variable** (voir plus bas) |
 | 4 | **Obtenir la valeur du dictionnaire** | clé `data.timings.Fajr` |
 | 5 | **Ajouter une alarme** | à cette heure, étiquette `Athan Fajr` |
 | 6 | Répéter 4–5 | `Dhuhr`, `Asr`, `Maghrib`, `Isha` |
+
+> ⚠️ **Deux pièges, dans cet ordre précis.**
+>
+> **Les alarmes apparaissent puis disparaissent aussitôt** → la suppression est passée *après*
+> les créations et efface ce qui vient d'être créé. Les actions 1 et 2 doivent être tout en haut.
+> Vérifie aussi l'**entrée** de *Supprimer les alarmes* : une action sans entrée explicite reprend
+> le résultat de celle qui la précède — donc, placée après *Ajouter une alarme*, elle supprime
+> l'alarme fraîchement créée. Elle doit pointer sur le résultat de *Rechercher des alarmes*.
+>
+> **Une confirmation de suppression est demandée** → normal, c'est une action destructive. Touche
+> le chevron **⌄** de *Supprimer les alarmes* et désactive **Demander avant de supprimer**. Sans ça
+> l'automatisation de 00:05 reste plantée sur la question pendant que tu dors, et aucune alarme
+> n'est créée.
 
 L'adresse pointe sur l'API publique **AlAdhan** avec *tes* coordonnées, *ta* méthode et
 *ton* madhhab — donc exactement les horaires affichés par la page :
