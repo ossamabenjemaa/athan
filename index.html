@@ -162,6 +162,10 @@
   .copyrow.done .ico { opacity: 1; }
   .copyrow .sp { opacity: 0.5; }
 
+  .adjgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .adjgrid label { margin-bottom: 4px; }
+  .adjgrid input { padding: 10px; text-align: center; font-variant-numeric: tabular-nums; }
+
   ol.steps { margin: 0; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; }
   ol.steps li { margin-bottom: 8px; }
   ol.steps b { color: var(--green); }
@@ -237,6 +241,17 @@
         </select>
       </div>
     </div>
+    <details id="adjBox">
+      <summary>Coller aux horaires de ma mosquée (± minutes)</summary>
+      <p class="hint" style="margin-top:0">Compare avec le calendrier de ta mosquée (ou son app) et
+        corrige ce qui diffère. Le Fajr et l'Ichaa sont les plus variables : chaque mosquée choisit
+        son angle de crépuscule. Ces minutes s'appliquent aussi à l'adresse du raccourci
+        (paramètre <code>tune</code>), donc <b>les alarmes suivront</b>. Reste un détail d'arrondi :
+        AlAdhan tronque parfois à la minute inférieure là où la page arrondit au-dessus — si une
+        alarme tombe une minute trop tôt, ajoute 1.</p>
+      <div class="adjgrid" id="adjGrid"></div>
+      <button id="adjReset" type="button" style="margin-top:10px">Tout remettre à zéro</button>
+    </details>
     <p class="hint">Les horaires sont calculés hors ligne, sur l'appareil, et les réglages mémorisés
       dans le navigateur. Seule la recherche de ville interroge le réseau (géocodage AlAdhan) —
       une fois les coordonnées trouvées, tu peux couper les données.</p>
@@ -364,7 +379,8 @@
 
   var settings = {
     place: '', latitude: 48.8566, longitude: 2.3522,
-    methodId: 3, madhab: 'standard', highLats: 'angle', watch: false
+    methodId: 3, madhab: 'standard', highLats: 'angle', watch: false,
+    adjust: {} // minutes par prière, pour coller au calendrier de la mosquée
   };
 
   /* ---------------------------------------------------------------- */
@@ -396,6 +412,11 @@
     settings.methodId = Number($('method').value);
     settings.madhab = $('madhab').value;
     settings.highLats = $('highlats').value;
+    PT.PRAYERS.forEach(function (p) {
+      var el = $('adj-' + p.key);
+      var v = el ? Math.round(Number(el.value)) : 0;
+      if (v) settings.adjust[p.key] = v; else delete settings.adjust[p.key];
+    });
     saveSettings();
     render();
   }
@@ -407,6 +428,20 @@
     $('method').value = settings.methodId;
     $('madhab').value = settings.madhab;
     $('highlats').value = settings.highLats;
+    PT.PRAYERS.forEach(function (p) {
+      var el = $('adj-' + p.key);
+      if (el) el.value = settings.adjust[p.key] || 0;
+    });
+  }
+
+  /* Les six champs d'ajustement, construits depuis la liste des prières. */
+  function buildAdjGrid() {
+    var html = '';
+    PT.PRAYERS.forEach(function (p) {
+      html += '<div><label for="adj-' + p.key + '">' + p.label + '</label>' +
+        '<input id="adj-' + p.key + '" type="number" step="1" inputmode="numeric" value="0"></div>';
+    });
+    $('adjGrid').innerHTML = html;
   }
 
   /* ---------------------------------------------------------------- */
@@ -417,7 +452,7 @@
     return {
       latitude: settings.latitude, longitude: settings.longitude,
       methodId: settings.methodId, madhab: settings.madhab,
-      highLats: settings.highLats, timeZone: TZ
+      highLats: settings.highLats, adjustments: settings.adjust, timeZone: TZ
     };
   }
 
@@ -771,6 +806,8 @@
     });
 
     loadSettings();
+    if (!settings.adjust || typeof settings.adjust !== 'object') settings.adjust = {};
+    buildAdjGrid();
     fillForm();
     $('watch').checked = false; // on ne réactive jamais le son sans geste de l'utilisateur
     render();
@@ -778,6 +815,12 @@
 
     ['place', 'lat', 'lon', 'method', 'madhab', 'highlats'].forEach(function (id) {
       $(id).addEventListener('change', readForm);
+    });
+    PT.PRAYERS.forEach(function (p) { $('adj-' + p.key).addEventListener('change', readForm); });
+
+    $('adjReset').addEventListener('click', function () {
+      settings.adjust = {};
+      saveSettings(); fillForm(); render();
     });
 
     /*

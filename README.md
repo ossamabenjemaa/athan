@@ -127,7 +127,34 @@ l'action *Obtenir le contenu de l'URL*, efface `15-08-2026` et insère à la pla
 
 Le bouton **📋 Copier la recette entière** de la page en donne la version texte, prête à suivre.
 
-### c. Trouver son lieu sans installer quoi que ce soit
+### c. Coller aux horaires de sa mosquée
+
+Les horaires calculés ne sont pas ceux de ta mosquée, et c'est attendu : **Dhuhr et Asr** ne
+dépendent que de la position du soleil et tombent au même moment partout, mais **Fajr et Ichaa**
+dépendent de l'angle de crépuscule retenu, qui varie d'une mosquée à l'autre (12°, 15°, 18°, ou
+un calendrier imprimé maison). Le Maghrib, lui, se voit souvent ajouter une ou deux minutes de
+marge après le coucher.
+
+Plutôt que de deviner l'angle, la page laisse **corriger prière par prière** :
+dépliant **« Coller aux horaires de ma mosquée (± minutes) »** dans la carte du haut. Exemple
+relevé sur une mosquée du 11ᵉ à Paris (méthode UOIF) : Fajr `-8`, Maghrib `+2`, Ichaa `+5`, et
+les six horaires tombent alors pile.
+
+Ces minutes ne restent pas dans la page : elles partent dans l'adresse du raccourci via le
+paramètre `tune` d'AlAdhan (ordre imposé : `imsak,fajr,sunrise,dhuhr,asr,maghrib,sunset,isha,midnight`),
+donc **les alarmes suivent le même calendrier que ce que tu lis**.
+
+```
+…&method=12&school=0&tune=0,-8,0,0,0,2,0,5,0
+```
+
+> Un résidu d'arrondi peut subsister : AlAdhan tronque parfois à la minute inférieure là où la page
+> arrondit au-dessus. Si une alarme tombe une minute trop tôt, ajoute `1`.
+>
+> ⚠️ Ne confonds pas l'heure de l'athan avec les `+15`, `+10`, `+5` affichés par Mawaqit : ce sont
+> les délais d'**iqama** (le début de la prière en groupe), pas l'appel.
+
+### d. Trouver son lieu sans installer quoi que ce soit
 
 Trois façons, de la plus simple à la plus précise :
 

@@ -286,7 +286,29 @@
       '?latitude=' + round(opts.latitude, 5) +
       '&longitude=' + round(opts.longitude, 5) +
       '&method=' + method.id +
-      '&school=' + (opts.madhab === 'hanafi' ? 1 : 0);
+      '&school=' + (opts.madhab === 'hanafi' ? 1 : 0) +
+      tuneParam(opts.adjustments);
+  }
+
+  /*
+   * Les ajustements en minutes passent à AlAdhan par le paramètre `tune`,
+   * dans un ordre imposé :
+   *   imsak, fajr, sunrise, dhuhr, asr, maghrib, sunset, isha, midnight
+   * — c'est ce qui permet au raccourci iOS de coller au calendrier de la
+   * mosquée exactement comme la page.
+   */
+  var TUNE_ORDER = ['imsak', 'fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'sunset', 'isha', 'midnight'];
+
+  function tuneParam(adjustments) {
+    var adj = adjustments || {};
+    var values = [];
+    var any = false;
+    for (var i = 0; i < TUNE_ORDER.length; i++) {
+      var v = Math.round(Number(adj[TUNE_ORDER[i]]) || 0);
+      if (v) any = true;
+      values.push(v);
+    }
+    return any ? '&tune=' + values.join(',') : '';
   }
 
   function round(n, digits) {
