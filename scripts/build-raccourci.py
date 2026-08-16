@@ -97,12 +97,22 @@ def construire():
             }}),
         },
     }
+    # On nomme tout de suite ce résultat : sans ça, deux actions s'appellent
+    # « Valeur du dictionnaire » et l'on choisit la mauvaise dans la boucle.
+    nommer_jour = {
+        'WFWorkflowActionIdentifier': 'is.workflow.actions.setvariable',
+        'WFWorkflowActionParameters': {
+            'WFVariableName': 'Jour',
+            'WFInput': jeton(OBJET, {'{0, 1}': sortie_action(UUID_JOUR, 'Valeur du dictionnaire')}),
+        },
+    }
     actions.insert(i_url + 1, action_jour)
-    i_cle += 1  # la boucle a glissé d'un cran
+    actions.insert(i_url + 2, nommer_jour)
+    i_cle += 2  # la boucle a glissé de deux crans
 
     # dans la boucle : la clé se réduit au nom de la prière, lu dans les horaires du jour
     params = actions[i_cle]['WFWorkflowActionParameters']
-    params['WFInput'] = jeton(OBJET, {'{0, 1}': sortie_action(UUID_JOUR, 'Valeur du dictionnaire')})
+    params['WFInput'] = jeton(OBJET, {'{0, 1}': {'VariableName': 'Jour', 'Type': 'Variable'}})
     params['WFDictionaryKey'] = jeton(OBJET, {'{0, 1}': {'VariableName': 'Repeat Item', 'Type': 'Variable'}})
 
     SORTIE.write_bytes(plistlib.dumps(raccourci, fmt=plistlib.FMT_BINARY))

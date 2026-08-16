@@ -1249,10 +1249,12 @@
           '<li>Action <b>Obtenir le contenu de l\'URL</b> : effacez tout le champ et mettez-y la ' +
           'seule variable <b>Texte</b> — plus d\'adresse AlAdhan, plus de date.</li>' +
           '<li>Juste après, ajoutez <b>Obtenir la valeur du dictionnaire</b> : clé = la variable ' +
-          '<b>Date actuelle</b> au format personnalisé <code>dd-MM</code>, dans <b>Contenu de l\'URL</b>.</li>' +
+          '<b>Date actuelle</b> au format personnalisé <code>dd-MM</code>, dans <b>Contenu de l\'URL</b>. ' +
+          'Vous obtenez les six horaires du jour.</li>' +
+          '<li>Puis <b>Définir la variable</b>, nommée <code>Jour</code> : sans ce nom, deux actions ' +
+          's\'appelleront « Valeur du dictionnaire » et vous choisirez la mauvaise à l\'étape suivante.</li>' +
           '<li>Dans la boucle, l\'action <b>Obtenir la valeur du dictionnaire</b> : la clé devient la ' +
-          'seule variable <b>Élément de répétition</b>, et le champ « dans » pointe sur la valeur du ' +
-          'jour de l\'étape précédente.</li>' +
+          'seule variable <b>Élément de répétition</b>, et le champ « dans » pointe sur <code>Jour</code>.</li>' +
           '</ol>' +
           '<p class="hint" style="margin:0">Une fois qu\'elle tourne, partagez-la : ' +
           '<b>Partager → Copier le lien iCloud</b>. Ce lien-là s\'installe en deux touches chez ' +
