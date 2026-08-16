@@ -53,6 +53,28 @@ Autoriser les raccourcis non fiables*. Une fois importé puis **repartagé** dep
 obtient un lien iCloud signé : il se colle dans `SHORTCUT_URL_MOSQUEE`, en tête du script de
 `index.html`, et le tuto propose alors l'installation en deux touches au lieu du téléchargement.
 
+## 🔗 Les liens du tuto
+
+Chaque étape porte au moins un bouton qui agit, plutôt qu'une consigne à suivre de tête :
+
+| Bouton | Lien | Fiable ? |
+|---|---|---|
+| Installer le raccourci | lien iCloud, ou téléchargement du `.shortcut` | ✅ |
+| Ouvrir le raccourci | `shortcuts://open-shortcut?name=Athan` | ✅ |
+| Ouvrir Raccourcis | `shortcuts://` | ✅ |
+| Lancer le raccourci | `shortcuts://run-shortcut?name=Athan` | ✅ |
+| Ouvrir GarageBand | `garageband://` | ✅ si l'app est installée |
+| Réglages | `App-Prefs:` | ⚠️ au mieux la racine |
+
+**Les liens vers un réglage précis n'existent plus.** `App-Prefs:root=…` pointait autrefois sur
+un panneau donné ; iOS 18 a cassé cette syntaxe, et Safari ne l'a jamais vraiment autorisée.
+L'étape concernée donne donc l'itinéraire complet, copiable en un tap, et le dit franchement
+plutôt que d'offrir un bouton qui ne fait rien.
+
+Le nom du raccourci compte pour les liens `shortcuts://…?name=` : il est dans la constante
+`SHORTCUT_NAME` en tête du script de `index.html`. S'il est renommé sur l'iPhone, les deux
+boutons cessent de le trouver.
+
 ## 🖼 Les illustrations du tuto
 
 `tuto/*.svg` sont des **schémas dessinés**, pas de vraies captures — ils portent la mention.

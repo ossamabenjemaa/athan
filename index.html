@@ -105,6 +105,15 @@
   button:active { transform: scale(0.98); }
   button.primary { color: #fff; border: none; background: linear-gradient(90deg, var(--green), #14a884); }
   button.wide { width: 100%; }
+  .tuto-step .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+  .tuto-step .actions > * { flex: 1 1 46%; }
+  a.go {
+    display: block; text-align: center; text-decoration: none;
+    padding: 12px 10px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+    color: var(--text); background: var(--mono-bg); border: 1.5px solid var(--line);
+  }
+  a.go:active { transform: scale(0.98); }
+
   a.install {
     display: block; text-align: center; text-decoration: none;
     padding: 14px; border-radius: 12px; font-weight: 700; font-size: 1.02rem;
@@ -425,6 +434,7 @@
   var SHORTCUT_URL = 'https://www.icloud.com/shortcuts/2b8ff86ac89e4dbbadb114af385ff42f';
   var SHORTCUT_URL_MOSQUEE = '';   // à remplir après import + repartage du fichier généré
   var SHORTCUT_FILE_MOSQUEE = 'raccourcis/athan-mosquee.shortcut';
+  var SHORTCUT_NAME = 'Athan';   // sert aux liens shortcuts://…?name=
 
   var SOURCES = [{ id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' }];
   var SOURCES_INDEX = 'calendriers/index.json';
@@ -1164,8 +1174,8 @@
   function buildTuto() {
     var src = sourceById(settings.source);
     var lien = src.file ? SHORTCUT_URL_MOSQUEE : SHORTCUT_URL;
-    var fichier = src.file ? SHORTCUT_FILE_MOSQUEE : '';
     var valeur = tutoValue();
+    var nom = encodeURIComponent(SHORTCUT_NAME);
 
     $('tutoSource').innerHTML = sourceLabel();
 
@@ -1175,13 +1185,14 @@
       titre: 'Installer le raccourci',
       image: TUTO_IMAGES.installer,
       html: lien
-        ? '<a class="install" href="' + lien + '" target="_blank" rel="noopener">⬇️ Installer « Athan »</a>' +
-          '<p>Ouvrez ce lien depuis votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
+        ? '<p>Ouvrez ce lien depuis votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
           'Deux touches, rien à construire.</p>'
         : '<p>Ce parcours utilise un raccourci adapté aux calendriers de mosquée. Il n\'a pas ' +
           'encore de lien iCloud : téléchargez le fichier, puis activez <b>Réglages → Raccourcis → ' +
-          'Autoriser les raccourcis non fiables</b> avant de l\'ouvrir.</p>' +
-          '<a class="install" href="' + fichier + '" download>⬇️ Télécharger le raccourci</a>'
+          'Autoriser les raccourcis non fiables</b> avant de l\'ouvrir.</p>',
+      actions: lien
+        ? [{ label: '⬇️ Installer « ' + SHORTCUT_NAME + ' »', href: lien, primary: true, externe: true }]
+        : [{ label: '⬇️ Télécharger le raccourci', href: SHORTCUT_FILE_MOSQUEE, primary: true, download: true }]
     });
 
     steps.push({
@@ -1189,38 +1200,48 @@
       image: TUTO_IMAGES.parametres,
       html: '<p>Dans le raccourci, la <b>première action Texte</b> contient ' +
         (src.file ? 'une adresse de calendrier' : 'une ligne de paramètres') +
-        '. Remplacez-la par la vôtre — touchez la ligne ci-dessous pour la copier :</p>',
-      copy: { k: src.file ? 'Adresse du calendrier' : 'Paramètres (action Texte)', v: valeur }
+        '. Touchez la ligne ci-dessous pour copier la vôtre, puis ouvrez le raccourci et ' +
+        'remplacez le contenu de cette action.</p>',
+      copy: { k: src.file ? 'Adresse du calendrier' : 'Paramètres (action Texte)', v: valeur },
+      actions: [{ label: '✏️ Ouvrir le raccourci', href: 'shortcuts://open-shortcut?name=' + nom }]
     });
 
     steps.push({
       titre: 'Deux réglages iOS, une fois pour toutes',
       image: TUTO_IMAGES.reglages,
-      html: '<p><b>1.</b> <b>Réglages → Apps → Raccourcis → Avancé</b> → activez ' +
+      html: '<p><b>1.</b> Dans <b>Réglages</b> : <b>Apps → Raccourcis → Avancé</b> → activez ' +
         '<b>Autoriser la suppression sans confirmation</b>. Sans ça, l\'automatisation reste bloquée ' +
         'la nuit sur une demande de confirmation, et aucune alarme n\'est créée.</p>' +
         '<p><b>2.</b> L\'athan comme sonnerie : importez votre mp3 dans <b>GarageBand</b>, coupez à ' +
         '30 s, <b>Partager → Sonnerie</b>. Puis créez une alarme dans <b>Horloge</b> avec cette ' +
-        'sonnerie : les alarmes créées ensuite la reprennent.</p>'
+        'sonnerie : les alarmes créées ensuite la reprennent.</p>' +
+        '<p class="hint" style="margin:0">Depuis iOS 18, Apple a fermé les liens qui ouvrent un ' +
+        'réglage précis : le bouton ci-dessous ouvre au mieux la racine des Réglages, et il se peut ' +
+        'que votre iPhone l\'ignore. D\'où l\'itinéraire, copiable en un tap.</p>',
+      copy: { k: 'Chemin du réglage', v: 'Réglages → Apps → Raccourcis → Avancé → Autoriser la suppression sans confirmation' },
+      actions: [{ label: '🎛 Réglages', href: 'App-Prefs:' },
+                { label: '🎹 Ouvrir GarageBand', href: 'garageband://' }]
     });
 
     steps.push({
       titre: 'Programmer le rendez-vous quotidien',
       image: TUTO_IMAGES.automatisation,
-      html: '<p><b>Raccourcis → Automatisation → + → Heure de la journée</b> → <b>00:05</b>, ' +
-        'tous les jours, puis choisissez le raccourci <b>Athan</b> et <b>Exécuter immédiatement</b> ' +
-        '(décochez « Demander avant d\'exécuter »).</p>' +
-        '<p>Chaque nuit, il efface les alarmes de la veille et crée celles du jour.</p>'
+      html: '<p>Dans Raccourcis, onglet <b>Automatisation</b> → <b>+</b> → <b>Heure de la journée</b> ' +
+        '→ <b>00:05</b>, tous les jours → choisissez le raccourci <b>' + escapeHtml(SHORTCUT_NAME) +
+        '</b> → <b>Exécuter immédiatement</b> (décochez « Demander avant d\'exécuter »).</p>' +
+        '<p>Chaque nuit, il efface les alarmes de la veille et crée celles du jour.</p>',
+      actions: [{ label: '⏱ Ouvrir Raccourcis', href: 'shortcuts://' }]
     });
 
     steps.push({
       titre: 'Vérifier tout de suite',
       image: TUTO_IMAGES.verifier,
-      html: '<p>Lancez le raccourci à la main avec ▶︎. Cinq alarmes <code>Athan Fajr</code> à ' +
+      html: '<p>Lancez le raccourci une fois : cinq alarmes <code>Athan Fajr</code> à ' +
         '<code>Athan Isha</code> doivent apparaître dans <b>Horloge</b>, aux horaires affichés ' +
-        'sur la page précédente.</p>' +
+        'à l\'écran précédent.</p>' +
         '<p>Le volume des alarmes suit <b>Réglages → Sons → Sonnerie et alertes</b>, ' +
-        'pas le volume multimédia.</p>'
+        'pas le volume multimédia.</p>',
+      actions: [{ label: '▶︎ Lancer le raccourci', href: 'shortcuts://run-shortcut?name=' + nom, primary: true }]
     });
 
     var html = '';
@@ -1228,6 +1249,16 @@
       var st = steps[i];
       html += '<div class="tuto-step"><h3><span class="num">' + (i + 1) + '</span>' +
         escapeHtml(st.titre) + '</h3>' + st.html;
+      if (st.actions && st.actions.length) {
+        html += '<div class="actions">';
+        for (var k = 0; k < st.actions.length; k++) {
+          var a = st.actions[k];
+          html += '<a class="' + (a.primary ? 'install' : 'go') + '" href="' + a.href + '"' +
+            (a.externe ? ' target="_blank" rel="noopener"' : '') +
+            (a.download ? ' download' : '') + '>' + a.label + '</a>';
+        }
+        html += '</div>';
+      }
       if (st.copy) {
         html += '<button class="copyrow" type="button" data-value="' + escapeHtml(st.copy.v) + '">' +
           '<span><span class="k">' + escapeHtml(st.copy.k) + '</span>' +
