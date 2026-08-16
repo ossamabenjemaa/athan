@@ -7,8 +7,8 @@ sonner l'athan **sans jamais toucher au bouton silencieux physique de l'iPhone**
 index.html      — la page (horaires, compte à rebours, mode veilleur)
 prayer-times.js — le calcul astronomique (navigateur + Node, zéro dépendance)
 cli.js          — les mêmes horaires en ligne de commande
-calendriers/    — calendriers de mosquée en JSON + manifeste index.json
-scripts/        — import-mawaqit.js : ajoute ou met à jour un calendrier
+calendriers/    — calendriers de mosquée, manifeste index.json, annuaire mosquees.json
+scripts/        — import-mawaqit.js (un calendrier) et crawl-mosquees.js (l'annuaire)
 ```
 
 ## 🚀 Essayer
@@ -129,7 +129,26 @@ l'action *Obtenir le contenu de l'URL*, efface `15-08-2026` et insère à la pla
 
 Le bouton **📋 Copier la recette entière** de la page en donne la version texte, prête à suivre.
 
-### c. Utiliser directement le calendrier de sa mosquée (le plus juste)
+### c. Trouver sa mosquée depuis la page
+
+Dépliant **🕌 Trouver la mosquée près de chez moi**, dans la carte du haut :
+
+- **les dix plus proches** de l'adresse réglée, avec la distance — saisis ton adresse, touche
+  *🔎 Chercher*, puis ouvre le dépliant ;
+- ou une **barre de recherche** par nom de mosquée ou de ville, classée par distance.
+
+Tout se fait sur l'appareil, à partir de `calendriers/mosquees.json` : un annuaire de
+métadonnées publiques (nom, ville, position, slug), sans aucun horaire. Il est construit par
+`scripts/crawl-mosquees.js`, qui balaie une grille de coordonnées sur la recherche Mawaqit
+(dix résultats maximum par requête, d'où le découpage adaptatif : une case dont les dix
+réponses sont toutes plus proches qu'elle-même est redécoupée en quatre). Le workflow
+`annuaire.yml` le régénère chaque trimestre.
+
+Une pastille indique l'état de chaque mosquée : **📅** son calendrier est déjà dans l'app,
+**➕** pas encore — la page se cale alors sur ses coordonnées (calcul) et donne le lien pour
+déclencher l'import en trois touches.
+
+### d. Utiliser directement le calendrier de sa mosquée (le plus juste)
 
 Le sélecteur **Source des horaires** propose, à côté du calcul, les calendriers de mosquée
 présents dans le dépôt. Choisi comme source, un calendrier remplace entièrement le calcul :
@@ -173,7 +192,16 @@ précision mesurée à ±3 min sur une année face à un calendrier réel.
 > près des changements d'heure, qui ne tombent pas aux mêmes dates — d'où le rafraîchissement
 > mensuel.
 
-### d. Coller aux horaires de sa mosquée (sans calendrier complet)
+> 💡 **Variante avancée, sans rien importer.** La page d'une mosquée Mawaqit contient ses
+> horaires du jour en clair : `"times":["05:18","13:55","17:52","21:07","22:28"]` (les cinq
+> prières, le Chourouq étant à part dans `"shuruq"`). Un raccourci iOS n'étant pas soumis au
+> CORS, il peut donc interroger `https://mawaqit.net/fr/<slug>` et extraire ces heures avec une
+> action **Correspondance de texte** et l'expression `(?<="times":\[")[^\]]+(?="\])`, puis
+> *Scinder le texte* sur `","`. Ça marche pour n'importe quelle mosquée, immédiatement.
+> Contrepartie : on dépend de la structure de leur page HTML, alors qu'un calendrier importé
+> dans le dépôt continue de fonctionner quoi qu'il arrive chez eux.
+
+### e. Coller aux horaires de sa mosquée (sans calendrier complet)
 
 Les horaires calculés ne sont pas ceux de ta mosquée, et c'est attendu : **Dhuhr et Asr** ne
 dépendent que de la position du soleil et tombent au même moment partout, mais **Fajr et Ichaa**
@@ -200,7 +228,7 @@ donc **les alarmes suivent le même calendrier que ce que tu lis**.
 > ⚠️ Ne confonds pas l'heure de l'athan avec les `+15`, `+10`, `+5` affichés par Mawaqit : ce sont
 > les délais d'**iqama** (le début de la prière en groupe), pas l'appel.
 
-### e. Trouver son lieu sans installer quoi que ce soit
+### f. Trouver son lieu sans installer quoi que ce soit
 
 Trois façons, de la plus simple à la plus précise :
 

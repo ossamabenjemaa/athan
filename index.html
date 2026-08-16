@@ -167,6 +167,17 @@
   .copyrow.done .ico { opacity: 1; }
   .copyrow .sp { opacity: 0.5; }
 
+  .mosque {
+    display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+    margin-top: 8px; padding: 10px 12px; border: 1.5px solid var(--line);
+    border-radius: 12px; background: var(--mono-bg); color: var(--text); font: inherit; cursor: pointer;
+  }
+  .mosque .nom { font-weight: 700; font-size: 0.92rem; }
+  .mosque .ville { display: block; font-weight: 400; font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .mosque .dist { margin-left: auto; flex: none; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+  .mosque .pastille { flex: none; font-size: 0.9rem; }
+  .mosque.active { border-color: var(--ok); background: var(--ok-bg); }
+
   .adjgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .adjgrid label { margin-bottom: 4px; }
   .adjgrid input { padding: 10px; text-align: center; font-variant-numeric: tabular-nums; }
@@ -228,10 +239,20 @@
       <label for="source">Source des horaires</label>
       <select id="source"></select>
     </div>
-    <p class="hint" style="margin:-6px 0 12px">Ta mosquée n'est pas dans la liste ?
-      <a href="https://github.com/ossamabenjemaa/athan/actions/workflows/calendriers.yml"
-         target="_blank" rel="noopener">Ajoute-la depuis GitHub</a> — bouton <i>Run workflow</i>,
-      colle le nom ou le lien Mawaqit, et elle apparaîtra ici. Sinon, garde le calcul ci-dessous.</p>
+    <details id="findBox">
+      <summary>🕌 Trouver la mosquée près de chez moi</summary>
+      <div class="field">
+        <label for="mosqueSearch">Nom de mosquée, ou vide pour les plus proches</label>
+        <div class="row">
+          <input id="mosqueSearch" type="text" placeholder="Ex. Ayoub, Essalam, Grande Mosquée…"
+                 autocomplete="off" enterkeyhint="search">
+          <button id="mosqueNear" type="button" style="flex:none">📍 Plus proches</button>
+        </div>
+      </div>
+      <div id="mosqueResults"></div>
+      <p class="hint" id="mosqueHint">Les distances partent du lieu réglé plus haut : saisis ton
+        adresse et touche <b>🔎 Chercher</b> d'abord.</p>
+    </details>
     <div class="field" id="methodField">
       <label for="method">Méthode de calcul</label>
       <select id="method"></select>
@@ -432,7 +453,7 @@
     var added = false;
     list.forEach(function (e) {
       if (!e || !e.id || !e.file || known[e.id]) return;
-      SOURCES.push({ id: e.id, label: e.label || e.id, file: e.file });
+      SOURCES.push({ id: e.id, label: e.label || e.id, file: e.file, slug: e.slug });
       added = true;
     });
     return added;
@@ -447,6 +468,127 @@
       sel.appendChild(o);
     });
     sel.value = sourceById(settings.source).id;
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Annuaire des mosquées : trouver la sienne sans quitter la page      */
+  /* ---------------------------------------------------------------- */
+
+  var DIRECTORY = 'calendriers/mosquees.json';
+  var REPO = 'https://github.com/ossamabenjemaa/athan';
+  var mosques = null;
+
+  function loadDirectory() {
+    try {
+      var cached = localStorage.getItem('athan.mosquees');
+      if (cached) mosques = JSON.parse(cached);
+    } catch (e) { /* cache illisible */ }
+    fetch(DIRECTORY, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) {
+        if (!json || !json.mosquees) return;
+        mosques = json.mosquees;
+        try { localStorage.setItem('athan.mosquees', JSON.stringify(mosques)); } catch (e) {}
+        if (!$('findBox').hidden && $('findBox').open) showMosques();
+      })
+      .catch(function () { /* hors ligne : le cache fera l'affaire */ });
+  }
+
+  /* Distance à vol d'oiseau, en km — assez juste à cette échelle. */
+  function distanceKm(lat1, lon1, lat2, lon2) {
+    var p = Math.PI / 180;
+    var x = (lat2 - lat1) * p;
+    var y = (lon2 - lon1) * p * Math.cos((lat1 + lat2) / 2 * p);
+    return 6371 * Math.sqrt(x * x + y * y);
+  }
+
+  function normalize(s) {
+    return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  /*
+   * Sans texte : les dix plus proches du lieu réglé. Avec texte : on filtre sur
+   * le nom et la ville, en classant quand même par distance.
+   */
+  function pickMosques(query) {
+    if (!mosques) return null;
+    var q = normalize(query);
+    var list = mosques.map(function (m) {
+      return { m: m, d: distanceKm(settings.latitude, settings.longitude, m.lat, m.lon) };
+    });
+    if (q) {
+      list = list.filter(function (e) {
+        return normalize(e.m.nom).indexOf(q) >= 0 || normalize(e.m.ville).indexOf(q) >= 0;
+      });
+    }
+    list.sort(function (a, b) { return a.d - b.d; });
+    return list.slice(0, 10);
+  }
+
+  function calendarIdFor(slug) {
+    for (var i = 0; i < SOURCES.length; i++) {
+      if (SOURCES[i].slug === slug || SOURCES[i].id === slug) return SOURCES[i].id;
+    }
+    return null;
+  }
+
+  function showMosques() {
+    var box = $('mosqueResults');
+    if (!mosques) {
+      box.innerHTML = '';
+      $('mosqueHint').textContent = 'Annuaire indisponible (hors ligne ?). Réessaie une fois connecté.';
+      return;
+    }
+    var found = pickMosques($('mosqueSearch').value.trim());
+    if (!found.length) {
+      box.innerHTML = '';
+      $('mosqueHint').textContent = 'Aucune mosquée trouvée pour cette recherche.';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < found.length; i++) {
+      var m = found[i].m;
+      var ready = calendarIdFor(m.slug);
+      html += '<button class="mosque' + (ready && ready === settings.source ? ' active' : '') + '" type="button"' +
+        ' data-slug="' + escapeHtml(m.slug) + '">' +
+        '<span class="pastille">' + (ready ? '📅' : '➕') + '</span>' +
+        '<span><span class="nom">' + escapeHtml(m.nom) + '</span>' +
+        '<span class="ville">' + escapeHtml(m.ville || '') + '</span></span>' +
+        '<span class="dist">' + found[i].d.toFixed(found[i].d < 10 ? 1 : 0) + ' km</span></button>';
+    }
+    box.innerHTML = html;
+    $('mosqueHint').innerHTML = '📅 calendrier déjà dans l’app · ➕ pas encore importé ' +
+      '(un clic t’explique comment l’ajouter). Distances depuis ' +
+      (settings.place ? escapeHtml(settings.place) : 'ta position réglée plus haut') + '.';
+  }
+
+  function chooseMosque(slug) {
+    var m = null;
+    for (var i = 0; mosques && i < mosques.length; i++) if (mosques[i].slug === slug) m = mosques[i];
+    if (!m) return;
+
+    var id = calendarIdFor(slug);
+    if (id) {
+      settings.source = id;
+      settings.place = m.nom;
+      settings.latitude = m.lat;
+      settings.longitude = m.lon;
+      saveSettings(); fillForm(); fillSourceSelect(); loadCalendar(); showMosques();
+      return;
+    }
+
+    // Pas encore de calendrier : on se cale au moins sur sa position, et on
+    // donne le lien qui déclenche l'import.
+    settings.latitude = m.lat;
+    settings.longitude = m.lon;
+    settings.place = m.nom;
+    settings.source = 'calcul';
+    saveSettings(); fillForm(); fillSourceSelect(); loadCalendar(); showMosques();
+    $('mosqueHint').innerHTML = 'Position réglée sur <b>' + escapeHtml(m.nom) + '</b>, horaires calculés ' +
+      'en attendant son calendrier. Pour l’ajouter : ' +
+      '<a href="' + REPO + '/actions/workflows/calendriers.yml" target="_blank" rel="noopener">' +
+      'Actions → Run workflow</a> avec <code>' + escapeHtml(m.slug) + '</code> ' +
+      '(<a href="https://mawaqit.net/fr/' + escapeHtml(m.slug) + '" target="_blank" rel="noopener">voir la mosquée</a>).';
   }
 
   function loadSources() {
@@ -1034,6 +1176,16 @@
       $(id).addEventListener('change', readForm);
     });
     PT.PRAYERS.forEach(function (p) { $('adj-' + p.key).addEventListener('change', readForm); });
+
+    loadDirectory();
+    $('findBox').addEventListener('toggle', function () { if (this.open) showMosques(); });
+    $('mosqueNear').addEventListener('click', function () { $('mosqueSearch').value = ''; showMosques(); });
+    $('mosqueSearch').addEventListener('input', showMosques);
+    $('mosqueSearch').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); showMosques(); } });
+    $('mosqueResults').addEventListener('click', function (e) {
+      var row = e.target.closest ? e.target.closest('.mosque') : null;
+      if (row) chooseMosque(row.dataset.slug);
+    });
 
     $('source').addEventListener('change', function () {
       settings.source = this.value;

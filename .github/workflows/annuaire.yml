@@ -1,0 +1,57 @@
+name: Annuaire des mosquées
+
+# L'annuaire (nom, ville, position, slug) alimente « trouver la mosquée près de
+# chez moi » dans la page. Il bouge lentement : une fois par trimestre suffit.
+# « Run workflow » permet de le relancer à la demande, en changeant la zone.
+on:
+  schedule:
+    - cron: '40 3 2 1,4,7,10 *'
+  workflow_dispatch:
+    inputs:
+      bbox:
+        description: "Zone à balayer : lat1,lon1,lat2,lon2 (défaut : France métropolitaine)"
+        required: false
+        type: string
+      max:
+        description: "Plafond de requêtes (défaut 5000)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: annuaire
+
+jobs:
+  annuaire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Balayer Mawaqit
+        env:
+          BBOX: ${{ inputs.bbox }}
+          MAX: ${{ inputs.max }}
+        run: |
+          set -o pipefail
+          ARGS=""
+          [ -n "$BBOX" ] && ARGS="$ARGS --bbox $BBOX"
+          [ -n "$MAX" ] && ARGS="$ARGS --max $MAX"
+          node scripts/crawl-mosquees.js $ARGS 2>&1 | tail -20 | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Commiter si l'annuaire a changé
+        run: |
+          if git diff --quiet -- calendriers/mosquees.json; then
+            echo "Aucun changement." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add calendriers/mosquees.json
+          git commit -m "Met à jour l'annuaire des mosquées"
+          git push
