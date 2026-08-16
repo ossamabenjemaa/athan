@@ -1,0 +1,31 @@
+name: Rafraîchir les calendriers de mosquée
+
+on:
+  schedule:
+    - cron: '17 4 1 * *'   # le 1er de chaque mois — couvre aussi le passage d'année
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Réimporter depuis Mawaqit
+        run: node scripts/import-mawaqit.js --refresh
+      - name: Commiter si un calendrier a changé
+        run: |
+          if git diff --quiet -- calendriers/; then
+            echo "Aucun changement."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add calendriers/
+          git commit -m "Met à jour les calendriers de mosquée (import automatique)"
+          git push

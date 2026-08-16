@@ -105,6 +105,11 @@
   button:active { transform: scale(0.98); }
   button.primary { color: #fff; border: none; background: linear-gradient(90deg, var(--green), #14a884); }
   button.wide { width: 100%; }
+  a.install {
+    display: block; text-align: center; text-decoration: none;
+    padding: 14px; border-radius: 12px; font-weight: 700; font-size: 1.02rem;
+    color: #fff; background: linear-gradient(90deg, var(--green), #14a884);
+  }
   button.danger { color: var(--err); }
   .hint { font-size: 0.82rem; color: var(--muted); margin: 8px 0 0; line-height: 1.45; }
   .hint code, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; background: var(--mono-bg); padding: 1px 5px; border-radius: 6px; }
@@ -305,6 +310,12 @@
       passer le bouton silencieux <i>et</i> les modes de concentration. Un raccourci les recrée
       chaque nuit avec les horaires du jour.
     </p>
+    <div id="shortcutBox" hidden style="margin-bottom:14px">
+      <a id="shortcutLink" class="install" href="#" target="_blank" rel="noopener">⬇️ Installer le raccourci</a>
+      <p class="hint">Deux touches pour l'importer. Ensuite, une seule chose à y changer :
+        coller l'<b>adresse</b> du bloc « Valeurs à copier » dans l'action <i>Obtenir le contenu
+        de l'URL</i>. Les étapes ci-dessous ne servent qu'à le construire soi-même ou à dépanner.</p>
+    </div>
     <ol class="steps">
       <li>Apporte l'athan en sonnerie : <b>GarageBand</b> → importe ton mp3 → coupe à 30 s →
         <b>Partager → Sonnerie</b>. (Ou une sonnerie achetée / déjà installée.)</li>
@@ -392,12 +403,64 @@
    * calendrier publié par une mosquée — un fichier JSON du dépôt, servi à côté
    * de la page. Le calendrier gagne toujours quand il couvre le jour demandé.
    */
-  var SOURCES = [
-    { id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' },
-    { id: 'ayoub', label: 'Mosquée Ayoub el Ansari — Paris 11e (2026)',
-      file: 'calendriers/ayoub-el-ansari-2026.json' }
-  ];
+  /*
+   * Lien iCloud du raccourci, à coller une fois qu'il est construit :
+   * Raccourcis → le raccourci → Partager → Copier le lien iCloud.
+   * Rempli, la page propose un bouton d'installation ; vide, elle se contente
+   * de la recette pas à pas.
+   */
+  var SHORTCUT_URL = '';
+
+  var SOURCES = [{ id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' }];
+  var SOURCES_INDEX = 'calendriers/index.json';
   var calendar = null;
+
+  /*
+   * La liste des mosquées vient d'un manifeste du dépôt, alimenté par
+   * scripts/import-mawaqit.js : ajouter une mosquée ne demande donc pas de
+   * toucher à cette page. On garde le manifeste en cache pour l'afficher même
+   * hors ligne.
+   */
+  function applySources(list) {
+    if (!Array.isArray(list)) return false;
+    var known = {};
+    SOURCES.forEach(function (s) { known[s.id] = true; });
+    var added = false;
+    list.forEach(function (e) {
+      if (!e || !e.id || !e.file || known[e.id]) return;
+      SOURCES.push({ id: e.id, label: e.label || e.id, file: e.file });
+      added = true;
+    });
+    return added;
+  }
+
+  function fillSourceSelect() {
+    var sel = $('source');
+    sel.innerHTML = '';
+    SOURCES.forEach(function (src) {
+      var o = document.createElement('option');
+      o.value = src.id; o.textContent = src.label;
+      sel.appendChild(o);
+    });
+    sel.value = sourceById(settings.source).id;
+  }
+
+  function loadSources() {
+    try {
+      var cached = localStorage.getItem('athan.sources');
+      if (cached) applySources(JSON.parse(cached));
+    } catch (e) { /* cache illisible */ }
+    fillSourceSelect();
+
+    return fetch(SOURCES_INDEX, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (list) {
+        if (!list) return;
+        try { localStorage.setItem('athan.sources', JSON.stringify(list)); } catch (e) {}
+        if (applySources(list)) fillSourceSelect();
+      })
+      .catch(function () { /* hors ligne : le cache suffit */ });
+  }
 
   function sourceById(id) {
     for (var i = 0; i < SOURCES.length; i++) if (SOURCES[i].id === id) return SOURCES[i];
@@ -450,7 +513,6 @@
   }
 
   function fillForm() {
-    $('source').value = settings.source;
     $('place').value = settings.place;
     $('lat').value = settings.latitude;
     $('lon').value = settings.longitude;
@@ -947,19 +1009,21 @@
       sel.appendChild(o);
     });
 
-    var srcSel = $('source');
-    SOURCES.forEach(function (src) {
-      var o = document.createElement('option');
-      o.value = src.id; o.textContent = src.label;
-      srcSel.appendChild(o);
-    });
-
     loadSettings();
     if (!settings.adjust || typeof settings.adjust !== 'object') settings.adjust = {};
     buildAdjGrid();
     fillForm();
     $('watch').checked = false; // on ne réactive jamais le son sans geste de l'utilisateur
-    loadCalendar();  // rend la page, avec ou sans calendrier
+    if (SHORTCUT_URL) {
+      $('shortcutLink').href = SHORTCUT_URL;
+      $('shortcutBox').hidden = false;
+    }
+
+    loadSources().then(function () {
+      fillSourceSelect();
+      loadCalendar();  // rend la page, avec ou sans calendrier
+    });
+    loadCalendar();    // affichage immédiat, sans attendre le réseau
     setInterval(tick, 1000);
 
     ['place', 'lat', 'lon', 'method', 'madhab', 'highlats'].forEach(function (id) {

@@ -7,7 +7,8 @@ sonner l'athan **sans jamais toucher au bouton silencieux physique de l'iPhone**
 index.html      — la page (horaires, compte à rebours, mode veilleur)
 prayer-times.js — le calcul astronomique (navigateur + Node, zéro dépendance)
 cli.js          — les mêmes horaires en ligne de commande
-calendriers/    — calendriers de mosquée en JSON (365 jours, clés « JJ-MM »)
+calendriers/    — calendriers de mosquée en JSON + manifeste index.json
+scripts/        — import-mawaqit.js : ajoute ou met à jour un calendrier
 ```
 
 ## 🚀 Essayer
@@ -130,16 +131,31 @@ Le bouton **📋 Copier la recette entière** de la page en donne la version tex
 
 ### c. Utiliser directement le calendrier de sa mosquée (le plus juste)
 
-Le sélecteur **Source des horaires** propose, à côté du calcul, un calendrier de mosquée
-embarqué dans le dépôt :
+Le sélecteur **Source des horaires** propose, à côté du calcul, les calendriers de mosquée
+présents dans le dépôt. Choisi comme source, un calendrier remplace entièrement le calcul :
+plus de méthode, plus d'angle, plus d'ajustements — les horaires affichés *sont* ceux de la
+mosquée. Le fichier est mis en cache sur l'appareil, donc la page marche ensuite hors ligne.
 
-```
-calendriers/ayoub-el-ansari-2026.json   — 365 jours, heures de Paris, clés « JJ-MM »
+**Ajouter une mosquée = une commande.** Mawaqit publie le calendrier annuel complet de chaque
+mosquée sur sa page ; le script le range au format du dépôt et met à jour le manifeste
+`calendriers/index.json` que la page lit au chargement (aucun HTML à modifier) :
+
+```bash
+node scripts/import-mawaqit.js "ayoub ansari"        # cherche, puis importe
+node scripts/import-mawaqit.js "paris" --list        # juste voir les résultats
+node scripts/import-mawaqit.js --slug <slug>         # une mosquée précise
+node scripts/import-mawaqit.js --refresh             # met à jour tout le dépôt
 ```
 
-Choisi comme source, il remplace entièrement le calcul : plus de méthode, plus d'angle, plus
-d'ajustements — les horaires affichés *sont* ceux de la mosquée. Le fichier est mis en cache
-sur l'appareil au premier chargement, donc la page continue de fonctionner hors ligne.
+L'import a été contrôlé contre le calendrier PDF d'une mosquée : **365 jours × 6 horaires,
+zéro différence**. Le script refuse d'écrire un fichier incomplet (moins de 365 jours) ou
+incohérent (horaires dans le désordre).
+
+Ces horaires appartiennent aux mosquées : on les recopie, on ne les recalcule pas. Le workflow
+`.github/workflows/calendriers.yml` relance `--refresh` une fois par mois — de quoi suivre les
+corrections d'une mosquée et le passage à l'année suivante — et ne commite qu'en cas de
+changement. La page, elle, ne peut pas interroger Mawaqit directement : ni la page mosquée ni
+l'API de recherche n'envoient d'en-têtes CORS.
 
 Le raccourci s'y branche avec **une action de plus** : après *Obtenir le contenu de l'URL*
 (qui pointe maintenant sur le JSON), ajoute **Obtenir la valeur du dictionnaire** avec pour clé
@@ -147,12 +163,12 @@ la variable **Date actuelle** au format `dd-MM` — tu récupères les horaires 
 boucle, la clé n'est plus que la variable **Élément de répétition**, et le champ « dans » pointe
 sur cette valeur du jour. Le bouton *Copier la recette entière* s'adapte tout seul à la source.
 
-Pour ajouter ta propre mosquée : dépose un fichier au même format dans `calendriers/` et
-ajoute une entrée dans le tableau `SOURCES` en tête du script de `index.html`.
+Une mosquée absente de Mawaqit ? Repli : **calcul + ajustements par prière** (section d),
+précision mesurée à ±3 min sur une année face à un calendrier réel.
 
 > Les clés sont `JJ-MM`, sans année : le fichier reste utilisable l'année suivante, à la réserve
-> près des changements d'heure, qui ne tombent pas aux mêmes dates. Mieux vaut redéposer le
-> calendrier de l'année quand la mosquée le publie.
+> près des changements d'heure, qui ne tombent pas aux mêmes dates — d'où le rafraîchissement
+> mensuel.
 
 ### d. Coller aux horaires de sa mosquée (sans calendrier complet)
 
@@ -237,6 +253,26 @@ node cli.js --lat 48.8566 --lon 2.3522 --compare
 node cli.js --lat 43.2965 --lon 5.3698 --method 12 --hanafi --date 2026-09-01
 node cli.js --help
 ```
+
+## 👨‍👩‍👧 Le donner à ses proches
+
+Ce qui coûte cher à un débutant, ce n'est pas la page — c'est reconstruire le raccourci et ses
+douze actions. À faire une fois, puis à distribuer :
+
+1. **Partage le raccourci** : Raccourcis → ton raccourci → *Partager* → **Copier le lien iCloud**.
+   Colle ce lien dans la constante `SHORTCUT_URL` en tête du script de `index.html` : la page
+   affiche alors un bouton **« Installer le raccourci »** et relègue la recette au dépannage.
+2. **Importe leur mosquée** : `node scripts/import-mawaqit.js "<leur mosquée>"`, un commit,
+   elle apparaît dans leur sélecteur.
+
+Côté proche, il reste quatre gestes, tous dans la page :
+
+| | |
+|---|---|
+| 1 | Ouvrir la page, choisir sa mosquée (ou sa ville) |
+| 2 | Installer le raccourci (bouton) |
+| 3 | Y coller l'**adresse** donnée par le bloc *Valeurs à copier* |
+| 4 | Les deux réglages iOS : la sonnerie athan (GarageBand) et *Autoriser la suppression sans confirmation* |
 
 ## ⚠️ Limites connues
 
