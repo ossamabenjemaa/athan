@@ -210,9 +210,16 @@
     border: 1px solid var(--line); border-radius: 14px; background: var(--mono-bg);
   }
 
-  .adjgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .adjgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .adjgrid label { margin-bottom: 4px; }
-  .adjgrid input { padding: 10px; text-align: center; font-variant-numeric: tabular-nums; }
+  .stepper { display: flex; align-items: stretch; gap: 6px; }
+  .stepper input {
+    padding: 10px 4px; text-align: center; font-variant-numeric: tabular-nums;
+    min-width: 0; flex: 1;
+  }
+  .stepper .step {
+    flex: none; width: 40px; padding: 0; font-size: 1.15rem; font-weight: 700; line-height: 1;
+  }
 
   ol.steps { margin: 0; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; }
   ol.steps li { margin-bottom: 8px; }
@@ -290,11 +297,11 @@
       <div class="row field">
         <div>
           <label for="lat">Latitude</label>
-          <input id="lat" type="number" step="0.0001" inputmode="decimal" placeholder="48.8566">
+          <input id="lat" type="text" inputmode="text" autocomplete="off" placeholder="48.8566">
         </div>
         <div>
           <label for="lon">Longitude</label>
-          <input id="lon" type="number" step="0.0001" inputmode="decimal" placeholder="2.3522">
+          <input id="lon" type="text" inputmode="text" autocomplete="off" placeholder="2.3522">
         </div>
       </div>
       <div class="field">
@@ -735,7 +742,11 @@
     var html = '';
     PT.PRAYERS.forEach(function (p) {
       html += '<div><label for="adj-' + p.key + '">' + p.label + '</label>' +
-        '<input id="adj-' + p.key + '" type="number" step="1" inputmode="numeric" value="0"></div>';
+        '<div class="stepper">' +
+        '<button type="button" class="step" data-key="' + p.key + '" data-delta="-1">−</button>' +
+        '<input id="adj-' + p.key + '" type="text" inputmode="text" autocomplete="off" value="0">' +
+        '<button type="button" class="step" data-key="' + p.key + '" data-delta="1">+</button>' +
+        '</div></div>';
     });
     $('adjGrid').innerHTML = html;
   }
@@ -1409,6 +1420,16 @@
       $(id).addEventListener('change', readForm);
     });
     PT.PRAYERS.forEach(function (p) { $('adj-' + p.key).addEventListener('change', readForm); });
+
+    // Les pavés numériques d'iOS n'offrent pas de signe moins : d'où les boutons.
+    $('adjGrid').addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.step') : null;
+      if (!btn) return;
+      var champ = $('adj-' + btn.dataset.key);
+      var valeur = Math.round(Number(champ.value) || 0) + Number(btn.dataset.delta);
+      champ.value = Math.max(-90, Math.min(90, valeur));
+      readForm();
+    });
     $('source').addEventListener('change', function () {
       settings.source = this.value;
       saveSettings();
