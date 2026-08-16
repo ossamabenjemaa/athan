@@ -136,9 +136,12 @@ présents dans le dépôt. Choisi comme source, un calendrier remplace entièrem
 plus de méthode, plus d'angle, plus d'ajustements — les horaires affichés *sont* ceux de la
 mosquée. Le fichier est mis en cache sur l'appareil, donc la page marche ensuite hors ligne.
 
-**Ajouter une mosquée = une commande.** Mawaqit publie le calendrier annuel complet de chaque
-mosquée sur sa page ; le script le range au format du dépôt et met à jour le manifeste
-`calendriers/index.json` que la page lit au chargement (aucun HTML à modifier) :
+**Ajouter une mosquée : trois touches, sans terminal.** Onglet **Actions** du dépôt →
+*Calendriers de mosquée* → **Run workflow** → coller le nom, le slug ou le lien
+`mawaqit.net` → *Run*. Le job importe, commite, et la mosquée apparaît dans le sélecteur de
+la page quelques minutes plus tard. Ça marche depuis un téléphone.
+
+En ligne de commande, si tu as le dépôt sous la main :
 
 ```bash
 node scripts/import-mawaqit.js "ayoub ansari"        # cherche, puis importe
@@ -262,8 +265,9 @@ douze actions. À faire une fois, puis à distribuer :
 1. **Partage le raccourci** : Raccourcis → ton raccourci → *Partager* → **Copier le lien iCloud**.
    Colle ce lien dans la constante `SHORTCUT_URL` en tête du script de `index.html` : la page
    affiche alors un bouton **« Installer le raccourci »** et relègue la recette au dépannage.
-2. **Importe leur mosquée** : `node scripts/import-mawaqit.js "<leur mosquée>"`, un commit,
-   elle apparaît dans leur sélecteur.
+2. **Ajoute leur mosquée** sans terminal : onglet *Actions* → *Calendriers de mosquée* →
+   *Run workflow* → le nom ou le lien Mawaqit. Elle apparaît dans le sélecteur de tout le monde,
+   et le rafraîchissement mensuel s'en occupe ensuite tout seul.
 
 Côté proche, il reste quatre gestes, tous dans la page :
 

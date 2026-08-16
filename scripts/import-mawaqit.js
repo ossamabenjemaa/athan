@@ -158,6 +158,18 @@ async function importOne(slug, opts = {}) {
   return entry;
 }
 
+/* « https://mawaqit.net/fr/ma-mosquee » ou « ma-mosquee » → « ma-mosquee ». */
+function cleanSlug(value) {
+  const s = String(value || '').trim();
+  const m = s.match(/mawaqit\.net\/[a-z]{2}\/(?:m\/)?([a-z0-9-]+)/i);
+  return (m ? m[1] : s).replace(/^\/+|\/+$/g, '');
+}
+
+function looksLikeSlug(value) {
+  const s = cleanSlug(value);
+  return /^[a-z0-9]+(-[a-z0-9]+)+$/.test(s);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const flag = name => args.includes(name);
@@ -187,9 +199,19 @@ async function main() {
   }
 
   const slugArg = args.indexOf('--slug');
-  if (slugArg >= 0) return void await importOne(args[slugArg + 1]);
+  if (slugArg >= 0) return void await importOne(cleanSlug(args[slugArg + 1]));
 
   const word = args.find(a => !a.startsWith('--'));
+
+  /*
+   * L'argument peut être un nom, un slug, ou carrément l'adresse Mawaqit que
+   * quelqu'un vous a envoyée : on tente le slug d'abord, la recherche ensuite.
+   */
+  if (!flag('--list') && looksLikeSlug(word)) {
+    try { return void await importOne(cleanSlug(word)); }
+    catch (e) { console.log('Pas un slug (' + e.message + '), recherche par nom…'); }
+  }
+
   const results = await search(word);
   if (!results.length) return console.log('Aucune mosquée trouvée pour « ' + word + ' ».');
 

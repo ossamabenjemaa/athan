@@ -1,31 +1,68 @@
-name: Rafraîchir les calendriers de mosquée
+name: Calendriers de mosquée
 
+# Deux usages :
+#  - le 1er de chaque mois, tout est réimporté (corrections des mosquées, passage d'année) ;
+#  - à la demande, depuis l'onglet Actions, pour ajouter une mosquée sans terminal :
+#    « Run workflow » → coller le nom, le slug ou le lien Mawaqit → Run.
 on:
   schedule:
-    - cron: '17 4 1 * *'   # le 1er de chaque mois — couvre aussi le passage d'année
+    - cron: '17 4 1 * *'
   workflow_dispatch:
+    inputs:
+      mosquee:
+        description: "Mosquée à ajouter (nom, slug, ou lien mawaqit.net). Vide = mettre à jour l'existant."
+        required: false
+        type: string
 
 permissions:
   contents: write
 
+concurrency:
+  group: calendriers
+
 jobs:
-  refresh:
+  calendriers:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Réimporter depuis Mawaqit
-        run: node scripts/import-mawaqit.js --refresh
+
+      - name: Importer ou rafraîchir
+        env:
+          MOSQUEE: ${{ inputs.mosquee }}
+        run: |
+          set -o pipefail
+          if [ -n "$MOSQUEE" ]; then
+            echo "Ajout de « $MOSQUEE »" >> "$GITHUB_STEP_SUMMARY"
+            node scripts/import-mawaqit.js "$MOSQUEE" 2>&1 | tee sortie.txt
+          else
+            echo "Mise à jour des calendriers existants" >> "$GITHUB_STEP_SUMMARY"
+            node scripts/import-mawaqit.js --refresh 2>&1 | tee sortie.txt
+          fi
+          {
+            echo '```'
+            cat sortie.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -f sortie.txt
+
       - name: Commiter si un calendrier a changé
+        env:
+          MOSQUEE: ${{ inputs.mosquee }}
         run: |
           if git diff --quiet -- calendriers/; then
-            echo "Aucun changement."
+            echo "Aucun changement." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add calendriers/
-          git commit -m "Met à jour les calendriers de mosquée (import automatique)"
+          if [ -n "$MOSQUEE" ]; then
+            git commit -m "Ajoute le calendrier de « $MOSQUEE »"
+          else
+            git commit -m "Met à jour les calendriers de mosquée (import automatique)"
+          fi
           git push
+          echo "Calendriers mis à jour et publiés." >> "$GITHUB_STEP_SUMMARY"

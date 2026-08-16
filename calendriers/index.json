@@ -1,5 +1,11 @@
 [
   {
+    "id": "grande-mosquee-de-paris-paris",
+    "label": "GRANDE MOSQUÉE DE PARIS - Paris",
+    "file": "calendriers/grande-mosquee-de-paris-paris.json",
+    "slug": "grande-mosquee-de-paris"
+  },
+  {
     "id": "ayoub-el-ansari-paris",
     "label": "أيوب الأنصاري - Ayoub el Ansari - Paris",
     "file": "calendriers/ayoub-el-ansari-paris.json",
