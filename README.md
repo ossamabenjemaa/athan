@@ -64,12 +64,17 @@ Chaque étape porte au moins un bouton qui agit, plutôt qu'une consigne à suiv
 | Ouvrir Raccourcis | `shortcuts://` | ✅ |
 | Lancer le raccourci | `shortcuts://run-shortcut?name=Athan` | ✅ |
 | Ouvrir GarageBand | `garageband://` | ✅ si l'app est installée |
-| Réglages | `App-Prefs:` | ⚠️ au mieux la racine |
+| Ouvrir le réglage | un raccourci d'une action | ✅ une fois installé |
 
-**Les liens vers un réglage précis n'existent plus.** `App-Prefs:root=…` pointait autrefois sur
-un panneau donné ; iOS 18 a cassé cette syntaxe, et Safari ne l'a jamais vraiment autorisée.
-L'étape concernée donne donc l'itinéraire complet, copiable en un tap, et le dit franchement
-plutôt que d'offrir un bouton qui ne fait rien.
+**Safari ne sait plus ouvrir un panneau de Réglages** — `App-Prefs:root=…` a été cassé par
+iOS 18 et n'a jamais vraiment été autorisé depuis le web. En revanche, l'action *Ouvrir les URL*
+d'un **raccourci** y arrive encore. D'où `raccourcis/reglages-raccourcis.shortcut` : deux actions,
+une URL (`App-prefs:com.apple.shortcuts`) et son ouverture, généré par le même script.
+
+L'étape 3 propose son téléchargement ; une fois importé puis repartagé depuis l'iPhone, coller
+son lien iCloud dans `SHORTCUT_URL_REGLAGES` remplace le téléchargement par un bouton
+**« Ouvrir le réglage »** qui lance le raccourci en un tap. L'itinéraire écrit reste affiché et
+copiable, pour qui préfère y aller à la main.
 
 Le nom du raccourci compte pour les liens `shortcuts://…?name=` : il est dans la constante
 `SHORTCUT_NAME` en tête du script de `index.html`. S'il est renommé sur l'iPhone, les deux

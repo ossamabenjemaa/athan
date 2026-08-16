@@ -29,6 +29,12 @@ from pathlib import Path
 RACCOURCIS = Path(__file__).resolve().parent.parent / 'raccourcis'
 GABARIT = RACCOURCIS / 'athan-aladhan.shortcut'
 SORTIE = RACCOURCIS / 'athan-mosquee.shortcut'
+SORTIE_REGLAGES = RACCOURCIS / 'reglages-raccourcis.shortcut'
+
+# Safari ne suit plus les liens vers un panneau de Réglages, mais l'action
+# « Ouvrir les URL » d'un raccourci, elle, y arrive encore. Depuis iOS 18 la
+# syntaxe par identifiant d'app a remplacé l'ancien « root=… ».
+URL_REGLAGES = 'App-prefs:com.apple.shortcuts'
 
 # L'URL d'exemple : elle sera remplacée par chacun dans l'action Texte.
 URL_EXEMPLE = 'https://ossamabenjemaa.github.io/athan/calendriers/ayoub-el-ansari-paris.json'
@@ -104,6 +110,40 @@ def construire():
           f' ({SORTIE.stat().st_size} octets, {len(actions)} actions)')
 
 
+def construire_reglages():
+    """Un raccourci d'une seule chose : ouvrir la page Réglages de Raccourcis."""
+    url = {
+        'WFWorkflowActionIdentifier': 'is.workflow.actions.url',
+        'WFWorkflowActionParameters': {
+            'UUID': 'C0FFEE00-0000-4000-8000-B1B1B1B1B1B1',
+            'WFURLActionURL': URL_REGLAGES,
+        },
+    }
+    ouvrir = {
+        'WFWorkflowActionIdentifier': 'is.workflow.actions.openurl',
+        'WFWorkflowActionParameters': {
+            'UUID': 'C0FFEE01-0000-4000-8000-B1B1B1B1B1B1',
+            'WFInput': jeton(OBJET, {'{0, 1}': sortie_action(
+                'C0FFEE00-0000-4000-8000-B1B1B1B1B1B1', 'URL')}),
+        },
+    }
+    gabarit = plistlib.loads(GABARIT.read_bytes())
+    raccourci = {
+        'WFWorkflowClientVersion': gabarit.get('WFWorkflowClientVersion'),
+        'WFWorkflowMinimumClientVersion': gabarit.get('WFWorkflowMinimumClientVersion'),
+        'WFWorkflowMinimumClientVersionString': gabarit.get('WFWorkflowMinimumClientVersionString'),
+        'WFWorkflowIcon': gabarit.get('WFWorkflowIcon'),
+        'WFWorkflowImportQuestions': [],
+        'WFWorkflowTypes': [],
+        'WFWorkflowInputContentItemClasses': gabarit.get('WFWorkflowInputContentItemClasses', []),
+        'WFWorkflowHasShortcutInputVariables': False,
+        'WFWorkflowHasOutputFallback': False,
+        'WFWorkflowActions': [url, ouvrir],
+    }
+    SORTIE_REGLAGES.write_bytes(plistlib.dumps(raccourci, fmt=plistlib.FMT_BINARY))
+    print(f'✓ {SORTIE_REGLAGES.name} ({SORTIE_REGLAGES.stat().st_size} octets) → {URL_REGLAGES}')
+
+
 def decrire(chemin):
     raccourci = plistlib.loads(Path(chemin).read_bytes())
     print(f'\n{chemin} — {len(raccourci["WFWorkflowActions"])} actions')
@@ -138,5 +178,7 @@ if __name__ == '__main__':
     if '--verifier' in sys.argv:
         decrire(GABARIT)
         decrire(SORTIE)
+        decrire(SORTIE_REGLAGES)
     else:
         construire()
+        construire_reglages()

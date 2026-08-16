@@ -436,6 +436,16 @@
   var SHORTCUT_FILE_MOSQUEE = 'raccourcis/athan-mosquee.shortcut';
   var SHORTCUT_NAME = 'Athan';   // sert aux liens shortcuts://…?name=
 
+  /*
+   * Safari ne suit plus les liens vers un panneau de Réglages, mais l'action
+   * « Ouvrir les URL » d'un raccourci y arrive encore. D'où ce petit raccourci
+   * d'une seule action : une fois importé et repartagé depuis l'iPhone, coller
+   * son lien iCloud ici transforme l'étape 3 en un seul tap.
+   */
+  var SHORTCUT_URL_REGLAGES = '';
+  var SHORTCUT_FILE_REGLAGES = 'raccourcis/reglages-raccourcis.shortcut';
+  var SHORTCUT_NAME_REGLAGES = 'Réglages Raccourcis';
+
   var SOURCES = [{ id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' }];
   var SOURCES_INDEX = 'calendriers/index.json';
   var calendar = null;
@@ -1215,12 +1225,19 @@
         '<p><b>2.</b> L\'athan comme sonnerie : importez votre mp3 dans <b>GarageBand</b>, coupez à ' +
         '30 s, <b>Partager → Sonnerie</b>. Puis créez une alarme dans <b>Horloge</b> avec cette ' +
         'sonnerie : les alarmes créées ensuite la reprennent.</p>' +
-        '<p class="hint" style="margin:0">Depuis iOS 18, Apple a fermé les liens qui ouvrent un ' +
-        'réglage précis : le bouton ci-dessous ouvre au mieux la racine des Réglages, et il se peut ' +
-        'que votre iPhone l\'ignore. D\'où l\'itinéraire, copiable en un tap.</p>',
+        '<p class="hint" style="margin:0">Safari ne sait plus ouvrir un réglage précis (Apple a ' +
+        'fermé ces liens avec iOS 18) — mais un <b>raccourci</b>, si. ' +
+        (SHORTCUT_URL_REGLAGES
+          ? 'Le bouton ci-dessous vous y emmène directement.'
+          : 'Le petit raccourci ci-dessous ne fait que ça : ouvrir la bonne page des Réglages. ' +
+            'Son import demande d\'abord <b>Réglages → Raccourcis → Autoriser les raccourcis non ' +
+            'fiables</b> ; sinon, suivez l\'itinéraire à la main.') + '</p>',
       copy: { k: 'Chemin du réglage', v: 'Réglages → Apps → Raccourcis → Avancé → Autoriser la suppression sans confirmation' },
-      actions: [{ label: '🎛 Réglages', href: 'App-Prefs:' },
-                { label: '🎹 Ouvrir GarageBand', href: 'garageband://' }]
+      actions: (SHORTCUT_URL_REGLAGES
+          ? [{ label: '🎛 Ouvrir le réglage', href: 'shortcuts://run-shortcut?name=' +
+               encodeURIComponent(SHORTCUT_NAME_REGLAGES), primary: true }]
+          : [{ label: '🎛 Raccourci « ouvrir le réglage »', href: SHORTCUT_FILE_REGLAGES, download: true }])
+        .concat([{ label: '🎹 Ouvrir GarageBand', href: 'garageband://' }])
     });
 
     steps.push({
