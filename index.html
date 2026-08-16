@@ -1235,10 +1235,12 @@
         ? '<p>Ouvrez ce lien depuis votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
           'Deux touches, rien à construire.</p>'
         : '<p>Les horaires de mosquée demandent une variante du raccourci, qui n\'a pas encore de ' +
-          'lien iCloud. Un fichier <code>.shortcut</code> ne suffit pas : iOS n\'importe un raccourci ' +
-          'non signé qu\'après avoir activé « Autoriser les raccourcis non fiables », un réglage qui ' +
-          'n\'apparaît qu\'une fois un premier raccourci lancé. <b>Le plus simple est de partir du ' +
-          'raccourci Athan que vous avez déjà</b> :</p>' +
+          'lien iCloud. Un fichier <code>.shortcut</code> peut s\'installer, mais seulement après ' +
+          'avoir activé <b>Réglages → Apps → Raccourcis → Autoriser les raccourcis non fiables</b> ' +
+          '(sur iOS 17 et avant : <b>Réglages → Raccourcis</b>) — bascule qui n\'apparaît qu\'une fois ' +
+          'un premier raccourci lancé, et le fichier arrive dans <b>Fichiers → Téléchargements</b>, ' +
+          'où il faut le toucher pour l\'ouvrir. <b>Plus simple : partir du raccourci Athan que vous ' +
+          'avez déjà</b> :</p>' +
           '<ol class="steps" style="margin-bottom:10px">' +
           '<li>Raccourcis → appui long sur <b>' + escapeHtml(SHORTCUT_NAME) + '</b> → <b>Dupliquer</b>, ' +
           'et renommez la copie (par exemple <i>Athan mosquée</i>).</li>' +

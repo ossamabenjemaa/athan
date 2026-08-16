@@ -136,6 +136,8 @@ def construire_reglages():
         'WFWorkflowImportQuestions': [],
         'WFWorkflowTypes': [],
         'WFWorkflowInputContentItemClasses': gabarit.get('WFWorkflowInputContentItemClasses', []),
+        'WFWorkflowOutputContentItemClasses': gabarit.get('WFWorkflowOutputContentItemClasses', []),
+        'WFQuickActionSurfaces': gabarit.get('WFQuickActionSurfaces', []),
         'WFWorkflowHasShortcutInputVariables': False,
         'WFWorkflowHasOutputFallback': False,
         'WFWorkflowActions': [url, ouvrir],
