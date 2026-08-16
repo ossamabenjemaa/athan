@@ -178,6 +178,29 @@
   .mosque .pastille { flex: none; font-size: 0.9rem; }
   .mosque.active { border-color: var(--ok); background: var(--ok-bg); }
 
+  .sourceline {
+    margin: -6px 0 12px; font-size: 0.9rem; color: var(--muted);
+    background: var(--mono-bg); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 11px; line-height: 1.4;
+  }
+  .sourceline b { color: var(--text); }
+  .tuto-step { border-top: 1px dashed var(--line); padding-top: 14px; margin-top: 14px; }
+  .tuto-step:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .tuto-step h3 {
+    font-size: 0.98rem; margin: 0 0 8px; display: flex; align-items: baseline; gap: 8px;
+  }
+  .tuto-step h3 .num {
+    flex: none; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--green); color: #fff; font-size: 0.8rem;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .tuto-step p { font-size: 0.9rem; line-height: 1.5; margin: 0 0 10px; color: var(--muted); }
+  .tuto-step p b { color: var(--text); }
+  .tuto-step img {
+    display: block; width: 100%; max-width: 300px; margin: 10px auto;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--mono-bg);
+  }
+
   .adjgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .adjgrid label { margin-bottom: 4px; }
   .adjgrid input { padding: 10px; text-align: center; font-variant-numeric: tabular-nums; }
@@ -211,204 +234,169 @@
 
   <header>
     <h1>🕌 Athan</h1>
-    <p class="sub">Les horaires de prière calculés sur ton téléphone, et l'appel qui sonne <b>même en mode silencieux</b>.</p>
+    <p class="sub">Les horaires de votre mosquée, et l'appel qui sonne <b>même en mode silencieux</b>.</p>
   </header>
 
-  <!-- ---------------------------------------------------------------- -->
-  <section class="card">
-    <h2>🧭 Lieu &amp; méthode</h2>
+  <!-- ÉCRAN 1 — une seule question ------------------------------------- -->
+  <section class="card" id="screenSearch">
+    <h2>📍 Où voulez-vous prier ?</h2>
     <div class="field">
-      <label for="place">Ville, pays (ou code postal)</label>
+      <label for="q">Indiquez votre adresse ou la mosquée de votre choix</label>
       <div class="row">
-        <input id="place" type="text" placeholder="Marseille, France" autocomplete="off" enterkeyhint="search">
-        <button id="find" type="button" style="flex: none;">🔎 Chercher</button>
+        <input id="q" type="text" autocomplete="off" enterkeyhint="search"
+               placeholder="12 rue Godefroy Cavaignac, ou « Ayoub »">
+        <button id="qGo" type="button" style="flex:none">🔎</button>
       </div>
-      <button id="geo" class="wide" type="button" style="margin-top: 8px;">📍 Ou me localiser</button>
+      <button id="useGeo" class="wide" type="button" style="margin-top:8px">📍 Utiliser ma position</button>
     </div>
-    <div class="row field">
-      <div>
-        <label for="lat">Latitude</label>
-        <input id="lat" type="number" step="0.0001" inputmode="decimal" placeholder="48.8566">
-      </div>
-      <div>
-        <label for="lon">Longitude</label>
-        <input id="lon" type="number" step="0.0001" inputmode="decimal" placeholder="2.3522">
-      </div>
-    </div>
-    <div class="field">
-      <label for="source">Source des horaires</label>
-      <select id="source"></select>
-    </div>
-    <details id="findBox">
-      <summary>🕌 Trouver la mosquée près de chez moi</summary>
-      <div class="field">
-        <label for="mosqueSearch">Nom de mosquée, ou vide pour les plus proches</label>
-        <div class="row">
-          <input id="mosqueSearch" type="text" placeholder="Ex. Ayoub, Essalam, Grande Mosquée…"
-                 autocomplete="off" enterkeyhint="search">
-          <button id="mosqueNear" type="button" style="flex:none">📍 Plus proches</button>
-        </div>
-      </div>
-      <div id="mosqueResults"></div>
-      <p class="hint" id="mosqueHint">Les distances partent du lieu réglé plus haut : saisis ton
-        adresse et touche <b>🔎 Chercher</b> d'abord.</p>
-    </details>
-    <div class="field" id="methodField">
-      <label for="method">Méthode de calcul</label>
-      <select id="method"></select>
-    </div>
-    <div class="row field">
-      <div>
-        <label for="madhab">Asr</label>
-        <select id="madhab">
-          <option value="standard">Majorité (ombre ×1)</option>
-          <option value="hanafi">Hanafi (ombre ×2)</option>
-        </select>
-      </div>
-      <div>
-        <label for="highlats">Hautes latitudes</label>
-        <select id="highlats">
-          <option value="angle">Angle (défaut)</option>
-          <option value="seventh">1/7 de nuit</option>
-          <option value="night">Milieu de nuit</option>
-          <option value="none">Aucune</option>
-        </select>
-      </div>
-    </div>
-    <details id="adjBox">
-      <summary>Coller aux horaires de ma mosquée (± minutes)</summary>
-      <p class="hint" style="margin-top:0">Compare avec le calendrier de ta mosquée (ou son app) et
-        corrige ce qui diffère. Le Fajr et l'Ichaa sont les plus variables : chaque mosquée choisit
-        son angle de crépuscule. Ces minutes s'appliquent aussi à l'adresse du raccourci
-        (paramètre <code>tune</code>), donc <b>les alarmes suivront</b>. Reste un détail d'arrondi :
-        AlAdhan tronque parfois à la minute inférieure là où la page arrondit au-dessus — si une
-        alarme tombe une minute trop tôt, ajoute 1.</p>
-      <div class="adjgrid" id="adjGrid"></div>
-      <button id="adjReset" type="button" style="margin-top:10px">Tout remettre à zéro</button>
-    </details>
-    <p class="hint">Les horaires sont calculés hors ligne, sur l'appareil, et les réglages mémorisés
-      dans le navigateur. Seule la recherche de ville interroge le réseau (géocodage AlAdhan) —
-      une fois les coordonnées trouvées, tu peux couper les données.</p>
+    <div id="results"></div>
     <div id="geoStatus" class="status"></div>
+    <p class="hint" id="searchHint">Une adresse donne des horaires calculés pour ce point.
+      Une mosquée donne <b>ses horaires officiels</b>, ceux de son calendrier.</p>
   </section>
 
-  <!-- ---------------------------------------------------------------- -->
-  <section class="card">
+  <!-- ÉCRAN 2 — les horaires, puis la question -------------------------- -->
+  <section class="card" id="screenTimes" hidden>
     <h2>🕰️ Aujourd'hui <span class="tag" id="dayTag">—</span></h2>
+    <p class="sourceline" id="sourceLine">—</p>
     <div class="next">
       <div class="who" id="nextWho">—</div>
       <div class="count" id="nextCount">--:--:--</div>
       <div class="at" id="nextAt">&nbsp;</div>
     </div>
     <ul class="times" id="times"></ul>
-  </section>
 
-  <!-- ---------------------------------------------------------------- -->
-  <section class="card">
-    <h2>🔊 Mode veilleur <span class="tag">page ouverte</span></h2>
-    <div class="switch">
-      <input type="checkbox" id="watch">
-      <div class="lbl">Faire sonner l'athan ici
-        <span>L'onglet reste ouvert et l'écran allumé ; le son passe le bouton silencieux.</span>
+    <div style="margin-top:18px">
+      <button id="goTuto" class="primary wide" type="button">✅ Ces horaires me conviennent — obtenir les alarmes</button>
+      <button id="backSearch" class="wide" type="button" style="margin-top:8px">✏️ Ils ne correspondent pas — changer de lieu</button>
+    </div>
+
+    <details id="advBox">
+      <summary>Réglages fins (méthode, madhhab, décalages)</summary>
+      <div class="field">
+        <label for="place">Nom du lieu (étiquette)</label>
+        <input id="place" type="text" placeholder="Paris 11e" autocomplete="off">
       </div>
-    </div>
-    <div id="watchStatus" class="status"></div>
-
-    <div class="field" style="margin-top: 14px;">
-      <label for="file">Fichier de l'athan (mp3 / m4a)</label>
-      <div class="row">
-        <input id="file" type="file" accept="audio/*">
-        <button id="test" type="button" style="flex: none;">▶︎ Tester</button>
+      <div class="row field">
+        <div>
+          <label for="lat">Latitude</label>
+          <input id="lat" type="number" step="0.0001" inputmode="decimal" placeholder="48.8566">
+        </div>
+        <div>
+          <label for="lon">Longitude</label>
+          <input id="lon" type="number" step="0.0001" inputmode="decimal" placeholder="2.3522">
+        </div>
       </div>
-    </div>
-    <p class="hint" id="fileHint">Aucun fichier : un simple carillon de secours est utilisé. Le fichier choisi est gardé sur l'appareil (rien n'est envoyé nulle part).</p>
-    <button id="forget" class="danger" type="button" style="display:none; margin-top:8px;">Oublier le fichier</button>
-    <audio id="player" preload="auto" playsinline></audio>
-  </section>
-
-  <!-- ---------------------------------------------------------------- -->
-  <section class="card">
-    <h2>🔕 Téléphone rangé <span class="tag">recommandé</span></h2>
-    <p class="hint" style="margin-top:0">
-      Une page web ne peut sonner que si elle est ouverte. Pour un athan qui part tout seul,
-      on s'appuie sur les <b>réveils de l'app Horloge</b> : ce sont les seuls sons qu'iOS laisse
-      passer le bouton silencieux <i>et</i> les modes de concentration. Un raccourci les recrée
-      chaque nuit avec les horaires du jour.
-    </p>
-    <div id="shortcutBox" hidden style="margin-bottom:14px">
-      <a id="shortcutLink" class="install" href="#" target="_blank" rel="noopener">⬇️ Installer le raccourci</a>
-      <p class="hint">Deux touches pour l'importer. Ensuite, une seule chose à y changer :
-        coller l'<b>adresse</b> du bloc « Valeurs à copier » dans l'action <i>Obtenir le contenu
-        de l'URL</i>. Les étapes ci-dessous ne servent qu'à le construire soi-même ou à dépanner.</p>
-    </div>
-    <ol class="steps">
-      <li>Apporte l'athan en sonnerie : <b>GarageBand</b> → importe ton mp3 → coupe à 30 s →
-        <b>Partager → Sonnerie</b>. (Ou une sonnerie achetée / déjà installée.)</li>
-      <li>Crée une alarme dans <b>Horloge</b>, choisis cette sonnerie : les alarmes créées ensuite
-        reprennent ce son par défaut.</li>
-      <li><b>Raccourcis → Automatisation → Heure de la journée → 00:05</b>, tous les jours,
-        <b>Exécuter immédiatement</b> (sans confirmation).</li>
-      <li>Une fois pour toutes : <b>Réglages → Apps → Raccourcis → Avancé</b> (ou
-        <b>Réglages → Raccourcis</b> selon ta version d'iOS) → active
-        <b>Autoriser la suppression sans confirmation</b>. Sans ça, iOS demande ton accord à
-        chaque alarme supprimée, et l'automatisation reste plantée sur la question pendant la nuit.</li>
-      <li><b>Première action</b> : <b>Rechercher des alarmes</b> (Étiquette <i>contient</i>
-        <code>Athan</code>), puis <b>Supprimer les alarmes</b> pour balayer celles de la veille.</li>
-      <li>Ensuite seulement : <b>Obtenir le contenu de l'URL</b> avec l'adresse ci-dessous.</li>
-      <li>Action <b>Texte</b> contenant <code>Fajr,Dhuhr,Asr,Maghrib,Isha</code>, puis
-        <b>Scinder le texte</b> → séparateur <b>Personnalisé</b> → une <b>virgule</b>.
-        Pas d'espace après les virgules : il resterait collé au nom et la clé serait fausse.</li>
-      <li><b>Répéter avec chaque élément dans</b> → vérifie que c'est bien <b>Texte scindé</b>
-        (le résultat de <i>Scinder</i>) et non <i>Contenu de l'URL</i> : par défaut l'action reprend
-        le résultat de celle qui la précède. Dedans, deux actions seulement :
-        <b>Obtenir la valeur du dictionnaire</b> avec la clé <code>data.timings.</code> suivie de la
-        variable <b>Élément de répétition</b>, dans <b>Contenu de l'URL</b> ; puis
-        <b>Ajouter une alarme</b> à cette valeur, étiquette <code>Athan </code> + <b>Élément de répétition</b>.</li>
-    </ol>
-    <p class="hint">💡 La boucle évite de recopier cinq fois les deux mêmes actions — et donc cinq
-      occasions de faire une faute de frappe. Attention à la clé : <code>timings</code> prend un
-      <b>s</b>, et une clé erronée ne provoque pas d'erreur, elle rend juste une valeur vide et
-      l'alarme n'est pas créée.</p>
-    <p class="hint" id="calNote" hidden>📅 <b>En mode calendrier</b>, l'étape 3 pointe sur le fichier
-      JSON du dépôt et il faut <b>une action de plus</b> : juste après, <b>Obtenir la valeur du
-      dictionnaire</b> avec pour clé la variable <b>Date actuelle</b> au format <code>dd-MM</code>
-      → tu obtiens les horaires du jour. Dans la boucle, la clé n'est alors que la variable
-      <b>Élément de répétition</b>, et le champ « dans » pointe sur cette valeur du jour.
-      Ni <code>tune</code>, ni méthode : les horaires sont ceux de la mosquée, tels quels.</p>
-    <p class="hint">⚠️ L'ordre n'est pas décoratif : si <b>Supprimer les alarmes</b> se retrouve
-      <i>après</i> les <b>Ajouter une alarme</b>, il efface les alarmes qui viennent d'être créées —
-      on les voit apparaître puis disparaître. Vérifie aussi que l'entrée de l'action de suppression
-      est bien le résultat de <b>Rechercher des alarmes</b> : sans entrée explicite, une action
-      reprend le résultat de celle qui la précède.</p>
-    <h2 style="margin-top:20px">📋 Valeurs à copier <span class="tag">touche = copié</span></h2>
-    <p class="hint" style="margin-top:-6px">Tout ce qui se tape dans Raccourcis est là. Touche une
-      ligne, puis colle dans le champ correspondant de l'action.</p>
-    <div id="copyList"></div>
-    <p class="hint">⚠️ Dans l'URL, remplace la date <code id="dateSample">—</code> par la variable
-      <b>Date actuelle</b> au format perso <code>dd-MM-yyyy</code> — sinon toutes les nuits
-      reprogrammeront les horaires d'aujourd'hui.</p>
-    <button id="copyRecipe" class="wide" type="button" style="margin-top:10px">📋 Copier la recette entière</button>
-    <details>
-      <summary>Variante sans coordonnées (par ville)</summary>
-      <p class="hint" style="margin-top:0">Plus facile à taper à la main sur le téléphone : AlAdhan
-        accepte directement un nom de ville. Les horaires visent alors le centre de la ville —
-        quelques secondes d'écart avec tes coordonnées exactes, sans conséquence.</p>
-      <div class="urlbox" id="apiUrlCity">—</div>
-      <button id="copyUrlCity" type="button" style="margin-top:10px">📋 Copier cette adresse</button>
+      <div class="field">
+        <label for="source">Source des horaires</label>
+        <select id="source"></select>
+      </div>
+      <div class="field" id="methodField">
+        <label for="method">Méthode de calcul</label>
+        <select id="method"></select>
+      </div>
+      <div class="row field">
+        <div>
+          <label for="madhab">Asr</label>
+          <select id="madhab">
+            <option value="standard">Majorité (ombre ×1)</option>
+            <option value="hanafi">Hanafi (ombre ×2)</option>
+          </select>
+        </div>
+        <div>
+          <label for="highlats">Hautes latitudes</label>
+          <select id="highlats">
+            <option value="angle">Angle (défaut)</option>
+            <option value="seventh">1/7 de nuit</option>
+            <option value="night">Milieu de nuit</option>
+            <option value="none">Aucune</option>
+          </select>
+        </div>
+      </div>
+      <details id="adjBox">
+        <summary>Décaler prière par prière (± minutes)</summary>
+        <p class="hint" style="margin-top:0">Compare avec le calendrier de ta mosquée et corrige ce
+          qui diffère. Le Fajr et l'Ichaa sont les plus variables : chaque mosquée choisit son angle
+          de crépuscule. Ces minutes partent aussi dans le raccourci (paramètre <code>tune</code>),
+          donc <b>les alarmes suivront</b>.</p>
+        <div class="adjgrid" id="adjGrid"></div>
+        <button id="adjReset" type="button" style="margin-top:10px">Tout remettre à zéro</button>
+      </details>
     </details>
+
+    <details id="watchBox">
+      <summary>🔊 Mode veilleur — faire sonner l'athan dans cette page</summary>
+      <div class="switch">
+        <input type="checkbox" id="watch">
+        <div class="lbl">Faire sonner l'athan ici
+          <span>L'onglet reste ouvert et l'écran allumé ; le son passe le bouton silencieux.</span>
+        </div>
+      </div>
+      <div id="watchStatus" class="status"></div>
+      <div class="field" style="margin-top:14px">
+        <label for="file">Fichier de l'athan (mp3 / m4a)</label>
+        <div class="row">
+          <input id="file" type="file" accept="audio/*">
+          <button id="test" type="button" style="flex:none">▶︎ Tester</button>
+        </div>
+      </div>
+      <p class="hint" id="fileHint">Aucun fichier : un simple carillon de secours est utilisé.</p>
+      <button id="forget" class="danger" type="button" style="display:none; margin-top:8px">Oublier le fichier</button>
+      <audio id="player" preload="auto" playsinline></audio>
+    </details>
+  </section>
+
+  <!-- ÉCRAN 3 — le tuto, adapté à la source ----------------------------- -->
+  <section class="card" id="screenTuto" hidden>
+    <h2>📲 Les alarmes sur votre iPhone</h2>
+    <p class="sourceline" id="tutoSource">—</p>
+    <div id="tutoSteps"></div>
+    <button id="backTimes" class="wide" type="button" style="margin-top:16px">← Revenir aux horaires</button>
+
     <details>
-      <summary>Pourquoi pas une simple notification ?</summary>
+      <summary>Construire le raccourci soi-même (dépannage)</summary>
+      <ol class="steps">
+        <li><b>Première action</b> : <b>Rechercher des alarmes</b> (Étiquette <i>contient</i>
+          <code>Athan</code>), puis <b>Supprimer les alarmes</b> — avant les créations, sinon elles
+          effacent ce qui vient d'être créé.</li>
+        <li><b>Texte</b> avec les paramètres, puis <b>Définir la variable</b> <code>Paramètres</code>.</li>
+        <li><b>Obtenir le contenu de l'URL</b> (voir la valeur ci-dessous).</li>
+        <li><b>Texte</b> <code>Fajr,Dhuhr,Asr,Maghrib,Isha</code> → <b>Scinder le texte</b>,
+          séparateur <b>Personnalisé</b>, une virgule.</li>
+        <li><b>Répéter avec chaque élément dans</b> <i>Texte scindé</i> : dedans,
+          <b>Obtenir la valeur du dictionnaire</b> puis <b>Ajouter une alarme</b>,
+          étiquette <code>Athan </code> + <b>Élément de répétition</b>.</li>
+      </ol>
+      <p class="hint" id="calNote" hidden>📅 <b>Source calendrier</b> : l'URL pointe sur le fichier
+        JSON de la mosquée, et une action de plus s'intercale — <b>Obtenir la valeur du dictionnaire</b>
+        avec pour clé la <b>Date actuelle</b> au format <code>dd-MM</code>. Dans la boucle, la clé
+        n'est plus que l'<b>Élément de répétition</b>.</p>
+      <h2 style="margin-top:20px">📋 Valeurs à copier <span class="tag">touche = copié</span></h2>
+      <div id="copyList"></div>
+      <p class="hint">⚠️ Dans l'URL AlAdhan, la date <code id="dateSample">—</code> doit être la
+        variable <b>Date actuelle</b> au format <code>dd-MM-yyyy</code>.</p>
+      <button id="copyRecipe" class="wide" type="button" style="margin-top:10px">📋 Copier la recette entière</button>
+      <details>
+        <summary>Variante sans coordonnées (par ville)</summary>
+        <div class="urlbox" id="apiUrlCity">—</div>
+        <button id="copyUrlCity" type="button" style="margin-top:10px">📋 Copier cette adresse</button>
+      </details>
+    </details>
+
+    <details>
+      <summary>Pourquoi des alarmes plutôt qu'une notification ?</summary>
       <p class="hint" style="margin-top:0">
         Les notifications (web ou app) sont muettes quand le bouton silencieux est mis : seules les
-        <i>alertes critiques</i> passent, et elles demandent une autorisation spéciale d'Apple réservée
-        aux apps natives. Les alarmes de l'app Horloge, elles, sonnent toujours — d'où le détour.
-        À noter : leur volume suit le curseur <b>Sonnerie et alertes</b>, pas le volume multimédia.
+        <i>alertes critiques</i> passent, réservées à des apps autorisées par Apple. Les alarmes de
+        l'app Horloge, elles, sonnent toujours — d'où le détour. Leur volume suit le curseur
+        <b>Sonnerie et alertes</b>, pas le volume multimédia.
       </p>
     </details>
   </section>
 
   <footer>
-    Calcul astronomique local (algorithme PrayTimes), aligné à ±1 min sur l'API AlAdhan.<br>
+    Horaires de mosquée recopiés tels quels ; sinon calcul astronomique local,
+    aligné à ±1 min sur l'API AlAdhan.<br>
     Vérifie toujours avec le calendrier de ta mosquée. 🤲
   </footer>
 </div>
@@ -434,7 +422,9 @@
    * Rempli, la page propose un bouton d'installation ; vide, elle se contente
    * de la recette pas à pas.
    */
-  var SHORTCUT_URL = '';
+  var SHORTCUT_URL = 'https://www.icloud.com/shortcuts/2b8ff86ac89e4dbbadb114af385ff42f';
+  var SHORTCUT_URL_MOSQUEE = '';   // à remplir après import + repartage du fichier généré
+  var SHORTCUT_FILE_MOSQUEE = 'raccourcis/athan-mosquee.shortcut';
 
   var SOURCES = [{ id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' }];
   var SOURCES_INDEX = 'calendriers/index.json';
@@ -489,7 +479,7 @@
         if (!json || !json.mosquees) return;
         mosques = json.mosquees;
         try { localStorage.setItem('athan.mosquees', JSON.stringify(mosques)); } catch (e) {}
-        if (!$('findBox').hidden && $('findBox').open) showMosques();
+        if (!$('screenSearch').hidden) runSearch();
       })
       .catch(function () { /* hors ligne : le cache fera l'affaire */ });
   }
@@ -532,34 +522,94 @@
     return null;
   }
 
-  function showMosques() {
-    var box = $('mosqueResults');
-    if (!mosques) {
-      box.innerHTML = '';
-      $('mosqueHint').textContent = 'Annuaire indisponible (hors ligne ?). Réessaie une fois connecté.';
-      return;
-    }
-    var found = pickMosques($('mosqueSearch').value.trim());
-    if (!found.length) {
-      box.innerHTML = '';
-      $('mosqueHint').textContent = 'Aucune mosquée trouvée pour cette recherche.';
-      return;
-    }
+  /*
+   * Un seul champ pour deux besoins : on propose donc les deux familles de
+   * réponses, la forme du texte décidant seulement de l'ordre. Un numéro, un
+   * code postal ou « rue / avenue » sent l'adresse ; le reste sent la mosquée.
+   */
+  function looksLikeAddress(q) {
+    return /\d/.test(q) || /\b(rue|avenue|av|bd|boulevard|impasse|place|chemin|route|all[ée]e|quai)\b/i.test(q);
+  }
+
+  function runSearch() {
+    var q = $('q').value.trim();
+    var box = $('results');
     var html = '';
-    for (var i = 0; i < found.length; i++) {
-      var m = found[i].m;
-      var ready = calendarIdFor(m.slug);
-      html += '<button class="mosque' + (ready && ready === settings.source ? ' active' : '') + '" type="button"' +
-        ' data-slug="' + escapeHtml(m.slug) + '">' +
-        '<span class="pastille">' + (ready ? '📅' : '➕') + '</span>' +
-        '<span><span class="nom">' + escapeHtml(m.nom) + '</span>' +
-        '<span class="ville">' + escapeHtml(m.ville || '') + '</span></span>' +
-        '<span class="dist">' + found[i].d.toFixed(found[i].d < 10 ? 1 : 0) + ' km</span></button>';
+
+    var mosquesFound = q ? pickMosques(q) : (settings.latitude ? pickMosques('') : null);
+    var addressRow = q && !/^\s*$/.test(q)
+      ? '<button class="mosque" type="button" data-address="1">' +
+        '<span class="pastille">📍</span>' +
+        '<span><span class="nom">Utiliser cette adresse</span>' +
+        '<span class="ville">' + escapeHtml(q) + '</span></span>' +
+        '<span class="dist">→</span></button>'
+      : '';
+
+    var mosquesHtml = '';
+    if (mosquesFound && mosquesFound.length) {
+      for (var i = 0; i < mosquesFound.length; i++) {
+        var m = mosquesFound[i].m;
+        var ready = calendarIdFor(m.slug);
+        mosquesHtml += '<button class="mosque" type="button" data-slug="' + escapeHtml(m.slug) + '">' +
+          '<span class="pastille">' + (ready ? '📅' : '➕') + '</span>' +
+          '<span><span class="nom">' + escapeHtml(m.nom) + '</span>' +
+          '<span class="ville">' + escapeHtml(m.ville || '') + '</span></span>' +
+          '<span class="dist">' + fmtKm(mosquesFound[i].d) + '</span></button>';
+      }
+    }
+
+    if (!q) {
+      html = mosquesHtml ? '<p class="hint">Mosquées les plus proches :</p>' + mosquesHtml : '';
+    } else if (looksLikeAddress(q)) {
+      html = addressRow + (mosquesHtml ? '<p class="hint">Ou une mosquée :</p>' + mosquesHtml : '');
+    } else {
+      html = mosquesHtml + (mosquesHtml ? '<p class="hint">Ou :</p>' : '') + addressRow;
     }
     box.innerHTML = html;
-    $('mosqueHint').innerHTML = '📅 calendrier déjà dans l’app · ➕ pas encore importé ' +
-      '(un clic t’explique comment l’ajouter). Distances depuis ' +
-      (settings.place ? escapeHtml(settings.place) : 'ta position réglée plus haut') + '.';
+
+    $('searchHint').innerHTML = mosques
+      ? '📅 horaires officiels de la mosquée · ➕ mosquée connue, calendrier pas encore importé · ' +
+        '📍 horaires calculés pour une adresse.'
+      : 'Annuaire des mosquées indisponible hors ligne : la recherche par adresse reste possible.';
+  }
+
+  function fmtKm(d) {
+    if (!isFinite(d)) return '';
+    return d < 10 ? d.toFixed(1) + ' km' : Math.round(d) + ' km';
+  }
+
+  function calendarIdFor(slug) {
+    for (var i = 0; i < SOURCES.length; i++) {
+      if (SOURCES[i].slug === slug || SOURCES[i].id === slug) return SOURCES[i].id;
+    }
+    return null;
+  }
+
+  /* Géocodage d'une adresse libre — AlAdhan rend latitude et longitude. */
+  function chooseAddress(q) {
+    var el = $('geoStatus');
+    el.className = 'status show';
+    el.textContent = 'Recherche de « ' + q + ' »…';
+    fetch('https://api.aladhan.com/v1/addressInfo?address=' + encodeURIComponent(q))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || j.code !== 200 || !j.data || !isFinite(j.data.latitude)) {
+          throw new Error((j && j.data) ? String(j.data) : 'adresse introuvable');
+        }
+        settings.latitude = Math.round(j.data.latitude * 10000) / 10000;
+        settings.longitude = Math.round(j.data.longitude * 10000) / 10000;
+        settings.place = q;
+        settings.source = 'calcul';
+        saveSettings(); fillForm(); fillSourceSelect();
+        el.className = 'status'; el.textContent = '';
+        loadCalendar();
+        showScreen('times');
+      })
+      .catch(function (e) {
+        el.className = 'status show err';
+        el.textContent = 'Adresse introuvable (' + e.message + '). Essaie « ville, pays », ' +
+          'ou touche 📍 Utiliser ma position.';
+      });
   }
 
   function chooseMosque(slug) {
@@ -567,28 +617,13 @@
     for (var i = 0; mosques && i < mosques.length; i++) if (mosques[i].slug === slug) m = mosques[i];
     if (!m) return;
 
-    var id = calendarIdFor(slug);
-    if (id) {
-      settings.source = id;
-      settings.place = m.nom;
-      settings.latitude = m.lat;
-      settings.longitude = m.lon;
-      saveSettings(); fillForm(); fillSourceSelect(); loadCalendar(); showMosques();
-      return;
-    }
-
-    // Pas encore de calendrier : on se cale au moins sur sa position, et on
-    // donne le lien qui déclenche l'import.
     settings.latitude = m.lat;
     settings.longitude = m.lon;
     settings.place = m.nom;
-    settings.source = 'calcul';
-    saveSettings(); fillForm(); fillSourceSelect(); loadCalendar(); showMosques();
-    $('mosqueHint').innerHTML = 'Position réglée sur <b>' + escapeHtml(m.nom) + '</b>, horaires calculés ' +
-      'en attendant son calendrier. Pour l’ajouter : ' +
-      '<a href="' + REPO + '/actions/workflows/calendriers.yml" target="_blank" rel="noopener">' +
-      'Actions → Run workflow</a> avec <code>' + escapeHtml(m.slug) + '</code> ' +
-      '(<a href="https://mawaqit.net/fr/' + escapeHtml(m.slug) + '" target="_blank" rel="noopener">voir la mosquée</a>).';
+    settings.source = calendarIdFor(slug) || 'calcul';
+    settings.mosqueSlug = m.slug;
+    saveSettings(); fillForm(); fillSourceSelect(); loadCalendar();
+    showScreen('times');
   }
 
   function loadSources() {
@@ -820,6 +855,7 @@
       ? 'Sans objet : le calendrier de la mosquée remplace l’API.'
       : cityUrl(apiUrl);
     renderCopyList();
+    $('sourceLine').innerHTML = sourceLabel();
     tick();
   }
 
@@ -1080,6 +1116,131 @@
   function writeStr(view, at, s) { for (var i = 0; i < s.length; i++) view.setUint8(at + i, s.charCodeAt(i)); }
 
   /* ---------------------------------------------------------------- */
+  /* Les trois écrans                                                   */
+  /* ---------------------------------------------------------------- */
+
+  var SCREENS = { search: 'screenSearch', times: 'screenTimes', tuto: 'screenTuto' };
+
+  function showScreen(name) {
+    for (var key in SCREENS) $(SCREENS[key]).hidden = (key !== name);
+    if (name === 'times') { render(); }
+    if (name === 'tuto') { buildTuto(); }
+    if (name === 'search') { runSearch(); }
+    window.scrollTo(0, 0);
+  }
+
+  /* « Mosquée X — calendrier officiel » ou « Calcul à Y — méthode Z ». */
+  function sourceLabel() {
+    var src = sourceById(settings.source);
+    if (src.file) return '📅 <b>' + escapeHtml(src.label) + '</b> — horaires officiels de la mosquée';
+    var method = PT.methodById(settings.methodId);
+    return '📍 Calcul pour <b>' + escapeHtml(settings.place || 'votre position') + '</b> — ' +
+      escapeHtml(method.name) + (Object.keys(settings.adjust || {}).length ? ', avec vos décalages' : '');
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Le tuto, adapté à la source choisie                                */
+  /* ---------------------------------------------------------------- */
+
+  var TUTO_IMAGES = {
+    installer: 'tuto/1-installer.svg',
+    parametres: 'tuto/2-parametres.svg',
+    reglages: 'tuto/3-reglages.svg',
+    automatisation: 'tuto/4-automatisation.svg',
+    verifier: 'tuto/5-verifier.svg'
+  };
+
+  /* La ligne de paramètres du raccourci AlAdhan : tout ce qui suit le « ? ». */
+  function paramString() {
+    var url = PT.aladhanUrl(options(), today ? today.date : null);
+    return url.slice(url.indexOf('?') + 1);
+  }
+
+  function tutoValue() {
+    var src = sourceById(settings.source);
+    return src.file ? new URL(src.file, location.href).href : paramString();
+  }
+
+  function buildTuto() {
+    var src = sourceById(settings.source);
+    var lien = src.file ? SHORTCUT_URL_MOSQUEE : SHORTCUT_URL;
+    var fichier = src.file ? SHORTCUT_FILE_MOSQUEE : '';
+    var valeur = tutoValue();
+
+    $('tutoSource').innerHTML = sourceLabel();
+
+    var steps = [];
+
+    steps.push({
+      titre: 'Installer le raccourci',
+      image: TUTO_IMAGES.installer,
+      html: lien
+        ? '<a class="install" href="' + lien + '" target="_blank" rel="noopener">⬇️ Installer « Athan »</a>' +
+          '<p>Ouvrez ce lien depuis votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
+          'Deux touches, rien à construire.</p>'
+        : '<p>Ce parcours utilise un raccourci adapté aux calendriers de mosquée. Il n\'a pas ' +
+          'encore de lien iCloud : téléchargez le fichier, puis activez <b>Réglages → Raccourcis → ' +
+          'Autoriser les raccourcis non fiables</b> avant de l\'ouvrir.</p>' +
+          '<a class="install" href="' + fichier + '" download>⬇️ Télécharger le raccourci</a>'
+    });
+
+    steps.push({
+      titre: src.file ? 'Coller l’adresse de votre mosquée' : 'Coller vos paramètres',
+      image: TUTO_IMAGES.parametres,
+      html: '<p>Dans le raccourci, la <b>première action Texte</b> contient ' +
+        (src.file ? 'une adresse de calendrier' : 'une ligne de paramètres') +
+        '. Remplacez-la par la vôtre — touchez la ligne ci-dessous pour la copier :</p>',
+      copy: { k: src.file ? 'Adresse du calendrier' : 'Paramètres (action Texte)', v: valeur }
+    });
+
+    steps.push({
+      titre: 'Deux réglages iOS, une fois pour toutes',
+      image: TUTO_IMAGES.reglages,
+      html: '<p><b>1.</b> <b>Réglages → Apps → Raccourcis → Avancé</b> → activez ' +
+        '<b>Autoriser la suppression sans confirmation</b>. Sans ça, l\'automatisation reste bloquée ' +
+        'la nuit sur une demande de confirmation, et aucune alarme n\'est créée.</p>' +
+        '<p><b>2.</b> L\'athan comme sonnerie : importez votre mp3 dans <b>GarageBand</b>, coupez à ' +
+        '30 s, <b>Partager → Sonnerie</b>. Puis créez une alarme dans <b>Horloge</b> avec cette ' +
+        'sonnerie : les alarmes créées ensuite la reprennent.</p>'
+    });
+
+    steps.push({
+      titre: 'Programmer le rendez-vous quotidien',
+      image: TUTO_IMAGES.automatisation,
+      html: '<p><b>Raccourcis → Automatisation → + → Heure de la journée</b> → <b>00:05</b>, ' +
+        'tous les jours, puis choisissez le raccourci <b>Athan</b> et <b>Exécuter immédiatement</b> ' +
+        '(décochez « Demander avant d\'exécuter »).</p>' +
+        '<p>Chaque nuit, il efface les alarmes de la veille et crée celles du jour.</p>'
+    });
+
+    steps.push({
+      titre: 'Vérifier tout de suite',
+      image: TUTO_IMAGES.verifier,
+      html: '<p>Lancez le raccourci à la main avec ▶︎. Cinq alarmes <code>Athan Fajr</code> à ' +
+        '<code>Athan Isha</code> doivent apparaître dans <b>Horloge</b>, aux horaires affichés ' +
+        'sur la page précédente.</p>' +
+        '<p>Le volume des alarmes suit <b>Réglages → Sons → Sonnerie et alertes</b>, ' +
+        'pas le volume multimédia.</p>'
+    });
+
+    var html = '';
+    for (var i = 0; i < steps.length; i++) {
+      var st = steps[i];
+      html += '<div class="tuto-step"><h3><span class="num">' + (i + 1) + '</span>' +
+        escapeHtml(st.titre) + '</h3>' + st.html;
+      if (st.copy) {
+        html += '<button class="copyrow" type="button" data-value="' + escapeHtml(st.copy.v) + '">' +
+          '<span><span class="k">' + escapeHtml(st.copy.k) + '</span>' +
+          '<span class="v">' + escapeHtml(st.copy.v) + '</span></span>' +
+          '<span class="ico">⧉</span></button>';
+      }
+      html += '<img src="' + st.image + '" alt="" loading="lazy">';
+      html += '</div>';
+    }
+    $('tutoSteps').innerHTML = html;
+  }
+
+  /* ---------------------------------------------------------------- */
   /* Câblage de l'interface                                            */
   /* ---------------------------------------------------------------- */
 
@@ -1160,122 +1321,109 @@
     buildAdjGrid();
     fillForm();
     $('watch').checked = false; // on ne réactive jamais le son sans geste de l'utilisateur
-    if (SHORTCUT_URL) {
-      $('shortcutLink').href = SHORTCUT_URL;
-      $('shortcutBox').hidden = false;
-    }
 
     loadSources().then(function () {
       fillSourceSelect();
-      loadCalendar();  // rend la page, avec ou sans calendrier
+      loadCalendar();
+      runSearch();
     });
     loadCalendar();    // affichage immédiat, sans attendre le réseau
+    loadDirectory();
     setInterval(tick, 1000);
 
+    // Réglages fins : ils ne changent que l'écran des horaires.
     ['place', 'lat', 'lon', 'method', 'madhab', 'highlats'].forEach(function (id) {
       $(id).addEventListener('change', readForm);
     });
     PT.PRAYERS.forEach(function (p) { $('adj-' + p.key).addEventListener('change', readForm); });
-
-    loadDirectory();
-    $('findBox').addEventListener('toggle', function () { if (this.open) showMosques(); });
-    $('mosqueNear').addEventListener('click', function () { $('mosqueSearch').value = ''; showMosques(); });
-    $('mosqueSearch').addEventListener('input', showMosques);
-    $('mosqueSearch').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); showMosques(); } });
-    $('mosqueResults').addEventListener('click', function (e) {
-      var row = e.target.closest ? e.target.closest('.mosque') : null;
-      if (row) chooseMosque(row.dataset.slug);
-    });
-
     $('source').addEventListener('change', function () {
       settings.source = this.value;
       saveSettings();
       loadCalendar();
     });
-
     $('adjReset').addEventListener('click', function () {
       settings.adjust = {};
       saveSettings(); fillForm(); render();
     });
 
-    /*
-     * Recherche de ville : AlAdhan expose un géocodage public (sans clé, CORS
-     * ouvert) qui rend latitude et longitude. Ça évite d'aller les pêcher dans
-     * une app de cartes.
-     */
-    function findCity() {
-      var el = $('geoStatus');
-      var q = $('place').value.trim();
-      if (!q) { el.className = 'status show warn'; el.textContent = 'Écris d’abord une ville, par exemple « Marseille, France ».'; return; }
-      el.className = 'status show'; el.textContent = 'Recherche de « ' + q + ' »…';
-      fetch('https://api.aladhan.com/v1/addressInfo?address=' + encodeURIComponent(q))
-        .then(function (r) { return r.json(); })
-        .then(function (j) {
-          if (!j || j.code !== 200 || !j.data || !isFinite(j.data.latitude)) {
-            throw new Error((j && j.data) ? String(j.data) : 'ville introuvable');
-          }
-          settings.latitude = Math.round(j.data.latitude * 10000) / 10000;
-          settings.longitude = Math.round(j.data.longitude * 10000) / 10000;
-          settings.place = q;
-          saveSettings(); fillForm(); render();
-          el.className = 'status show ok';
-          el.textContent = '📍 ' + q + ' → ' + settings.latitude + ', ' + settings.longitude +
-            (j.data.timezone ? ' (' + j.data.timezone + ')' : '');
-        })
-        .catch(function (e) {
-          el.className = 'status show err';
-          el.textContent = 'Ville introuvable (' + e.message + '). Essaie « Ville, Pays », ou saisis les coordonnées à la main.';
-        });
-    }
-
-    $('find').addEventListener('click', findCity);
-    $('place').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') { e.preventDefault(); this.blur(); findCity(); }
+    /* --- écran 1 : le champ unique --- */
+    $('q').addEventListener('input', runSearch);
+    $('q').addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      e.preventDefault(); this.blur();
+      var q = this.value.trim();
+      if (q && looksLikeAddress(q)) chooseAddress(q); else runSearch();
+    });
+    $('qGo').addEventListener('click', function () {
+      var q = $('q').value.trim();
+      if (q && looksLikeAddress(q)) chooseAddress(q); else runSearch();
+    });
+    $('results').addEventListener('click', function (e) {
+      var row = e.target.closest ? e.target.closest('.mosque') : null;
+      if (!row) return;
+      if (row.dataset.address) chooseAddress($('q').value.trim());
+      else chooseMosque(row.dataset.slug);
     });
 
-    $('geo').addEventListener('click', function () {
+    $('useGeo').addEventListener('click', function () {
       var el = $('geoStatus');
       if (!navigator.geolocation) { el.className = 'status show err'; el.textContent = 'Géolocalisation indisponible.'; return; }
       el.className = 'status show'; el.textContent = 'Localisation en cours…';
       navigator.geolocation.getCurrentPosition(function (pos) {
         settings.latitude = Math.round(pos.coords.latitude * 10000) / 10000;
         settings.longitude = Math.round(pos.coords.longitude * 10000) / 10000;
-        saveSettings(); fillForm(); render();
-        el.className = 'status show ok';
-        el.textContent = 'Position enregistrée (' + settings.latitude + ', ' + settings.longitude + ').';
+        settings.place = settings.place || 'ma position';
+        settings.source = 'calcul';
+        saveSettings(); fillForm(); fillSourceSelect(); loadCalendar();
+        el.className = 'status'; el.textContent = '';
+        runSearch();          // la liste des mosquées proches devient utile
+        showScreen('times');
       }, function (err) {
         el.className = 'status show err';
-        el.textContent = 'Position refusée ou indisponible (' + err.message + '). Saisis la latitude et la longitude à la main.';
+        el.textContent = 'Position refusée ou indisponible (' + err.message + '). Saisis plutôt ton adresse.';
       }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
     });
 
-    $('file').addEventListener('change', function () {
-      var f = this.files && this.files[0];
-      if (!f) return;
-      useBlob(f, f.name);
-      saveAudio(f).catch(function () { /* pas de stockage : le fichier vaut pour la session */ });
-    });
+    /* --- écran 2 : la question --- */
+    $('goTuto').addEventListener('click', function () { showScreen('tuto'); });
+    $('backSearch').addEventListener('click', function () { showScreen('search'); });
+    $('backTimes').addEventListener('click', function () { showScreen('times'); });
 
-    $('forget').addEventListener('click', function () {
-      dropAudio().catch(function () {});
-      $('file').value = '';
-      useFallback();
+    /* --- écran 3 : les valeurs à copier --- */
+    $('tutoSteps').addEventListener('click', function (e) {
+      var row = e.target.closest ? e.target.closest('.copyrow') : null;
+      if (row && row.dataset.value) copyRow(row.dataset.value, row);
     });
-
-    $('test').addEventListener('click', function () { playAthan('test'); });
     $('copyList').addEventListener('click', function (e) {
       var row = e.target.closest ? e.target.closest('.copyrow') : null;
-      if (!row) return;
+      if (!row || !row.dataset.i) return;
       var value = copyValues()[Number(row.dataset.i)];
       if (value) copyRow(value.v, row);
     });
     $('copyUrlCity').addEventListener('click', function () { copy($('apiUrlCity').textContent, this); });
     $('copyRecipe').addEventListener('click', function () { copy(recipe(), this); });
 
+    /* --- mode veilleur --- */
+    $('file').addEventListener('change', function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      useBlob(f, f.name);
+      saveAudio(f).catch(function () { /* pas de stockage : le fichier vaut pour la session */ });
+    });
+    $('forget').addEventListener('click', function () {
+      dropAudio().catch(function () {});
+      $('file').value = '';
+      useFallback();
+    });
+    $('test').addEventListener('click', function () { playAthan('test'); });
+
     readAudio().then(function (blob) {
       if (blob) useBlob(blob, blob.name);
       else useFallback();
     }).catch(useFallback);
+
+    // On revient là où l'on en était : un lieu déjà choisi mène droit aux horaires.
+    showScreen(settings.place || settings.source !== 'calcul' ? 'times' : 'search');
   }
 
   init();

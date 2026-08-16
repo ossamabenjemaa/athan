@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 380" width="300" height="380" font-family="-apple-system, Helvetica, Arial, sans-serif">
+  <rect width="300" height="380" rx="26" fill="#1c1c1e"/>
+  <rect x="112" y="10" width="76" height="5" rx="2.5" fill="#8e8e93" opacity=".5"/>
+  <text x="150" y="46" font-size="13" fill="#f2f2f7" font-weight="700" text-anchor="middle">Horloge › Alarmes</text>
+  <rect x="20" y="64" width="260" height="38" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="89" font-size="15" fill="#f2f2f7" font-weight="700" text-anchor="start">05:18</text>
+  <text x="96" y="89" font-size="11" fill="#8e8e93" font-weight="400" text-anchor="start">Athan Fajr</text>
+  <rect x="228" y="74" width="40" height="22" rx="11" fill="#0f8b6c"/>
+  <circle cx="257" cy="85" r="9" fill="#fff"/>
+  <rect x="20" y="110" width="260" height="38" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="135" font-size="15" fill="#f2f2f7" font-weight="700" text-anchor="start">13:55</text>
+  <text x="96" y="135" font-size="11" fill="#8e8e93" font-weight="400" text-anchor="start">Athan Dhuhr</text>
+  <rect x="228" y="120" width="40" height="22" rx="11" fill="#0f8b6c"/>
+  <circle cx="257" cy="131" r="9" fill="#fff"/>
+  <rect x="20" y="156" width="260" height="38" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="181" font-size="15" fill="#f2f2f7" font-weight="700" text-anchor="start">17:52</text>
+  <text x="96" y="181" font-size="11" fill="#8e8e93" font-weight="400" text-anchor="start">Athan Asr</text>
+  <rect x="228" y="166" width="40" height="22" rx="11" fill="#0f8b6c"/>
+  <circle cx="257" cy="177" r="9" fill="#fff"/>
+  <rect x="20" y="202" width="260" height="38" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="227" font-size="15" fill="#f2f2f7" font-weight="700" text-anchor="start">21:07</text>
+  <text x="96" y="227" font-size="11" fill="#8e8e93" font-weight="400" text-anchor="start">Athan Maghrib</text>
+  <rect x="228" y="212" width="40" height="22" rx="11" fill="#0f8b6c"/>
+  <circle cx="257" cy="223" r="9" fill="#fff"/>
+  <rect x="20" y="248" width="260" height="38" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="273" font-size="15" fill="#f2f2f7" font-weight="700" text-anchor="start">22:28</text>
+  <text x="96" y="273" font-size="11" fill="#8e8e93" font-weight="400" text-anchor="start">Athan Isha</text>
+  <rect x="228" y="258" width="40" height="22" rx="11" fill="#0f8b6c"/>
+  <circle cx="257" cy="269" r="9" fill="#fff"/>
+  <text x="150" y="356" font-size="9" fill="#8e8e93" font-weight="400" text-anchor="middle">Illustration — pas une vraie capture</text>
+</svg>

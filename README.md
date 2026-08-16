@@ -4,12 +4,60 @@ Horaires de prière calculés **hors ligne** sur le téléphone, et surtout : de
 sonner l'athan **sans jamais toucher au bouton silencieux physique de l'iPhone**.
 
 ```
-index.html      — la page (horaires, compte à rebours, mode veilleur)
+index.html      — la page : chercher, vérifier, installer
 prayer-times.js — le calcul astronomique (navigateur + Node, zéro dépendance)
 cli.js          — les mêmes horaires en ligne de commande
 calendriers/    — calendriers de mosquée, manifeste index.json, annuaire mosquees.json
-scripts/        — import-mawaqit.js (un calendrier) et crawl-mosquees.js (l'annuaire)
+raccourcis/     — les deux raccourcis iOS (.shortcut)
+tuto/           — les illustrations du tuto, remplaçables par de vraies captures
+scripts/        — import-mawaqit.js, crawl-mosquees.js, build-raccourci.py
 ```
+
+## 🧭 Le parcours, en trois écrans
+
+1. **Un seul champ** — « Indiquez votre adresse ou la mosquée de votre choix ». La saisie
+   alimente les deux pistes : les mosquées de l'annuaire (avec la distance) et « utiliser cette
+   adresse » (géocodage). La forme du texte décide seulement de l'ordre — un numéro ou un mot
+   de voirie fait passer l'adresse en tête.
+2. **Les horaires du jour**, avec la source en toutes lettres : *horaires officiels de la
+   mosquée* ou *calcul pour tel lieu, telle méthode*. Puis la question :
+   **« Ces horaires me conviennent — obtenir les alarmes »** ou
+   **« Ils ne correspondent pas — changer de lieu »**.
+3. **Le tuto**, adapté à ce qui a été choisi : installer le raccourci, coller **la seule valeur
+   à changer**, les deux réglages iOS, l'automatisation de 00:05, la vérification.
+
+Les réglages d'expert (méthode, madhhab, hautes latitudes, décalages, mode veilleur) sont
+toujours là, repliés dans l'écran des horaires.
+
+## 📲 Les deux raccourcis
+
+Le raccourci isole ses réglages dans une **action Texte** en tête : c'est la seule chose qu'un
+proche a à changer, et la page la lui donne en un tap.
+
+| Fichier | Pour | Valeur à coller |
+|---|---|---|
+| `raccourcis/athan-aladhan.shortcut` | une adresse (calcul) | `latitude=…&longitude=…&method=…&school=…` |
+| `raccourcis/athan-mosquee.shortcut` | un calendrier de mosquée | l'URL du fichier JSON |
+
+Le second est **dérivé du premier** par `scripts/build-raccourci.py` : même enchaînement, mais
+l'URL n'est plus celle d'AlAdhan et une action s'intercale pour extraire les horaires du jour
+(clé = date au format `dd-MM`).
+
+```bash
+python3 scripts/build-raccourci.py             # régénère la variante mosquée
+python3 scripts/build-raccourci.py --verifier  # relit les deux et décrit chaque action
+```
+
+Le fichier généré n'est pas signé : il s'importe après avoir activé *Réglages → Raccourcis →
+Autoriser les raccourcis non fiables*. Une fois importé puis **repartagé** depuis l'iPhone, on
+obtient un lien iCloud signé : il se colle dans `SHORTCUT_URL_MOSQUEE`, en tête du script de
+`index.html`, et le tuto propose alors l'installation en deux touches au lieu du téléchargement.
+
+## 🖼 Les illustrations du tuto
+
+`tuto/*.svg` sont des **schémas dessinés**, pas de vraies captures — ils portent la mention.
+Pour les remplacer : déposer les images dans `tuto/` et changer le tableau `TUTO_IMAGES` en tête
+du script de `index.html` (une ligne par étape).
 
 ## 🚀 Essayer
 

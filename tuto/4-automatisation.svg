@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 380" width="300" height="380" font-family="-apple-system, Helvetica, Arial, sans-serif">
+  <rect width="300" height="380" rx="26" fill="#1c1c1e"/>
+  <rect x="112" y="10" width="76" height="5" rx="2.5" fill="#8e8e93" opacity=".5"/>
+  <text x="150" y="46" font-size="13" fill="#f2f2f7" font-weight="700" text-anchor="middle">Nouvelle automatisation</text>
+  <rect x="20" y="66" width="260" height="60" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="90" font-size="11" fill="#f2f2f7" font-weight="400" text-anchor="start">🕐  Heure de la journée</text>
+  <text x="34" y="112" font-size="11" fill="#7ee2c4" font-weight="700" text-anchor="start">00:05 — tous les jours</text>
+  <rect x="20" y="140" width="260" height="44" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="168" font-size="11" fill="#f2f2f7" font-weight="400" text-anchor="start">▶️  Exécuter le raccourci « Athan »</text>
+  <rect x="20" y="198" width="260" height="96" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="34" y="222" font-size="11" fill="#f2f2f7" font-weight="400" text-anchor="start">Exécuter immédiatement</text>
+  <rect x="222" y="210" width="44" height="26" rx="13" fill="#0f8b6c"/>
+  <circle cx="253" cy="223" r="11" fill="#fff"/>
+  <text x="34" y="262" font-size="11" fill="#8e8e93" font-weight="400" text-anchor="start">Demander avant d’exécuter</text>
+  <rect x="222" y="250" width="44" height="26" rx="13" fill="#48484a"/>
+  <circle cx="235" cy="263" r="11" fill="#fff"/>
+  <text x="150" y="356" font-size="9" fill="#8e8e93" font-weight="400" text-anchor="middle">Illustration — pas une vraie capture</text>
+</svg>

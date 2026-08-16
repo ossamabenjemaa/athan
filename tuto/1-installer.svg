@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 380" width="300" height="380" font-family="-apple-system, Helvetica, Arial, sans-serif">
+  <rect width="300" height="380" rx="26" fill="#1c1c1e"/>
+  <rect x="112" y="10" width="76" height="5" rx="2.5" fill="#8e8e93" opacity=".5"/>
+  <text x="150" y="46" font-size="13" fill="#f2f2f7" font-weight="700" text-anchor="middle">Ajouter le raccourci ?</text>
+  <rect x="30" y="66" width="240" height="150" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="150" y="120" font-size="40" fill="#f2f2f7" font-weight="400" text-anchor="middle">🕌</text>
+  <text x="150" y="160" font-size="15" fill="#f2f2f7" font-weight="700" text-anchor="middle">Athan</text>
+  <text x="150" y="182" font-size="10" fill="#8e8e93" font-weight="400" text-anchor="middle">11 actions · Horloge, Web</text>
+  <rect x="30" y="236" width="240" height="40" rx="12" fill="#0f8b6c" stroke="none"/>
+  <text x="150" y="261" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">Ajouter le raccourci</text>
+  <rect x="30" y="288" width="240" height="40" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="150" y="313" font-size="13" fill="#8e8e93" font-weight="400" text-anchor="middle">Annuler</text>
+  <text x="150" y="356" font-size="9" fill="#8e8e93" font-weight="400" text-anchor="middle">Illustration — pas une vraie capture</text>
+</svg>
