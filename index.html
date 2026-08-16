@@ -268,6 +268,7 @@
   <section class="card" id="screenTimes" hidden>
     <h2>🕰️ Aujourd'hui <span class="tag" id="dayTag">—</span></h2>
     <p class="sourceline" id="sourceLine">—</p>
+    <div id="sourceWarn" class="status warn" style="margin-bottom:12px"></div>
     <div class="next">
       <div class="who" id="nextWho">—</div>
       <div class="count" id="nextCount">--:--:--</div>
@@ -620,6 +621,7 @@
         settings.longitude = Math.round(j.data.longitude * 10000) / 10000;
         settings.place = q;
         settings.source = 'calcul';
+        settings.pendingMosque = null;
         saveSettings(); fillForm(); fillSourceSelect();
         el.className = 'status'; el.textContent = '';
         loadCalendar();
@@ -640,8 +642,10 @@
     settings.latitude = m.lat;
     settings.longitude = m.lon;
     settings.place = m.nom;
-    settings.source = calendarIdFor(slug) || 'calcul';
-    settings.mosqueSlug = m.slug;
+    var id = calendarIdFor(slug);
+    settings.source = id || 'calcul';
+    // Sans calendrier, on garde le nom pour pouvoir le dire franchement.
+    settings.pendingMosque = id ? null : { slug: m.slug, nom: m.nom };
     saveSettings(); fillForm(); fillSourceSelect(); loadCalendar();
     showScreen('times');
   }
@@ -876,6 +880,7 @@
       : cityUrl(apiUrl);
     renderCopyList();
     $('sourceLine').innerHTML = sourceLabel();
+    renderWarning();
     tick();
   }
 
@@ -1147,6 +1152,26 @@
     if (name === 'tuto') { buildTuto(); }
     if (name === 'search') { runSearch(); }
     window.scrollTo(0, 0);
+  }
+
+  /*
+   * Le cas qui trompe : une mosquée trouvée dans l'annuaire mais dont le
+   * calendrier n'est pas encore importé. On affichait alors un calcul sans
+   * prévenir assez fort — de quoi croire qu'on a les horaires de la mosquée.
+   */
+  function renderWarning() {
+    var el = $('sourceWarn');
+    var attente = settings.pendingMosque;
+    if (!attente || sourceById(settings.source).file) {
+      el.className = 'status warn';
+      el.innerHTML = '';
+      return;
+    }
+    el.className = 'status warn show';
+    el.innerHTML = '⚠️ Le calendrier de <b>' + escapeHtml(attente.nom) + '</b> n’est pas encore dans ' +
+      'l’app : ces horaires sont un <b>calcul</b> fait à son emplacement, pas ses horaires officiels. ' +
+      '<a href="' + REPO + '/actions/workflows/calendriers.yml" target="_blank" rel="noopener">' +
+      'Demander son import</a> (quelques minutes), ou continuez avec le calcul.';
   }
 
   /* « Mosquée X — calendrier officiel » ou « Calcul à Y — méthode Z ». */

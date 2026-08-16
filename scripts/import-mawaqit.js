@@ -185,6 +185,39 @@ async function main() {
     return;
   }
 
+  /*
+   * Import en masse : tout ce que l'annuaire connaît et dont le calendrier
+   * manque encore. C'est ce qui évite qu'un proche tombe sur une mosquée
+   * trouvable mais sans horaires — le pire des deux mondes.
+   */
+  if (flag('--tous')) {
+    const annuaire = path.join(DIR, 'mosquees.json');
+    if (!fs.existsSync(annuaire)) return console.log('Annuaire absent : lance d’abord crawl-mosquees.js.');
+    const mosquees = JSON.parse(fs.readFileSync(annuaire, 'utf8')).mosquees || [];
+    const index = fs.existsSync(INDEX) ? JSON.parse(fs.readFileSync(INDEX, 'utf8')) : [];
+    const connus = new Set(index.map(e => e.slug));
+    const restants = mosquees.filter(m => !connus.has(m.slug));
+    const plafond = Number(args[args.indexOf('--max') + 1]) || restants.length;
+    const aFaire = restants.slice(0, plafond);
+
+    console.log(`${mosquees.length} mosquées dans l’annuaire, ${connus.size} déjà importées, ` +
+      `${aFaire.length} à faire.`);
+    let ok = 0, ko = 0;
+    for (let i = 0; i < aFaire.length; i++) {
+      const m = aFaire[i];
+      try {
+        await importOne(m.slug);
+        ok++;
+      } catch (e) {
+        ko++;
+        console.error(`  ✗ ${m.nom} (${m.slug}) : ${e.message}`);
+      }
+      if ((i + 1) % 25 === 0) console.log(`  … ${i + 1}/${aFaire.length} — ${ok} importées, ${ko} échecs`);
+    }
+    console.log(`\nTerminé : ${ok} calendriers importés, ${ko} échecs.`);
+    return;
+  }
+
   if (flag('--refresh')) {
     const index = fs.existsSync(INDEX) ? JSON.parse(fs.readFileSync(INDEX, 'utf8')) : [];
     if (!index.length) return console.log('Aucun calendrier à mettre à jour.');

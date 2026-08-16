@@ -1,9 +1,1455 @@
 [
   {
+    "id": "mosquee-el-fath-alencon",
+    "label": "- - - Mosquée EL FATH - - - مسجد الفتح - Alençon",
+    "file": "calendriers/mosquee-el-fath-alencon.json",
+    "slug": "elfath-alencon"
+  },
+  {
+    "id": "mosquee-nour-annemasse-annemasse",
+    "label": "- مسجد نور - Mosquée Nour Annemasse - - Annemasse",
+    "file": "calendriers/mosquee-nour-annemasse-annemasse.json",
+    "slug": "nour-annemasse"
+  },
+  {
+    "id": "masjid-an-nour-bagnols-sur-ceze",
+    "label": "\"MASJID AN-NOUR\" - Bagnols-sur-ceze",
+    "file": "calendriers/masjid-an-nour-bagnols-sur-ceze.json",
+    "slug": "m-annour-bagnols-sc"
+  },
+  {
+    "id": "lyon-69002-lyon",
+    "label": "(  LYON 69002 ) مسجد السلام - Lyon",
+    "file": "calendriers/lyon-69002-lyon.json",
+    "slug": "perrache-lyon"
+  },
+  {
+    "id": "ditib-mosquee-selimiye",
+    "label": "(DiTiB) - MOSQUÉE SELiMiYE",
+    "file": "calendriers/ditib-mosquee-selimiye.json",
+    "slug": "ditib-montfermeil-selimiye-montfermeil-93370-france"
+  },
+  {
+    "id": "quartier-babeu-bondy",
+    "label": "(quartier Babeu) مسجد الرحمة -BONDY-",
+    "file": "calendriers/quartier-babeu-bondy.json",
+    "slug": "errahma-bondy"
+  },
+  {
+    "id": "khadidja-soullarderie",
+    "label": "(رضي الله عنها) مسجد خديجة",
+    "file": "calendriers/khadidja-soullarderie.json",
+    "slug": "khadidja-soullarderie"
+  },
+  {
+    "id": "a-c-c-t-ditib-mevlana-chambery",
+    "label": "A.c.c.T. Ditib Mevlana - Chambéry",
+    "file": "calendriers/a-c-c-t-ditib-mevlana-chambery.json",
+    "slug": "a-c-c-t-ditib-chambery-mosquee-mevlana-chambery-73000-france"
+  },
+  {
+    "id": "a-c-f-m-chambery",
+    "label": "A.C.F.M - Chambéry",
+    "file": "calendriers/a-c-f-m-chambery.json",
+    "slug": "m-chambery"
+  },
+  {
+    "id": "abchir",
+    "label": "ABCHIR",
+    "file": "calendriers/abchir.json",
+    "slug": "abchir-poitiers-86000-france"
+  },
+  {
+    "id": "abou-bakr-mistral-grenoble",
+    "label": "Abou Bakr ( Mistral ) - GRENOBLE",
+    "file": "calendriers/abou-bakr-mistral-grenoble.json",
+    "slug": "abou-bakr-grenoble-38100-france"
+  },
+  {
+    "id": "abou-bakr-seddik-oyonnax",
+    "label": "ABOU BAKR SEDDIK - OYONNAX",
+    "file": "calendriers/abou-bakr-seddik-oyonnax.json",
+    "slug": "abou-bakr-seddik-oyonnax-01100-france-1"
+  },
+  {
+    "id": "aboubaker-essadik-chelles",
+    "label": "ABOUBAKER ESSADIK - CHELLES",
+    "file": "calendriers/aboubaker-essadik-chelles.json",
+    "slug": "mosquee-de-chelles-chelles-77500-france"
+  },
+  {
+    "id": "acacm-albertville",
+    "label": "ACACM - Albertville",
+    "file": "calendriers/acacm-albertville.json",
+    "slug": "mosquee-acacm-albertville"
+  },
+  {
+    "id": "acbmmontreuil-montreuil",
+    "label": "ACBMmontreuil - Montreuil",
+    "file": "calendriers/acbmmontreuil-montreuil.json",
+    "slug": "acbm-montreuil"
+  },
+  {
+    "id": "acbsd-st-dizier",
+    "label": "ACBSD - St-dizier",
+    "file": "calendriers/acbsd-st-dizier.json",
+    "slug": "acbsd-st-dizier"
+  },
+  {
+    "id": "accft-bourg-en-bresse",
+    "label": "ACCFT - BOURG EN BRESSE",
+    "file": "calendriers/accft-bourg-en-bresse.json",
+    "slug": "accft-bourg-en-bresse-01000-france"
+  },
+  {
+    "id": "accmba-annonay-annonay",
+    "label": "ACCMBA Annonay - Annonay",
+    "file": "calendriers/accmba-annonay-annonay.json",
+    "slug": "m-annonay"
+  },
+  {
+    "id": "acdft-melun-ditib",
+    "label": "ACDFT MELUN DITIB",
+    "file": "calendriers/acdft-melun-ditib.json",
+    "slug": "acdft-melun-ditib-melun-77000-france"
+  },
+  {
+    "id": "acfm-chambery",
+    "label": "acfm - Chambéry",
+    "file": "calendriers/acfm-chambery.json",
+    "slug": "acfm-chambery-73000-france"
+  },
+  {
+    "id": "acm-saint-ouen-l-aumone-saint-ouen-l-aumone",
+    "label": "ACM Saint Ouen L'Aumône - Saint-Ouen-l'Aumône",
+    "file": "calendriers/acm-saint-ouen-l-aumone-saint-ouen-l-aumone.json",
+    "slug": "mosquee-de-saint-ouen-laumone"
+  },
+  {
+    "id": "acmm-meyrin",
+    "label": "ACMM - Meyrin",
+    "file": "calendriers/acmm-meyrin.json",
+    "slug": "acmm-meyrin-1217-switzerland"
+  },
+  {
+    "id": "act-louviers",
+    "label": "ACT LOUVIERS",
+    "file": "calendriers/act-louviers.json",
+    "slug": "mosquee-ditip-act-louviers-louviers-27400-france"
+  },
+  {
+    "id": "act-mosquee-aksemseddin-angers",
+    "label": "ACT Mosquée Akşemseddin - ANGERS",
+    "file": "calendriers/act-mosquee-aksemseddin-angers.json",
+    "slug": "act-mosquee-aksemseddin-angers-49000-france"
+  },
+  {
+    "id": "aft-romainville",
+    "label": "AFT مسجد الأُخوّة - Romainville",
+    "file": "calendriers/aft-romainville.json",
+    "slug": "lafraternite-romainville"
+  },
+  {
+    "id": "aftv-ditib-villefranche-camisi-villefranche",
+    "label": "AFTV  DITIB VILLEFRANCHE CAMISI - Villefranche",
+    "file": "calendriers/aftv-ditib-villefranche-camisi-villefranche.json",
+    "slug": "aftv-villefranche"
+  },
+  {
+    "id": "ahle-soufa-forbach",
+    "label": "Ahle soufa - FORBACH",
+    "file": "calendriers/ahle-soufa-forbach.json",
+    "slug": "ahle-soufa-forbach-57600-forbach-france"
+  },
+  {
+    "id": "aimf-fos-sur-mer",
+    "label": "AIMF - Fos-Sur-Mer",
+    "file": "calendriers/aimf-fos-sur-mer.json",
+    "slug": "aimf-fos-sur-mer-13270-france"
+  },
+  {
+    "id": "aipf-paris",
+    "label": "AIPF - PARIS",
+    "file": "calendriers/aipf-paris.json",
+    "slug": "aipf-paris-75010-france"
+  },
+  {
+    "id": "al-amal-l-espoir-wattignies",
+    "label": "Al Amal L'espoir - Wattignies",
+    "file": "calendriers/al-amal-l-espoir-wattignies.json",
+    "slug": "al-amal-lespoir-wattignies-wattignies-59139-france"
+  },
+  {
+    "id": "al-forqane-chennevieres-sur-marne",
+    "label": "Al Forqane - Chennevières-sur-Marne",
+    "file": "calendriers/al-forqane-chennevieres-sur-marne.json",
+    "slug": "masjid-al-forqane-chennevieres-sur-marne"
+  },
+  {
+    "id": "al-fourqane-montpellier",
+    "label": "AL FOURQANE - Montpellier",
+    "file": "calendriers/al-fourqane-montpellier.json",
+    "slug": "al-fourqane-montpellier"
+  },
+  {
+    "id": "al-ihsane-vandoeuvre-les-nancy",
+    "label": "AL Ihsane - Vandoeuvre-Les-Nancy",
+    "file": "calendriers/al-ihsane-vandoeuvre-les-nancy.json",
+    "slug": "al-ihsane-vandoeuvre-les-nancy"
+  },
+  {
+    "id": "al-mouhsinine-villeneuve-saint-georges",
+    "label": "Al Mouhsinine - Villeneuve-Saint-Georges",
+    "file": "calendriers/al-mouhsinine-villeneuve-saint-georges.json",
+    "slug": "mosquee-al-mouhsinine-villeneuve-saint-georges"
+  },
+  {
+    "id": "al-amel-neuilly-plaisance",
+    "label": "AL-AMEL - Neuilly-Plaisance",
+    "file": "calendriers/al-amel-neuilly-plaisance.json",
+    "slug": "al-amel-neuilly-plaisance-93360-france"
+  },
+  {
+    "id": "al-hidaya-villeneuve-saint-georges",
+    "label": "AL-HIDAYA الهداية - Villeneuve-saint-georges",
+    "file": "calendriers/al-hidaya-villeneuve-saint-georges.json",
+    "slug": "mosquee-hidaya-wa-islah-villeneuve-saint-georges"
+  },
+  {
+    "id": "al-kadar-firminy",
+    "label": "Al-Kadar - FIRMINY",
+    "file": "calendriers/al-kadar-firminy.json",
+    "slug": "al-kadar-firminy-42700-france"
+  },
+  {
+    "id": "almadina-mosque",
+    "label": "AlMadina Mosque",
+    "file": "calendriers/almadina-mosque.json",
+    "slug": "almadina-le-raizet-les-abymes"
+  },
+  {
+    "id": "ama-saint-omer",
+    "label": "AMA - Saint-omer",
+    "file": "calendriers/ama-saint-omer.json",
+    "slug": "massejid-bilal-saint-omer"
+  },
+  {
+    "id": "amal-al-madina",
+    "label": "Amal Al Madina",
+    "file": "calendriers/amal-al-madina.json",
+    "slug": "amal-al-madina-wervik-8940-belgium"
+  },
+  {
+    "id": "amc-mosquee-de-choisy-le-roi-choisy-le-roi",
+    "label": "AMC Mosquée de Choisy-Le-Roi - Choisy-le-Roi",
+    "file": "calendriers/amc-mosquee-de-choisy-le-roi-choisy-le-roi.json",
+    "slug": "mosquee-de-choisy-le-roi-choisy-le-roi"
+  },
+  {
+    "id": "amcv-cesson-vert-saint-denis",
+    "label": "AMCV - Cesson - Vert-Saint-Denis",
+    "file": "calendriers/amcv-cesson-vert-saint-denis.json",
+    "slug": "amcv-cesson-vsd"
+  },
+  {
+    "id": "amh-centre-ville-hyeres",
+    "label": "AMH Centre Ville - HYERES",
+    "file": "calendriers/amh-centre-ville-hyeres.json",
+    "slug": "amh-hyeres-83400-france-1"
+  },
+  {
+    "id": "ami-alfred-de-musset-la-courneuve",
+    "label": "AMI - Alfred de Musset - La-Courneuve",
+    "file": "calendriers/ami-alfred-de-musset-la-courneuve.json",
+    "slug": "ami-lacourneuve"
+  },
+  {
+    "id": "ami-boulevard-pasteur",
+    "label": "AMI - Boulevard Pasteur",
+    "file": "calendriers/ami-boulevard-pasteur.json",
+    "slug": "mosquee-ami-la-courneuve"
+  },
+  {
+    "id": "amiccal-montataire",
+    "label": "AMICCAL - Montataire",
+    "file": "calendriers/amiccal-montataire.json",
+    "slug": "amiccal-montataire-1"
+  },
+  {
+    "id": "amp-mosquee-de-plaisir-plaisir",
+    "label": "AMP Mosquée de Plaisir - PLAISIR",
+    "file": "calendriers/amp-mosquee-de-plaisir-plaisir.json",
+    "slug": "amp-mosquee-de-plaisir-plaisir-78370-france"
+  },
+  {
+    "id": "amps-sedan",
+    "label": "amps - Sedan",
+    "file": "calendriers/amps-sedan.json",
+    "slug": "amps-sedan"
+  },
+  {
+    "id": "ams-salle-de-priere-143-grande-rue-sevres",
+    "label": "AMS - Salle de prière (143 Grande Rue) - Sevres",
+    "file": "calendriers/ams-salle-de-priere-143-grande-rue-sevres.json",
+    "slug": "m-ams-sevres"
+  },
+  {
+    "id": "an-nour-al-ilahi-orange",
+    "label": "An Nour Al Ilahi - ORANGE",
+    "file": "calendriers/an-nour-al-ilahi-orange.json",
+    "slug": "mosqueeorange"
+  },
+  {
+    "id": "ar-rahma-chenove",
+    "label": "Ar Rahma مسجد الرحمه - CHENÔVE",
+    "file": "calendriers/ar-rahma-chenove.json",
+    "slug": "ar-rahma-msjd-lrhmh-chenove"
+  },
+  {
+    "id": "ar-rahma-mericourt",
+    "label": "Ar-Rahma - MéRICOURT",
+    "file": "calendriers/ar-rahma-mericourt.json",
+    "slug": "ar-rahma-mericourt-62680-france"
+  },
+  {
+    "id": "ar-rahmen-villiers-le-bel",
+    "label": "Ar-Rahmen مسْجدُ ٱلرَّحۡمَٰنُ - Villiers-Le-Bel",
+    "file": "calendriers/ar-rahmen-villiers-le-bel.json",
+    "slug": "zac95400"
+  },
+  {
+    "id": "arvfs-lyon",
+    "label": "ARVFS - Lyon",
+    "file": "calendriers/arvfs-lyon.json",
+    "slug": "arvfs-lyon-8"
+  },
+  {
+    "id": "as-salam-la-garde",
+    "label": "As Salam - مسجد السلام - La-Garde",
+    "file": "calendriers/as-salam-la-garde.json",
+    "slug": "mosquee-essalam-acmg83"
+  },
+  {
+    "id": "as-salam-chatellerault",
+    "label": "AS-SÂLAM - Chatellerault",
+    "file": "calendriers/as-salam-chatellerault.json",
+    "slug": "essalem-chatellerault"
+  },
+  {
+    "id": "as-salam-lons-le-saunier",
+    "label": "AS-SALAM مسجد السلام - LONS-LE-SAUNIER",
+    "file": "calendriers/as-salam-lons-le-saunier.json",
+    "slug": "es-salaam-msjd-lslm-lons-le-saunier"
+  },
+  {
+    "id": "asmc78-la-celle-saint-cloud",
+    "label": "Asmc78 - La-celle-saint-cloud",
+    "file": "calendriers/asmc78-la-celle-saint-cloud.json",
+    "slug": "asmc78-la-celle-saint-cloud"
+  },
+  {
+    "id": "ass-al-anwar-nemours",
+    "label": "Ass. Al Anwar - Nemours",
+    "file": "calendriers/ass-al-anwar-nemours.json",
+    "slug": "ass-al-anwar-nemours"
+  },
+  {
+    "id": "assalam-cayenne",
+    "label": "Assalam - CAYENNE",
+    "file": "calendriers/assalam-cayenne.json",
+    "slug": "assalam-cayenne-97300-french-guiana"
+  },
+  {
+    "id": "association-albanaise-bashkimi-vaulx-en-velin",
+    "label": "ASSOCIATION ALBANAISE BASHKIMI - VAULX EN VELIN",
+    "file": "calendriers/association-albanaise-bashkimi-vaulx-en-velin.json",
+    "slug": "association-albanaise-bashkimi-vaulx-en-velin-69120-france"
+  },
+  {
+    "id": "association-belleu",
+    "label": "Association Belleu",
+    "file": "calendriers/association-belleu.json",
+    "slug": "association-culture-musulmane-de-belleu-belleu-02200-france"
+  },
+  {
+    "id": "association-ben-achour-orleans",
+    "label": "Association Ben Achour - Orléans",
+    "file": "calendriers/association-ben-achour-orleans.json",
+    "slug": "ben-achour-orleans"
+  },
+  {
+    "id": "association-bosniaque-strasbourg-schiltigheim",
+    "label": "Association Bosniaque Strasbourg - SCHILTIGHEIM",
+    "file": "calendriers/association-bosniaque-strasbourg-schiltigheim.json",
+    "slug": "association-bosniaque-strasbourg-schiltigheim-67300-france"
+  },
+  {
+    "id": "association-clemence-terville-terville",
+    "label": "Association Clemence Terville   الرحمة - Terville",
+    "file": "calendriers/association-clemence-terville-terville.json",
+    "slug": "clemence57-terville"
+  },
+  {
+    "id": "association-cultuelle-de-chateauneuf",
+    "label": "Association Cultuelle de Châteauneuf",
+    "file": "calendriers/association-cultuelle-de-chateauneuf.json",
+    "slug": "culte-chateauneuf-chatellerault-86100-france"
+  },
+  {
+    "id": "association-cultuelle-musulmane-presles-soissons",
+    "label": "Association Cultuelle Musulmane PRESLES - SOISSONS",
+    "file": "calendriers/association-cultuelle-musulmane-presles-soissons.json",
+    "slug": "mosquee-de-presles-soissons-02200-france"
+  },
+  {
+    "id": "association-culturelle-bosniaque-mulhouse",
+    "label": "Association Culturelle Bosniaque - Mulhouse",
+    "file": "calendriers/association-culturelle-bosniaque-mulhouse.json",
+    "slug": "association-culturelle-bosniaque-mulhouse-1"
+  },
+  {
+    "id": "association-culturelle-pakistanaise-creil",
+    "label": "Association culturelle pakistanaise - CREIL",
+    "file": "calendriers/association-culturelle-pakistanaise-creil.json",
+    "slug": "association-culturelle-pakistanaise-creil-60100-france-1"
+  },
+  {
+    "id": "association-culturelle-quartier-hoche-pantin",
+    "label": "ASSOCIATION CULTURELLE QUARTIER HOCHE - PANTIN",
+    "file": "calendriers/association-culturelle-quartier-hoche-pantin.json",
+    "slug": "mosquee-la-fraternite-pantin-93500-france"
+  },
+  {
+    "id": "association-culturelle-turque-de-roanne-riorges",
+    "label": "Association culturelle turque de Roanne - Riorges",
+    "file": "calendriers/association-culturelle-turque-de-roanne-riorges.json",
+    "slug": "roanne-riorges"
+  },
+  {
+    "id": "association-des-amities-franco-turques-belfort",
+    "label": "Association des Amitiés Franco-Turques - Belfort",
+    "file": "calendriers/association-des-amities-franco-turques-belfort.json",
+    "slug": "association-des-amities-franco-turques-belfort"
+  },
+  {
+    "id": "association-des-musulmans-de-vienne-malissol-vienne",
+    "label": "Association des musulmans de Vienne Malissol - Vienne",
+    "file": "calendriers/association-des-musulmans-de-vienne-malissol-vienne.json",
+    "slug": "m-vienne-malissol"
+  },
+  {
+    "id": "association-des-turcs-de-pontarlier-pontarlier",
+    "label": "ASSOCIATION DES TURCS DE PONTARLIER - PONTARLIER",
+    "file": "calendriers/association-des-turcs-de-pontarlier-pontarlier.json",
+    "slug": "association-des-turcs-de-pontarlier-pontarlier-25300-france"
+  },
+  {
+    "id": "association-el-imane-dijon",
+    "label": "ASSOCIATION EL IMANE - Dijon",
+    "file": "calendriers/association-el-imane-dijon.json",
+    "slug": "elimane-dijon"
+  },
+  {
+    "id": "association-espoir-cluses",
+    "label": "Association Espoir - مسجد الإمام مالك - Cluses",
+    "file": "calendriers/association-espoir-cluses.json",
+    "slug": "malik-cluses"
+  },
+  {
+    "id": "association-franco-turque-meaux",
+    "label": "Association franco-turque meaux",
+    "file": "calendriers/association-franco-turque-meaux.json",
+    "slug": "ditib-meaux-meaux-77100-france"
+  },
+  {
+    "id": "association-kawthar",
+    "label": "Association Kawthar",
+    "file": "calendriers/association-kawthar.json",
+    "slug": "association-kawthar-lisieux-14100-france"
+  },
+  {
+    "id": "association-le-vivre-ensemble-vichy",
+    "label": "Association Le Vivre Ensemble - Vichy",
+    "file": "calendriers/association-le-vivre-ensemble-vichy.json",
+    "slug": "arahma-vichy"
+  },
+  {
+    "id": "assounna-amiens",
+    "label": "ASSOUNNA - AMIENS",
+    "file": "calendriers/assounna-amiens.json",
+    "slug": "assouna-amiens-80090-france"
+  },
+  {
+    "id": "attawba-perpignan",
+    "label": "Attawba - Perpignan",
+    "file": "calendriers/attawba-perpignan.json",
+    "slug": "attawba-perpignan"
+  },
+  {
+    "id": "attawba-venissieux",
+    "label": "Attawba - Venissieux",
+    "file": "calendriers/attawba-venissieux.json",
+    "slug": "attawba-venissieux-69200-france"
+  },
+  {
+    "id": "au-petit-jama-a-fameck",
+    "label": "Au Petit Jama’a - Fameck",
+    "file": "calendriers/au-petit-jama-a-fameck.json",
+    "slug": "au-petit-jama"
+  },
+  {
+    "id": "ayasofya-camii-carrieres-sous-poissy",
+    "label": "Ayasofya Camii - Carrières-Sous-Poissy",
+    "file": "calendriers/ayasofya-camii-carrieres-sous-poissy.json",
+    "slug": "mosquee-ditib-ayasofia-carrieres-sous-poissy-78955-france"
+  },
+  {
+    "id": "babessalam-forbach",
+    "label": "Babessalam - FORBACH",
+    "file": "calendriers/babessalam-forbach.json",
+    "slug": "babessalam-forbach-57600-france"
+  },
+  {
+    "id": "badr-avion",
+    "label": "BADR - Avion",
+    "file": "calendriers/badr-avion.json",
+    "slug": "badr-avion-62210-france"
+  },
+  {
+    "id": "bediuzzaman-said-i-nursi-savigny-le-temple",
+    "label": "Bediuzzaman Said-i Nursi - SAVIGNY-LE-TEMPLE",
+    "file": "calendriers/bediuzzaman-said-i-nursi-savigny-le-temple.json",
+    "slug": "mosquee-bediuzzaman-savigny-le-temple-77176-france"
+  },
+  {
+    "id": "bellegarde-sur-valserine-ditib-valserhone",
+    "label": "Bellegarde-sur-Valserine DITIB - VALSERHôNE",
+    "file": "calendriers/bellegarde-sur-valserine-ditib-valserhone.json",
+    "slug": "bellegarde-sur-valserine-ditib-valserhone-01200-france"
+  },
+  {
+    "id": "bendida-vaulx-en-velin",
+    "label": "Bendida - Vaulx-en-Velin",
+    "file": "calendriers/bendida-vaulx-en-velin.json",
+    "slug": "masjid-bendida-vaulx-en-velin"
+  },
+  {
+    "id": "cap-capuche-grenoble",
+    "label": "CAP CAPUCHE - GRENOBLE",
+    "file": "calendriers/cap-capuche-grenoble.json",
+    "slug": "cap-capuche-grenoble-38100-france"
+  },
+  {
+    "id": "ccft-pontoise-pontoise",
+    "label": "CCFT Pontoise - Pontoise",
+    "file": "calendriers/ccft-pontoise-pontoise.json",
+    "slug": "ccft-pontoise"
+  },
+  {
+    "id": "cci-avicenne-rennes",
+    "label": "CCI Avicenne - مسجد ابن سينا - Rennes",
+    "file": "calendriers/cci-avicenne-rennes.json",
+    "slug": "cciavicenne-rennes"
+  },
+  {
+    "id": "ccmpg-crozet",
+    "label": "CCMPG - Crozet",
+    "file": "calendriers/ccmpg-crozet.json",
+    "slug": "mosquee-pays-de-gex-crozet-01170-france"
+  },
+  {
+    "id": "ccmr-ris-orangis",
+    "label": "CCMR - Ris-Orangis",
+    "file": "calendriers/ccmr-ris-orangis.json",
+    "slug": "arrahma-orangis"
+  },
+  {
+    "id": "cctm-centre-culturel-turc-de-marignane-gignac-la-nerthe",
+    "label": "Cctm Centre Culturel Turc de Marignane - GIGNAC-LA-NERTHE",
+    "file": "calendriers/cctm-centre-culturel-turc-de-marignane-gignac-la-nerthe.json",
+    "slug": "cctm-centre-culturel-turque-gignac-la-nerthe-13180-france"
+  },
+  {
+    "id": "centre-al-fath-kingersheim",
+    "label": "Centre Al Fath - Kingersheim",
+    "file": "calendriers/centre-al-fath-kingersheim.json",
+    "slug": "centre-al-fath-kingersheim-68260-france"
+  },
+  {
+    "id": "centre-annour-mulhouse-mulhouse",
+    "label": "Centre Annour Mulhouse - مركز النور - Mulhouse",
+    "file": "calendriers/centre-annour-mulhouse-mulhouse.json",
+    "slug": "annour-mulhouse"
+  },
+  {
+    "id": "centre-cultuel-culturel-bourgoin-jallieu",
+    "label": "Centre Cultuel & Culturel - BOURGOIN JALLIEU",
+    "file": "calendriers/centre-cultuel-culturel-bourgoin-jallieu.json",
+    "slug": "mosquee-abou-bakr-siddik-bourgoin-jallieu-38300-france"
+  },
+  {
+    "id": "centre-cultuel-et-musulman-bethune-bethune",
+    "label": "Centre cultuel et musulman Béthune - BéTHUNE",
+    "file": "calendriers/centre-cultuel-et-musulman-bethune-bethune.json",
+    "slug": "centre-cultuel-et-musulman-bethune-bethune-62400-france"
+  },
+  {
+    "id": "centre-cultuel-musulman-des-herbiers-les-herbiers",
+    "label": "Centre Cultuel Musulman Des herbiers - Les-Herbiers",
+    "file": "calendriers/centre-cultuel-musulman-des-herbiers-les-herbiers.json",
+    "slug": "centre-culturel-des-herbiers-les-herbiers-85500-france"
+  },
+  {
+    "id": "centre-culturel-cultuel-nord-de-toulouse-aucamville",
+    "label": "Centre Culturel Cultuel Nord de Toulouse - AUCAMVILLE",
+    "file": "calendriers/centre-culturel-cultuel-nord-de-toulouse-aucamville.json",
+    "slug": "el-houda-aucamville"
+  },
+  {
+    "id": "centre-culturel-de-trelaze-trelaze",
+    "label": "Centre Culturel de Trélazé - Trélazé",
+    "file": "calendriers/centre-culturel-de-trelaze-trelaze.json",
+    "slug": "m-trelaze"
+  },
+  {
+    "id": "centre-culturel-des-musulmans-de-nice-nice",
+    "label": "CENTRE CULTUREL DES MUSULMANS DE NICE - Nice",
+    "file": "calendriers/centre-culturel-des-musulmans-de-nice-nice.json",
+    "slug": "centre-culturel-des-musulmans-de-nice-nice-06200-france"
+  },
+  {
+    "id": "centre-culturel-essalam-annemasse",
+    "label": "Centre Culturel Essalam - Annemasse",
+    "file": "calendriers/centre-culturel-essalam-annemasse.json",
+    "slug": "essalam-annemasse"
+  },
+  {
+    "id": "centre-culturel-islamique-de-martinique-fort-de-france",
+    "label": "Centre Culturel Islamique de Martinique - Fort-De-France",
+    "file": "calendriers/centre-culturel-islamique-de-martinique-fort-de-france.json",
+    "slug": "centre-culturel-islamique-de-martinique-fort-de-france-97234-martinique"
+  },
+  {
+    "id": "centre-culturel-musulman-d-annonay",
+    "label": "Centre Culturel Musulman d’Annonay",
+    "file": "calendriers/centre-culturel-musulman-d-annonay.json",
+    "slug": "centre-culturel-musulman-dannonay-annonay-07100-france"
+  },
+  {
+    "id": "centre-des-lumieres-mitry-mory",
+    "label": "Centre des lumières - MITRY-MORY",
+    "file": "calendriers/centre-des-lumieres-mitry-mory.json",
+    "slug": "centre-des-lumieres-mitry-mory-77290-france"
+  },
+  {
+    "id": "centre-essalam",
+    "label": "CENTRE ESSALAM",
+    "file": "calendriers/centre-essalam.json",
+    "slug": "association-des-musulmans-du-havre-le-havre"
+  },
+  {
+    "id": "centre-islamique-de-la-fraternite-limay",
+    "label": "Centre Islamique de la Fratérnité - Limay",
+    "file": "calendriers/centre-islamique-de-la-fraternite-limay.json",
+    "slug": "centre-islamique-de-la-fraternite-limay"
+  },
+  {
+    "id": "centre-islamique-de-noumea",
+    "label": "Centre Islamique de Nouméa",
+    "file": "calendriers/centre-islamique-de-noumea.json",
+    "slug": "mosquee-de-noumea-noumea-98800-new-caledonia"
+  },
+  {
+    "id": "centre-islamique-de-villeneuve-d-ascq",
+    "label": "Centre Islamique de Villeneuve d'Ascq",
+    "file": "calendriers/centre-islamique-de-villeneuve-d-ascq.json",
+    "slug": "leciv-villeneuve-dascq-59650-france"
+  },
+  {
+    "id": "centre-islamique-du-havre",
+    "label": "Centre islamique du Havre",
+    "file": "calendriers/centre-islamique-du-havre.json",
+    "slug": "centre-islamique-du-havre-le-havre-76610-france"
+  },
+  {
+    "id": "centre-musulman-amana-aix-en-provence",
+    "label": "Centre Musulman Amana - Aix-En-Provence",
+    "file": "calendriers/centre-musulman-amana-aix-en-provence.json",
+    "slug": "amana-aix-en-provence"
+  },
+  {
+    "id": "centre-musulman-d-ambares",
+    "label": "Centre Musulman d'Ambarès",
+    "file": "calendriers/centre-musulman-d-ambares.json",
+    "slug": "centre-musulman-de-bordeaux-ambares-et-lagrave-33440-france"
+  },
+  {
+    "id": "centre-musulman-de-clamart-clamart",
+    "label": "Centre Musulman de Clamart - clamart",
+    "file": "calendriers/centre-musulman-de-clamart-clamart.json",
+    "slug": "mon-domicile-clamart-tv"
+  },
+  {
+    "id": "centre-philippe-grenier-rennes",
+    "label": "Centre Philippe Grenier - Rennes",
+    "file": "calendriers/centre-philippe-grenier-rennes.json",
+    "slug": "centre-philippe-grenier-rennes-35000-france"
+  },
+  {
+    "id": "cfp-le-plessis-bouchard",
+    "label": "CFP - Le Plessis Bouchard",
+    "file": "calendriers/cfp-le-plessis-bouchard.json",
+    "slug": "cfp-bouchard"
+  },
+  {
+    "id": "chababidine-handrema",
+    "label": "CHABABIDINE - HANDREMA",
+    "file": "calendriers/chababidine-handrema.json",
+    "slug": "chababidine-handrema-97650-mayotte"
+  },
+  {
+    "id": "cholet-anadolu-cami-cholet",
+    "label": "CHOLET ANADOLU CAMI - CHOLET",
+    "file": "calendriers/cholet-anadolu-cami-cholet.json",
+    "slug": "cholet-anadolu-cami-cholet-49300-france"
+  },
+  {
+    "id": "cich-chambery",
+    "label": "CICH - Chambery",
+    "file": "calendriers/cich-chambery.json",
+    "slug": "mosquee-tawba-chambery"
+  },
+  {
+    "id": "cimg-albertville",
+    "label": "CIMG - ALBERTVILLE",
+    "file": "calendriers/cimg-albertville.json",
+    "slug": "cimg-albertville-albertville-73200-france"
+  },
+  {
+    "id": "cimg-annemasse",
+    "label": "CIMG - ANNEMASSE",
+    "file": "calendriers/cimg-annemasse.json",
+    "slug": "cimg-annemasse-annemasse-74100-france"
+  },
+  {
+    "id": "cimg-grenoble",
+    "label": "CIMG - GRENOBLE",
+    "file": "calendriers/cimg-grenoble.json",
+    "slug": "cimg-grenoble-grenoble-38100-france-1"
+  },
+  {
+    "id": "cimg-annonay-mosquee-m-sami-efendi-annonay",
+    "label": "CIMG Annonay Mosquée M. Sami Efendi - ANNONAY",
+    "file": "calendriers/cimg-annonay-mosquee-m-sami-efendi-annonay.json",
+    "slug": "-37"
+  },
+  {
+    "id": "cimg-blois",
+    "label": "CIMG Blois",
+    "file": "calendriers/cimg-blois.json",
+    "slug": "blois-merkez"
+  },
+  {
+    "id": "cimg-chambery-barberaz",
+    "label": "CIMG CHAMBÉRY - Barberaz",
+    "file": "calendriers/cimg-chambery-barberaz.json",
+    "slug": "cimg-chambery-barberaz-73000-france"
+  },
+  {
+    "id": "cimg-fontenay-fontenay-sous-bois",
+    "label": "CIMG Fontenay - Fontenay-Sous-Bois",
+    "file": "calendriers/cimg-fontenay-fontenay-sous-bois.json",
+    "slug": "cimg-fontenay"
+  },
+  {
+    "id": "cimg-montargis-mosquee-fatih",
+    "label": "CIMG MONTARGIS - Mosquée Fatih",
+    "file": "calendriers/cimg-montargis-mosquee-fatih.json",
+    "slug": "cimg-montargis-mosquee-fatih-chalette-sur-loing-45120-france"
+  },
+  {
+    "id": "cimg-saint-etienne-merve-cami",
+    "label": "CIMG Saint-Etienne Merve Cami",
+    "file": "calendriers/cimg-saint-etienne-merve-cami.json",
+    "slug": "cimg-saint-etienne-merve-cami-saint-etienne-42100-france"
+  },
+  {
+    "id": "cimg-salon-de-provence-salon-de-provence",
+    "label": "CIMG Salon De Provence - Salon-De-Provence",
+    "file": "calendriers/cimg-salon-de-provence-salon-de-provence.json",
+    "slug": "cimg-salon-de-provence-salon-de-provence-13300-france"
+  },
+  {
+    "id": "cimg-sevran-mosquee-salih-camii",
+    "label": "CIMG Sevran - Mosquée Salih Camii",
+    "file": "calendriers/cimg-sevran-mosquee-salih-camii.json",
+    "slug": "cimg-sevran-mosquee-salih-sevran-93270-france"
+  },
+  {
+    "id": "cimg-vaise-lyon",
+    "label": "CIMG Vaise - Lyon",
+    "file": "calendriers/cimg-vaise-lyon.json",
+    "slug": "vaise-cimg-lyon"
+  },
+  {
+    "id": "cite-basse-sevran",
+    "label": "CITE BASSE - Sevran",
+    "file": "calendriers/cite-basse-sevran.json",
+    "slug": "cite-basse-sevran"
+  },
+  {
+    "id": "clermont-ferrand-ditib-clermont-ferrand",
+    "label": "Clermont-ferrand DITIB - CLERMONT-FERRAND",
+    "file": "calendriers/clermont-ferrand-ditib-clermont-ferrand.json",
+    "slug": "clermont-ferrand-ditib-clermont-ferrand-63100-france"
+  },
+  {
+    "id": "cmeo-epinay-sur-seine",
+    "label": "CMEO - Epinay-sur-Seine",
+    "file": "calendriers/cmeo-epinay-sur-seine.json",
+    "slug": "cmeo-epinay-sur-seine"
+  },
+  {
+    "id": "cmi-issy-les-moulineaux",
+    "label": "CMI - Issy-Les-Moulineaux",
+    "file": "calendriers/cmi-issy-les-moulineaux.json",
+    "slug": "ascmi-moulineaux"
+  },
+  {
+    "id": "cmo-montpellier",
+    "label": "CMO - Montpellier",
+    "file": "calendriers/cmo-montpellier.json",
+    "slug": "cmo-montpellier"
+  },
+  {
+    "id": "communaute-musulmane-de-poitiers",
+    "label": "Communauté Musulmane de Poitiers",
+    "file": "calendriers/communaute-musulmane-de-poitiers.json",
+    "slug": "cmp-grande-mosquee-de-poitiers-poitiers"
+  },
+  {
+    "id": "compiegne-ditib-camii",
+    "label": "Compiègne DITIB Camii",
+    "file": "calendriers/compiegne-ditib-camii.json",
+    "slug": "compiegne-ditib-camii-compiegne-60200-france"
+  },
+  {
+    "id": "cultures-dialogue-eybens",
+    "label": "Cultures & dialogue - EYBENS",
+    "file": "calendriers/cultures-dialogue-eybens.json",
+    "slug": "cultures-dialogue-eybens-eybens-38320-france"
+  },
+  {
+    "id": "dar-al-arqam-epinay-sur-seine",
+    "label": "Dar Al Arqam - Epinay-sur-Seine",
+    "file": "calendriers/dar-al-arqam-epinay-sur-seine.json",
+    "slug": "al-arqam-epinay-sur-seine"
+  },
+  {
+    "id": "dar-al-iman",
+    "label": "DAR AL IMAN",
+    "file": "calendriers/dar-al-iman.json",
+    "slug": "dar-al-iman-besancon-25000-france"
+  },
+  {
+    "id": "dar-el-salem-marseille",
+    "label": "Dar El Salem دار السلام - MARSEILLE",
+    "file": "calendriers/dar-el-salem-marseille.json",
+    "slug": "dar-el-salem-marseille-13015-france"
+  },
+  {
+    "id": "ditib-colmar",
+    "label": "DITIB - COLMAR",
+    "file": "calendriers/ditib-colmar.json",
+    "slug": "ditib-colmar-colmar-68000-france"
+  },
+  {
+    "id": "ditib-goussainville-ulu-camii",
+    "label": "Ditib - Goussainville Ulu Camii",
+    "file": "calendriers/ditib-goussainville-ulu-camii.json",
+    "slug": "mt-goussainville"
+  },
+  {
+    "id": "ditib-mevlana-camii-vendome",
+    "label": "DITIB - Mevlana Camii - Vendôme",
+    "file": "calendriers/ditib-mevlana-camii-vendome.json",
+    "slug": "ditib-vendome-vendome-41100-france"
+  },
+  {
+    "id": "ditib-romorantin-lanthenay",
+    "label": "DITIB - ROMORANTIN-LANTHENAY",
+    "file": "calendriers/ditib-romorantin-lanthenay.json",
+    "slug": "asctf-romorantin-romorantin-lanthenay-41200-france"
+  },
+  {
+    "id": "ditib-acft-torcy-camii",
+    "label": "Ditib acft.torcy camii",
+    "file": "calendriers/ditib-acft-torcy-camii.json",
+    "slug": "acft-torcy-camii-torcy-77200-france"
+  },
+  {
+    "id": "ditib-afto-oyonnax",
+    "label": "DITIB AFTO - OYONNAX",
+    "file": "calendriers/ditib-afto-oyonnax.json",
+    "slug": "ditib-afto-oyonnax-01100-france"
+  },
+  {
+    "id": "ditib-atf-fameck",
+    "label": "DITIB ATF Fameck",
+    "file": "calendriers/ditib-atf-fameck.json",
+    "slug": "ditib-atf-fameck-fameck-57290-france"
+  },
+  {
+    "id": "ditib-blois",
+    "label": "Ditib Blois",
+    "file": "calendriers/ditib-blois.json",
+    "slug": "ditib-blois-blois-41000-france"
+  },
+  {
+    "id": "ditib-camii-selestat",
+    "label": "DITIB CAMII SELESTAT",
+    "file": "calendriers/ditib-camii-selestat.json",
+    "slug": "melvana-camii-ditib-selestat-selestat-france-67600-france"
+  },
+  {
+    "id": "ditib-corbeil-essonnes",
+    "label": "DITIB Corbeil-Essonnes",
+    "file": "calendriers/ditib-corbeil-essonnes.json",
+    "slug": "uftc-corbeil-essonnes-corbeil-essonnes-91100-france"
+  },
+  {
+    "id": "ditib-fatih-camii-perpignan",
+    "label": "DİTİB FATIH CAMİİ - PERPIGNAN",
+    "file": "calendriers/ditib-fatih-camii-perpignan.json",
+    "slug": "acti-perpignan-perpignan-66000-france-1"
+  },
+  {
+    "id": "ditib-firminy-fatih-camii-firminy",
+    "label": "DİTİB FIRMINY FATİH CAMİİ - FIRMINY",
+    "file": "calendriers/ditib-firminy-fatih-camii-firminy.json",
+    "slug": "ditib-firminy-fatih-camii-firminy-42700-france"
+  },
+  {
+    "id": "ditib-haguenau-ulu-cami-haguenau",
+    "label": "DITIB Haguenau Ulu Camiı - HAGUENAU",
+    "file": "calendriers/ditib-haguenau-ulu-cami-haguenau.json",
+    "slug": "ditib-haguenau-ulu-cami-haguenau-67500-france"
+  },
+  {
+    "id": "ditib-horasan-camii",
+    "label": "DITIB Horasan Camii",
+    "file": "calendriers/ditib-horasan-camii.json",
+    "slug": "mosquee-horasan-toul-54200-france"
+  },
+  {
+    "id": "ditib-le-mans-le-mans",
+    "label": "DITIB LE-MANS - Le-Mans",
+    "file": "calendriers/ditib-le-mans-le-mans.json",
+    "slug": "ditib-lemans"
+  },
+  {
+    "id": "ditib-lille-fatih-cami",
+    "label": "DITIB Lille Fatih Cami",
+    "file": "calendriers/ditib-lille-fatih-cami.json",
+    "slug": "ditip-lille-fatih-cami-lille-59800-france"
+  },
+  {
+    "id": "ditib-metz-merkez-camii",
+    "label": "DITIB Metz Merkez Camii",
+    "file": "calendriers/ditib-metz-merkez-camii.json",
+    "slug": "ditib-metz-metz-57070-france"
+  },
+  {
+    "id": "ditib-nasrullah-camii-vannes",
+    "label": "DITIB NASRULLAH CAMII - VANNES",
+    "file": "calendriers/ditib-nasrullah-camii-vannes.json",
+    "slug": "ditib-nasrullah-camii-vannes-56000-france"
+  },
+  {
+    "id": "ditib-selimiye-camii-forbach",
+    "label": "DİTİB SELİMİYE CAMİİ - FORBACH",
+    "file": "calendriers/ditib-selimiye-camii-forbach.json",
+    "slug": "ditip-forbach-selimiye-camii-forbach-57600-france"
+  },
+  {
+    "id": "ditib-st-fons",
+    "label": "DITIB ST-FONS",
+    "file": "calendriers/ditib-st-fons.json",
+    "slug": "ditib-st-fons-saint-fons-69190-france"
+  },
+  {
+    "id": "ditib-strasbourg-strasbourg",
+    "label": "Ditib Strasbourg - Strasbourg",
+    "file": "calendriers/ditib-strasbourg-strasbourg.json",
+    "slug": "ditib-strasbourg-strasbourg-67200-france-1"
+  },
+  {
+    "id": "ditib-turquoise-sallanches-sallanches",
+    "label": "Ditib Turquoise Sallanches - SALLANCHES",
+    "file": "calendriers/ditib-turquoise-sallanches-sallanches.json",
+    "slug": "ditib-turquoise-sallanches-sallanches-74700-france"
+  },
+  {
+    "id": "ditib-valentigney",
+    "label": "DITIB Valentigney",
+    "file": "calendriers/ditib-valentigney.json",
+    "slug": "ditib-valentigney-valentigney-25700-france"
+  },
+  {
+    "id": "ditib-yavuz-selim-camii-charleville-mezieres",
+    "label": "DİTİB Yavuz Selim Camii - CHARLEVILLE-MEZIERES",
+    "file": "calendriers/ditib-yavuz-selim-camii-charleville-mezieres.json",
+    "slug": "ditib-yavuz-selim-camii-charleville-mezieres-08000-france"
+  },
+  {
+    "id": "ditib-yunus-emre-camii-montereau",
+    "label": "DITIB YUNUS EMRE CAMII - MONTEREAU",
+    "file": "calendriers/ditib-yunus-emre-camii-montereau.json",
+    "slug": "ditib-yunus-emre-camii-montereau-77130-france"
+  },
+  {
+    "id": "dzemat-bosniaques-paris-le-pre-saint-gervais",
+    "label": "DŽEMAT BOSNIAQUES PARIS - LE PRE SAINT GERVAIS",
+    "file": "calendriers/dzemat-bosniaques-paris-le-pre-saint-gervais.json",
+    "slug": "dzemat-paris-le-pre-saint-gervais-93500-france"
+  },
+  {
+    "id": "dzemat-zeneva-vernier",
+    "label": "Džemat Ženeva - VERNIER",
+    "file": "calendriers/dzemat-zeneva-vernier.json",
+    "slug": "dzemat-zeneva-vernier-1219-switzerland"
+  },
+  {
+    "id": "el-amine-lyon",
+    "label": "El AMINE - Lyon",
+    "file": "calendriers/el-amine-lyon.json",
+    "slug": "el-amine-lyon"
+  },
+  {
+    "id": "el-fath-nimes",
+    "label": "el Fath - Nîmes",
+    "file": "calendriers/el-fath-nimes.json",
+    "slug": "fatah-nimes"
+  },
+  {
+    "id": "el-fath-perpignan",
+    "label": "EL FATH - perpignan",
+    "file": "calendriers/el-fath-perpignan.json",
+    "slug": "el-fath-perpignan"
+  },
+  {
+    "id": "el-mohsinine-bourg-en-bresse",
+    "label": "EL Mohsinine - Bourg-En-Bresse",
+    "file": "calendriers/el-mohsinine-bourg-en-bresse.json",
+    "slug": "centre-culturel-islamique-bourg-en-bresse"
+  },
+  {
+    "id": "el-wassila",
+    "label": "El.Wassila - مسجد الوسيلة",
+    "file": "calendriers/el-wassila.json",
+    "slug": "el-wassila-lyon"
+  },
+  {
+    "id": "ema-nevers",
+    "label": "EMA - NEVERS",
+    "file": "calendriers/ema-nevers.json",
+    "slug": "ema-nevers-58000-france-1"
+  },
+  {
+    "id": "en-nasr-saint-priest",
+    "label": "EN-NASR مسجد النصر - Saint-Priest",
+    "file": "calendriers/en-nasr-saint-priest.json",
+    "slug": "nasr-saint-priest"
+  },
+  {
+    "id": "ensar-camii-la-source-orleans",
+    "label": "Ensar Camii La Source - ORLEANS",
+    "file": "calendriers/ensar-camii-la-source-orleans.json",
+    "slug": "ensar-camii-orleans-45100-france"
+  },
+  {
+    "id": "espace-averoes",
+    "label": "Espace AVEROES",
+    "file": "calendriers/espace-averoes.json",
+    "slug": "espace-averoes-sainte-genevieve-des-bois"
+  },
+  {
+    "id": "espace-culturel-spirituel-de-montpellier-montpellier",
+    "label": "Espace Culturel&Spirituel de Montpellier - Montpellier",
+    "file": "calendriers/espace-culturel-spirituel-de-montpellier-montpellier.json",
+    "slug": "ecsm-espace-culturel-et-spirituel-de-montpellier-montpellier"
+  },
+  {
+    "id": "espoir-et-unicite-perpignan",
+    "label": "espoir et Unicité - Perpignan",
+    "file": "calendriers/espoir-et-unicite-perpignan.json",
+    "slug": "espoir-et-unicite-perpignan-66000-france"
+  },
+  {
+    "id": "espoir-set-ramonville-st-agne",
+    "label": "Espoir-SET - Ramonville-St-Agne",
+    "file": "calendriers/espoir-set-ramonville-st-agne.json",
+    "slug": "m-ramonville"
+  },
+  {
+    "id": "eyup-sultan-camii-dunkerque",
+    "label": "Eyüp Sultan Camii - Dunkerque",
+    "file": "calendriers/eyup-sultan-camii-dunkerque.json",
+    "slug": "eyup-sultan-dunkerque"
+  },
+  {
+    "id": "eyup-sultan-cimg-venissieux",
+    "label": "EYUP SULTAN CIMG - Venissieux",
+    "file": "calendriers/eyup-sultan-cimg-venissieux.json",
+    "slug": "eyupsultan69"
+  },
+  {
+    "id": "eyup-sultan-roubaix-roubaix",
+    "label": "Eyup Sultan Roubaix - ROUBAIX",
+    "file": "calendriers/eyup-sultan-roubaix-roubaix.json",
+    "slug": "eyup-sultan-roubaix-roubaix-59100-france"
+  },
+  {
+    "id": "fatih-cami-grenoble",
+    "label": "Fatih Cami - GRENOBLE",
+    "file": "calendriers/fatih-cami-grenoble.json",
+    "slug": "grenoble-fatih-cami-grenoble-38100-france"
+  },
+  {
+    "id": "fatih-camii-strasbourg",
+    "label": "Fatih Camii - Strasbourg",
+    "file": "calendriers/fatih-camii-strasbourg.json",
+    "slug": "mosquee-fatih-strasbourg-67000-france"
+  },
+  {
+    "id": "fondation-culturelle-islamique-de-geneve-geneve",
+    "label": "Fondation Culturelle Islamique de Genève - GENèVE",
+    "file": "calendriers/fondation-culturelle-islamique-de-geneve-geneve.json",
+    "slug": "fondation-culturelle-islamique-de-geneve-geneve-1209-switzerland"
+  },
+  {
+    "id": "fondation-salam-geneve",
+    "label": "Fondation Salam - Genève",
+    "file": "calendriers/fondation-salam-geneve.json",
+    "slug": "fondation-salam-geneve-1207-switzerland"
+  },
+  {
+    "id": "foyer-adoma",
+    "label": "Foyer Adoma",
+    "file": "calendriers/foyer-adoma.json",
+    "slug": "fadoma-champigny"
+  },
+  {
+    "id": "foyer-adoma-saint-denis",
+    "label": "Foyer Adoma - Saint-Denis",
+    "file": "calendriers/foyer-adoma-saint-denis.json",
+    "slug": "foyer-adama-saint-denis-93200-france"
+  },
+  {
+    "id": "foyer-adoma-la-courneuve",
+    "label": "Foyer Adoma La Courneuve",
+    "file": "calendriers/foyer-adoma-la-courneuve.json",
+    "slug": "foyer-adoma-la-courneuve-la-courneuve-93120-france"
+  },
+  {
+    "id": "foyer-ampere-massy",
+    "label": "Foyer Ampère - Massy",
+    "file": "calendriers/foyer-ampere-massy.json",
+    "slug": "f-ampere-massy"
+  },
+  {
+    "id": "foyer-clisson-paris",
+    "label": "Foyer Clisson - Paris",
+    "file": "calendriers/foyer-clisson-paris.json",
+    "slug": "foyer-clisson-paris-75013-france"
+  },
+  {
+    "id": "foyer-david-d-angers-paris",
+    "label": "Foyer David D'angers - Paris",
+    "file": "calendriers/foyer-david-d-angers-paris.json",
+    "slug": "foyer-david-dangers-paris"
+  },
+  {
+    "id": "foyer-hautpoul-paris",
+    "label": "Foyer Hautpoul - Paris",
+    "file": "calendriers/foyer-hautpoul-paris.json",
+    "slug": "foyer-hautpoul-paris"
+  },
+  {
+    "id": "foyer-laennec-villemomble",
+    "label": "Foyer Laennec - Villemomble",
+    "file": "calendriers/foyer-laennec-villemomble.json",
+    "slug": "foyer-laennec-villemomble-villemomble"
+  },
+  {
+    "id": "foyer-lorraine-paris",
+    "label": "Foyer Lorraine - Paris",
+    "file": "calendriers/foyer-lorraine-paris.json",
+    "slug": "foyer-lorraine-paris"
+  },
+  {
+    "id": "foyer-residence-robespierre-bagnolet-bagnolet",
+    "label": "Foyer Résidence Robespierre Bagnolet - BAGNOLET",
+    "file": "calendriers/foyer-residence-robespierre-bagnolet-bagnolet.json",
+    "slug": "foyer-residence-robespierre-bagnolet-93170-france"
+  },
+  {
+    "id": "foyer-rue-des-fillettes-paris",
+    "label": "Foyer Rue des fillettes - PARIS",
+    "file": "calendriers/foyer-rue-des-fillettes-paris.json",
+    "slug": "foyer-rue-fiellettes-paris-93300-france"
+  },
+  {
+    "id": "foyer-saint-just-paris",
+    "label": "Foyer Saint-Just - Paris",
+    "file": "calendriers/foyer-saint-just-paris.json",
+    "slug": "foyer-saint-just-paris"
+  },
+  {
+    "id": "g-mosquee-des-3-frontieres-saint-louis",
+    "label": "G. Mosquée des 3 Frontières - Saint-Louis",
+    "file": "calendriers/g-mosquee-des-3-frontieres-saint-louis.json",
+    "slug": "gm-saint-louis"
+  },
+  {
+    "id": "gagny-turk-kultur-ocagi",
+    "label": "GAGNY TÜRK KÜLTÜR OCAĞI",
+    "file": "calendriers/gagny-turk-kultur-ocagi.json",
+    "slug": "gagny-turk-kultur-ocagi-gagny-93220-france"
+  },
+  {
+    "id": "gazi-osman-pasa-cami-canteleu",
+    "label": "Gazi Osman Paşa cami - CANTELEU",
+    "file": "calendriers/gazi-osman-pasa-cami-canteleu.json",
+    "slug": "gazi-osman-pasa-cami-canteleu-76380-france"
+  },
+  {
+    "id": "grande-mosquee-thonon-les-bains",
+    "label": "Grande Mosquée - THONON-LES-BAINS",
+    "file": "calendriers/grande-mosquee-thonon-les-bains.json",
+    "slug": "mosquee-thonon"
+  },
+  {
+    "id": "grande-mosquee-v-st-george",
+    "label": "GRANDE MOSQUÉE - عثمان بن عفان - V.st-George",
+    "file": "calendriers/grande-mosquee-v-st-george.json",
+    "slug": "othman-st-george"
+  },
+  {
+    "id": "grande-mosquee-acn-noyon-noyon",
+    "label": "Grande Mosquée (ACN)-NOYON - Noyon",
+    "file": "calendriers/grande-mosquee-acn-noyon-noyon.json",
+    "slug": "acn-noyon"
+  },
+  {
+    "id": "grande-mosquee-d-oyonnax",
+    "label": "Grande mosquée d'Oyonnax",
+    "file": "calendriers/grande-mosquee-d-oyonnax.json",
+    "slug": "oyonnax"
+  },
+  {
+    "id": "grande-mosquee-de-beauvais",
+    "label": "Grande Mosquée de Beauvais",
+    "file": "calendriers/grande-mosquee-de-beauvais.json",
+    "slug": "mosquee-bilal-beauvais"
+  },
+  {
+    "id": "grande-mosquee-de-belfort-belfort",
+    "label": "Grande Mosquée de Belfort - Belfort",
+    "file": "calendriers/grande-mosquee-de-belfort-belfort.json",
+    "slug": "gm-belfort"
+  },
+  {
+    "id": "grande-mosquee-de-bondy",
+    "label": "GRANDE MOSQUEE DE BONDY",
+    "file": "calendriers/grande-mosquee-de-bondy.json",
+    "slug": "mosquee-de-bondy-bondy"
+  },
+  {
+    "id": "grande-mosquee-de-clermont-auvergne-clermont-ferrand",
+    "label": "Grande Mosquée de Clermont Auvergne - Clermont-Ferrand",
+    "file": "calendriers/grande-mosquee-de-clermont-auvergne-clermont-ferrand.json",
+    "slug": "gm-clermont"
+  },
+  {
+    "id": "grande-mosquee-de-compiegne-compiegne",
+    "label": "Grande Mosquée de Compiègne - Compiègne",
+    "file": "calendriers/grande-mosquee-de-compiegne-compiegne.json",
+    "slug": "grande-mosquee-de-compiegne"
+  },
+  {
+    "id": "grande-mosquee-de-grigny",
+    "label": "Grande Mosquée de Grigny",
+    "file": "calendriers/grande-mosquee-de-grigny.json",
+    "slug": "grande-mosquee-de-grigny"
+  },
+  {
+    "id": "grande-mosquee-de-laval-laval",
+    "label": "GRANDE MOSQUÉE DE LAVAL - Laval",
+    "file": "calendriers/grande-mosquee-de-laval-laval.json",
+    "slug": "isf-laval"
+  },
+  {
+    "id": "grande-mosquee-de-lille",
+    "label": "Grande Mosquée de Lille",
+    "file": "calendriers/grande-mosquee-de-lille.json",
+    "slug": "grande-mosquee-de-lille-lille-59000-france"
+  },
+  {
+    "id": "grande-mosquee-de-lyon-lyon",
+    "label": "Grande mosquée de Lyon - Lyon",
+    "file": "calendriers/grande-mosquee-de-lyon-lyon.json",
+    "slug": "grande-mosquee-de-lyon-lyon-69008-france"
+  },
+  {
+    "id": "grande-mosquee-de-nanterre-nanterre",
+    "label": "Grande Mosquée de Nanterre - Nanterre",
+    "file": "calendriers/grande-mosquee-de-nanterre-nanterre.json",
+    "slug": "grande-mosquee-de-nanterre-nanterre-92000-france"
+  },
+  {
+    "id": "grande-mosquee-de-nantes-nantes",
+    "label": "Grande Mosquée de Nantes - Nantes",
+    "file": "calendriers/grande-mosquee-de-nantes-nantes.json",
+    "slug": "mosquee-assalam-nantes-2"
+  },
+  {
+    "id": "grande-mosquee-de-narbonne",
+    "label": "Grande Mosquée De Narbonne",
+    "file": "calendriers/grande-mosquee-de-narbonne.json",
+    "slug": "grande-mosquee-de-narbonne-narbonne-11100-france-2"
+  },
+  {
     "id": "grande-mosquee-de-paris-paris",
     "label": "GRANDE MOSQUÉE DE PARIS - Paris",
     "file": "calendriers/grande-mosquee-de-paris-paris.json",
     "slug": "grande-mosquee-de-paris"
+  },
+  {
+    "id": "grande-mosquee-de-pierrefitte-pierrefitte-sur-seine",
+    "label": "Grande Mosquée de Pierrefitte - Pierrefitte-Sur-Seine",
+    "file": "calendriers/grande-mosquee-de-pierrefitte-pierrefitte-sur-seine.json",
+    "slug": "grande-mosquee-de-pierrefitte-pierrefitte-sur-seine-93380-france"
+  },
+  {
+    "id": "grande-mosquee-de-rosny-rosny-sous-bois",
+    "label": "Grande Mosquée de Rosny - rosny-sous-bois",
+    "file": "calendriers/grande-mosquee-de-rosny-rosny-sous-bois.json",
+    "slug": "mosquee-de-rosny-sous"
+  },
+  {
+    "id": "grande-mosquee-de-saint-chamond-saint-chamond",
+    "label": "GRANDE Mosquée de SAINT-CHAMOND - Saint-Chamond",
+    "file": "calendriers/grande-mosquee-de-saint-chamond-saint-chamond.json",
+    "slug": "gm-saint-chamond"
+  },
+  {
+    "id": "grande-mosquee-de-soissons-soissons",
+    "label": "Grande Mosquée de Soissons - Soissons",
+    "file": "calendriers/grande-mosquee-de-soissons-soissons.json",
+    "slug": "mosquee-badr-soissons-02200-france"
+  },
+  {
+    "id": "grande-mosquee-de-stains-stains",
+    "label": "Grande Mosquée de Stains - Stains",
+    "file": "calendriers/grande-mosquee-de-stains-stains.json",
+    "slug": "gm-stains"
+  },
+  {
+    "id": "grande-mosquee-de-valence-valence",
+    "label": "Grande Mosquée de Valence - VALENCE",
+    "file": "calendriers/grande-mosquee-de-valence-valence.json",
+    "slug": "grande-mosquee-de-valence-valence-26000-france-1"
+  },
+  {
+    "id": "grande-mosquee-du-mont-belfort-belfort",
+    "label": "Grande Mosquée du Mont - Belfort - Belfort",
+    "file": "calendriers/grande-mosquee-du-mont-belfort-belfort.json",
+    "slug": "gmm-belfort"
+  },
+  {
+    "id": "grande-mosquee-nour-roanne",
+    "label": "Grande Mosquée Nour - ROANNE",
+    "file": "calendriers/grande-mosquee-nour-roanne.json",
+    "slug": "grande-mosquee-nour-de-roanne-roanne-42300-france"
+  },
+  {
+    "id": "grande-mosquee-perpignan",
+    "label": "Grande Mosquée Perpignan",
+    "file": "calendriers/grande-mosquee-perpignan.json",
+    "slug": "grande-mosquee-perpignan"
+  },
+  {
+    "id": "grande-mosquee-vitrolles-vitrolles",
+    "label": "Grande Mosquée Vitrolles - Vitrolles",
+    "file": "calendriers/grande-mosquee-vitrolles-vitrolles.json",
+    "slug": "grande-mosquee-vitrolles"
+  },
+  {
+    "id": "ibn-sina-ambares-et-lagrave",
+    "label": "Ibn Sina - AMBARèS ET LAGRAVE",
+    "file": "calendriers/ibn-sina-ambares-et-lagrave.json",
+    "slug": "ibn-sina-ambares-et-lagrave-33440-france"
+  },
+  {
+    "id": "ikram-mosquee-marseille",
+    "label": "IKRAM MOSQUÉE - MARSEILLE",
+    "file": "calendriers/ikram-mosquee-marseille.json",
+    "slug": "ikram-mosquee-marseille-13014-france"
+  },
+  {
+    "id": "institut-ibn-badis-nanterre",
+    "label": "Institut Ibn Badis - Nanterre",
+    "file": "calendriers/institut-ibn-badis-nanterre.json",
+    "slug": "institut-ibn-badis-nanterre-92000-france"
+  },
+  {
+    "id": "institut-musulman-des-bleuets",
+    "label": "Institut Musulman des Bleuets",
+    "file": "calendriers/institut-musulman-des-bleuets.json",
+    "slug": "im-bleuets-marseille"
+  },
+  {
+    "id": "institut-nicois-en-nour",
+    "label": "Institut Niçois En-Nour",
+    "file": "calendriers/institut-nicois-en-nour.json",
+    "slug": "ennour-nice"
+  },
+  {
+    "id": "institut-rissalat-averroes-marseille",
+    "label": "Institut Rissalat Averroes - Marseille",
+    "file": "calendriers/institut-rissalat-averroes-marseille.json",
+    "slug": "institut-rissalat-averroes-marseille-13001-france"
+  },
+  {
+    "id": "iqraa-chateau-gontier",
+    "label": "Iqraa إقرأ - Chateau-gontier",
+    "file": "calendriers/iqraa-chateau-gontier.json",
+    "slug": "iqraa-chateau-gontier"
+  },
+  {
+    "id": "kanuni-sultan-suleyman-camii-flers",
+    "label": "Kanuni Sultan Süleyman Camii - FLERS",
+    "file": "calendriers/kanuni-sultan-suleyman-camii-flers.json",
+    "slug": "kanuni-sultan-suleyman-cami-flers-61100-france"
+  },
+  {
+    "id": "kemper-turk-dernegi-camii-quimper",
+    "label": "KEMPER TÜRK DERNEĞİ CAMİİ - Quimper",
+    "file": "calendriers/kemper-turk-dernegi-camii-quimper.json",
+    "slug": "mosquee-turque-de-quimper-quimper-29000-france"
+  },
+  {
+    "id": "khalid-ibn-al-walid-paris",
+    "label": "Khalid Ibn Al-walid - Paris",
+    "file": "calendriers/khalid-ibn-al-walid-paris.json",
+    "slug": "khalid-ibn-al-walid-paris-75018-france"
+  },
+  {
+    "id": "mosquee-des-carmes-orleans",
+    "label": "Mosquée Des Carmes - orléans",
+    "file": "calendriers/mosquee-des-carmes-orleans.json",
+    "slug": "mosquee-des-carmes-orleans-2"
   },
   {
     "id": "ayoub-el-ansari-paris",
