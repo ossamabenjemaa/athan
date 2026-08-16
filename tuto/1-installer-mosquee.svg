@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 442" width="300" height="442" font-family="-apple-system, Helvetica, Arial, sans-serif">
+  <rect width="300" height="442" rx="26" fill="#1c1c1e"/>
+  <text x="150" y="40" font-size="13" fill="#f2f2f7" font-weight="700" text-anchor="middle">Athan mosquée — la copie</text>
+  <rect x="16" y="58" width="268" height="30" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="28" y="78" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">🔍  Rechercher des alarmes</text>
+  <rect x="16" y="93" width="268" height="30" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="28" y="113" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">🗑  Supprimer les alarmes</text>
+  <rect x="16" y="128" width="268" height="30" rx="12" fill="#2c2c2e" stroke="#0f8b6c"/>
+  <text x="28" y="148" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">📝  Texte → adresse du calendrier</text>
+  <text x="276" y="148" font-size="8" fill="#0f8b6c" font-weight="700" text-anchor="end">à changer</text>
+  <rect x="16" y="163" width="268" height="30" rx="12" fill="#2c2c2e" stroke="#0f8b6c"/>
+  <text x="28" y="183" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">🌐  Obtenir le contenu de l’URL → Texte</text>
+  <text x="276" y="183" font-size="8" fill="#0f8b6c" font-weight="700" text-anchor="end">à changer</text>
+  <rect x="16" y="198" width="268" height="30" rx="12" fill="#2c2c2e" stroke="#0f8b6c"/>
+  <text x="28" y="218" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">📗  Valeur du dict. → clé [Date dd-MM]</text>
+  <text x="276" y="218" font-size="8" fill="#0f8b6c" font-weight="700" text-anchor="end">à ajouter</text>
+  <rect x="16" y="233" width="268" height="30" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="28" y="253" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">📝  Fajr,Dhuhr,Asr,Maghrib,Isha</text>
+  <rect x="16" y="268" width="268" height="30" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="28" y="288" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">✂️  Scinder le texte  ( , )</text>
+  <rect x="16" y="303" width="268" height="30" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="28" y="323" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">🔁  Répéter avec chaque élément</text>
+  <rect x="16" y="338" width="268" height="30" rx="12" fill="#2c2c2e" stroke="#0f8b6c"/>
+  <text x="28" y="358" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">📗  Valeur du dict. → clé [Élément]</text>
+  <text x="276" y="358" font-size="8" fill="#0f8b6c" font-weight="700" text-anchor="end">à changer</text>
+  <rect x="16" y="373" width="268" height="30" rx="12" fill="#2c2c2e" stroke="none"/>
+  <text x="28" y="393" font-size="9.5" fill="#f2f2f7" font-weight="400" text-anchor="start">⏰  Ajouter une alarme « Athan … »</text>
+  <text x="150" y="426" font-size="9" fill="#8e8e93" font-weight="400" text-anchor="middle">Illustration — pas une vraie capture</text>
+</svg>

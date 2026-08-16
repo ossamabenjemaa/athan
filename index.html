@@ -1200,6 +1200,7 @@
 
   var TUTO_IMAGES = {
     installer: 'tuto/1-installer.svg',
+    installerMosquee: 'tuto/1-installer-mosquee.svg',
     parametres: 'tuto/2-parametres.svg',
     reglages: 'tuto/3-reglages.svg',
     automatisation: 'tuto/4-automatisation.svg',
@@ -1229,16 +1230,35 @@
 
     steps.push({
       titre: 'Installer le raccourci',
-      image: TUTO_IMAGES.installer,
+      image: (!lien && src.file) ? TUTO_IMAGES.installerMosquee : TUTO_IMAGES.installer,
       html: lien
         ? '<p>Ouvrez ce lien depuis votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
           'Deux touches, rien à construire.</p>'
-        : '<p>Ce parcours utilise un raccourci adapté aux calendriers de mosquée. Il n\'a pas ' +
-          'encore de lien iCloud : téléchargez le fichier, puis activez <b>Réglages → Raccourcis → ' +
-          'Autoriser les raccourcis non fiables</b> avant de l\'ouvrir.</p>',
+        : '<p>Les horaires de mosquée demandent une variante du raccourci, qui n\'a pas encore de ' +
+          'lien iCloud. Un fichier <code>.shortcut</code> ne suffit pas : iOS n\'importe un raccourci ' +
+          'non signé qu\'après avoir activé « Autoriser les raccourcis non fiables », un réglage qui ' +
+          'n\'apparaît qu\'une fois un premier raccourci lancé. <b>Le plus simple est de partir du ' +
+          'raccourci Athan que vous avez déjà</b> :</p>' +
+          '<ol class="steps" style="margin-bottom:10px">' +
+          '<li>Raccourcis → appui long sur <b>' + escapeHtml(SHORTCUT_NAME) + '</b> → <b>Dupliquer</b>, ' +
+          'et renommez la copie (par exemple <i>Athan mosquée</i>).</li>' +
+          '<li>Dans la copie, l\'action <b>Texte</b> de tête : remplacez la ligne de paramètres par ' +
+          'l\'<b>adresse du calendrier</b> (étape 2 ci-dessous).</li>' +
+          '<li>Action <b>Obtenir le contenu de l\'URL</b> : effacez tout le champ et mettez-y la ' +
+          'seule variable <b>Texte</b> — plus d\'adresse AlAdhan, plus de date.</li>' +
+          '<li>Juste après, ajoutez <b>Obtenir la valeur du dictionnaire</b> : clé = la variable ' +
+          '<b>Date actuelle</b> au format personnalisé <code>dd-MM</code>, dans <b>Contenu de l\'URL</b>.</li>' +
+          '<li>Dans la boucle, l\'action <b>Obtenir la valeur du dictionnaire</b> : la clé devient la ' +
+          'seule variable <b>Élément de répétition</b>, et le champ « dans » pointe sur la valeur du ' +
+          'jour de l\'étape précédente.</li>' +
+          '</ol>' +
+          '<p class="hint" style="margin:0">Une fois qu\'elle tourne, partagez-la : ' +
+          '<b>Partager → Copier le lien iCloud</b>. Ce lien-là s\'installe en deux touches chez ' +
+          'n\'importe qui, et remplacera tout ce pavé.</p>',
       actions: lien
         ? [{ label: '⬇️ Installer « ' + SHORTCUT_NAME + ' »', href: lien, primary: true, externe: true }]
-        : [{ label: '⬇️ Télécharger le raccourci', href: SHORTCUT_FILE_MOSQUEE, primary: true, download: true }]
+        : [{ label: '✏️ Ouvrir Raccourcis', href: 'shortcuts://', primary: true },
+           { label: '⬇️ Le fichier (si vous savez)', href: SHORTCUT_FILE_MOSQUEE, download: true }]
     });
 
     steps.push({

@@ -48,10 +48,22 @@ python3 scripts/build-raccourci.py             # régénère la variante mosqué
 python3 scripts/build-raccourci.py --verifier  # relit les deux et décrit chaque action
 ```
 
-Le fichier généré n'est pas signé : il s'importe après avoir activé *Réglages → Raccourcis →
-Autoriser les raccourcis non fiables*. Une fois importé puis **repartagé** depuis l'iPhone, on
-obtient un lien iCloud signé : il se colle dans `SHORTCUT_URL_MOSQUEE`, en tête du script de
-`index.html`, et le tuto propose alors l'installation en deux touches au lieu du téléchargement.
+**Un fichier `.shortcut` ne s'installe pas comme ça.** iOS n'importe un raccourci non signé
+qu'après avoir activé *Autoriser les raccourcis non fiables*, réglage qui n'apparaît qu'une fois
+un premier raccourci lancé — impasse pour la plupart des gens. Le fichier généré sert donc de
+référence ; **le chemin praticable est de dupliquer le raccourci existant et d'y faire trois
+retouches**, ce que le tuto détaille :
+
+| Action | Avant (AlAdhan) | Après (calendrier) |
+|---|---|---|
+| Texte de tête | `latitude=…&longitude=…` | l'URL du fichier JSON |
+| Obtenir le contenu de l'URL | `…/timings/[Date]?[Texte]` | la seule variable **Texte** |
+| *(nouvelle action)* | — | **Valeur du dictionnaire**, clé = **Date actuelle** au format `dd-MM` |
+| Valeur du dictionnaire (boucle) | clé `data.timings.[Élément]` | clé = **[Élément]**, dans la valeur du jour |
+
+Une fois la copie fonctionnelle, **Partager → Copier le lien iCloud** : ce lien signé s'installe
+en deux touches chez n'importe qui. Collé dans `SHORTCUT_URL_MOSQUEE` en tête du script de
+`index.html`, il remplace tout ce pavé par un bouton.
 
 ## 🔗 Les liens du tuto
 
