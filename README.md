@@ -7,6 +7,7 @@ sonner l'athan **sans jamais toucher au bouton silencieux physique de l'iPhone**
 index.html      — la page (horaires, compte à rebours, mode veilleur)
 prayer-times.js — le calcul astronomique (navigateur + Node, zéro dépendance)
 cli.js          — les mêmes horaires en ligne de commande
+calendriers/    — calendriers de mosquée en JSON (365 jours, clés « JJ-MM »)
 ```
 
 ## 🚀 Essayer
@@ -127,7 +128,33 @@ l'action *Obtenir le contenu de l'URL*, efface `15-08-2026` et insère à la pla
 
 Le bouton **📋 Copier la recette entière** de la page en donne la version texte, prête à suivre.
 
-### c. Coller aux horaires de sa mosquée
+### c. Utiliser directement le calendrier de sa mosquée (le plus juste)
+
+Le sélecteur **Source des horaires** propose, à côté du calcul, un calendrier de mosquée
+embarqué dans le dépôt :
+
+```
+calendriers/ayoub-el-ansari-2026.json   — 365 jours, heures de Paris, clés « JJ-MM »
+```
+
+Choisi comme source, il remplace entièrement le calcul : plus de méthode, plus d'angle, plus
+d'ajustements — les horaires affichés *sont* ceux de la mosquée. Le fichier est mis en cache
+sur l'appareil au premier chargement, donc la page continue de fonctionner hors ligne.
+
+Le raccourci s'y branche avec **une action de plus** : après *Obtenir le contenu de l'URL*
+(qui pointe maintenant sur le JSON), ajoute **Obtenir la valeur du dictionnaire** avec pour clé
+la variable **Date actuelle** au format `dd-MM` — tu récupères les horaires du jour. Dans la
+boucle, la clé n'est plus que la variable **Élément de répétition**, et le champ « dans » pointe
+sur cette valeur du jour. Le bouton *Copier la recette entière* s'adapte tout seul à la source.
+
+Pour ajouter ta propre mosquée : dépose un fichier au même format dans `calendriers/` et
+ajoute une entrée dans le tableau `SOURCES` en tête du script de `index.html`.
+
+> Les clés sont `JJ-MM`, sans année : le fichier reste utilisable l'année suivante, à la réserve
+> près des changements d'heure, qui ne tombent pas aux mêmes dates. Mieux vaut redéposer le
+> calendrier de l'année quand la mosquée le publie.
+
+### d. Coller aux horaires de sa mosquée (sans calendrier complet)
 
 Les horaires calculés ne sont pas ceux de ta mosquée, et c'est attendu : **Dhuhr et Asr** ne
 dépendent que de la position du soleil et tombent au même moment partout, mais **Fajr et Ichaa**
@@ -154,7 +181,7 @@ donc **les alarmes suivent le même calendrier que ce que tu lis**.
 > ⚠️ Ne confonds pas l'heure de l'athan avec les `+15`, `+10`, `+5` affichés par Mawaqit : ce sont
 > les délais d'**iqama** (le début de la prière en groupe), pas l'appel.
 
-### d. Trouver son lieu sans installer quoi que ce soit
+### e. Trouver son lieu sans installer quoi que ce soit
 
 Trois façons, de la plus simple à la plus précise :
 

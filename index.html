@@ -220,6 +220,10 @@
       </div>
     </div>
     <div class="field">
+      <label for="source">Source des horaires</label>
+      <select id="source"></select>
+    </div>
+    <div class="field" id="methodField">
       <label for="method">Méthode de calcul</label>
       <select id="method"></select>
     </div>
@@ -329,6 +333,12 @@
       occasions de faire une faute de frappe. Attention à la clé : <code>timings</code> prend un
       <b>s</b>, et une clé erronée ne provoque pas d'erreur, elle rend juste une valeur vide et
       l'alarme n'est pas créée.</p>
+    <p class="hint" id="calNote" hidden>📅 <b>En mode calendrier</b>, l'étape 3 pointe sur le fichier
+      JSON du dépôt et il faut <b>une action de plus</b> : juste après, <b>Obtenir la valeur du
+      dictionnaire</b> avec pour clé la variable <b>Date actuelle</b> au format <code>dd-MM</code>
+      → tu obtiens les horaires du jour. Dans la boucle, la clé n'est alors que la variable
+      <b>Élément de répétition</b>, et le champ « dans » pointe sur cette valeur du jour.
+      Ni <code>tune</code>, ni méthode : les horaires sont ceux de la mosquée, tels quels.</p>
     <p class="hint">⚠️ L'ordre n'est pas décoratif : si <b>Supprimer les alarmes</b> se retrouve
       <i>après</i> les <b>Ajouter une alarme</b>, il efface les alarmes qui viennent d'être créées —
       on les voit apparaître puis disparaître. Vérifie aussi que l'entrée de l'action de suppression
@@ -377,7 +387,25 @@
   var STORE = 'athan.settings.v1';
   var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  /*
+   * Deux façons d'obtenir les horaires : le calcul astronomique, ou le
+   * calendrier publié par une mosquée — un fichier JSON du dépôt, servi à côté
+   * de la page. Le calendrier gagne toujours quand il couvre le jour demandé.
+   */
+  var SOURCES = [
+    { id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' },
+    { id: 'ayoub', label: 'Mosquée Ayoub el Ansari — Paris 11e (2026)',
+      file: 'calendriers/ayoub-el-ansari-2026.json' }
+  ];
+  var calendar = null;
+
+  function sourceById(id) {
+    for (var i = 0; i < SOURCES.length; i++) if (SOURCES[i].id === id) return SOURCES[i];
+    return SOURCES[0];
+  }
+
   var settings = {
+    source: 'calcul',
     place: '', latitude: 48.8566, longitude: 2.3522,
     methodId: 3, madhab: 'standard', highLats: 'angle', watch: false,
     adjust: {} // minutes par prière, pour coller au calendrier de la mosquée
@@ -422,6 +450,7 @@
   }
 
   function fillForm() {
+    $('source').value = settings.source;
     $('place').value = settings.place;
     $('lat').value = settings.latitude;
     $('lon').value = settings.longitude;
@@ -458,15 +487,107 @@
 
   var today = null;
 
+  /*
+   * Les horaires d'un jour donné, quelle que soit la source. Le calendrier
+   * d'une mosquée est en heure locale de sa ville : on fabrique les instants
+   * dans le fuseau du téléphone, ce qui suppose d'être dans le même fuseau
+   * qu'elle (c'est le cas quand on prie derrière elle).
+   */
+  function dayTimes(date) {
+    var src = sourceById(settings.source);
+    if (src.file && calendar) {
+      var p = dateParts(date);
+      var row = calendar[pad2(p.day) + '-' + pad2(p.month)];
+      if (row) return calendarDay(p, row);
+    }
+    return PT.computeTimes(assign(options(), { date: date }));
+  }
+
+  function calendarDay(p, row) {
+    var list = [];
+    var times = {};
+    for (var i = 0; i < PT.PRAYERS.length; i++) {
+      var pr = PT.PRAYERS[i];
+      var raw = row[pr.key.charAt(0).toUpperCase() + pr.key.slice(1)];
+      var date = null;
+      if (raw) {
+        var hm = raw.split(':');
+        date = new Date(p.year, p.month - 1, p.day, Number(hm[0]), Number(hm[1]), 0, 0);
+      }
+      times[pr.key] = date;
+      list.push({ key: pr.key, label: pr.label, ar: pr.ar, sub: pr.sub, silent: !!pr.silent, date: date });
+    }
+    return { times: times, list: list, date: p, fromCalendar: true };
+  }
+
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+  function dateParts(d) {
+    var s = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
+      .format(d).split('-');
+    return { year: Number(s[0]), month: Number(s[1]), day: Number(s[2]) };
+  }
+
+  /* Prochaine prière : aujourd'hui, sinon le Fajr de demain. */
+  function findNext(now) {
+    for (var offset = 0; offset <= 1; offset++) {
+      var day = dayTimes(new Date(now.getTime() + offset * 86400000));
+      for (var i = 0; i < day.list.length; i++) {
+        var item = day.list[i];
+        if (item.silent || !item.date) continue;
+        if (item.date.getTime() > now.getTime()) {
+          return { key: item.key, label: item.label, ar: item.ar, date: item.date, tomorrow: offset === 1 };
+        }
+      }
+    }
+    return null;
+  }
+
+  /*
+   * Le calendrier est un fichier statique servi à côté de la page : on le garde
+   * en cache local pour que la page reste utilisable hors ligne, tout en
+   * rafraîchissant en arrière-plan.
+   */
+  function loadCalendar() {
+    var src = sourceById(settings.source);
+    if (!src.file) { calendar = null; render(); return; }
+    var cacheKey = 'athan.cal.' + src.id;
+    try {
+      var cached = localStorage.getItem(cacheKey);
+      if (cached) { calendar = JSON.parse(cached); }
+    } catch (e) { /* cache illisible : on retéléchargera */ }
+    render();
+    fetch(src.file, { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (json) {
+        calendar = json;
+        try { localStorage.setItem(cacheKey, JSON.stringify(json)); } catch (e) {}
+        render();
+        var meta = json._meta || {};
+        srcStatus('ok', '📅 ' + (meta.mosquee || src.label) + (meta.annee ? ' — calendrier ' + meta.annee : '') +
+          ' : ' + (Object.keys(json).length - 1) + ' jours chargés.');
+      })
+      .catch(function (e) {
+        if (calendar) srcStatus('warn', 'Calendrier hors ligne : version enregistrée sur l’appareil.');
+        else srcStatus('err', 'Calendrier introuvable (' + e.message + '). Repasse en calcul astronomique.');
+      });
+  }
+
+  function srcStatus(kind, msg) {
+    var el = $('geoStatus');
+    el.className = 'status show ' + kind;
+    el.textContent = msg;
+  }
+
   function render() {
     var now = new Date();
-    today = PT.computeTimes(assign(options(), { date: now }));
+    today = dayTimes(now);
 
     $('dayTag').textContent = new Intl.DateTimeFormat('fr-FR', {
       weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ
     }).format(now);
 
-    var next = PT.nextPrayer(options(), now);
+    var next = findNext(now);
     var html = '';
     for (var i = 0; i < today.list.length; i++) {
       var p = today.list[i];
@@ -479,9 +600,17 @@
     }
     $('times').innerHTML = html;
 
-    apiUrl = PT.aladhanUrl(options(), today.date);
-    $('dateSample').textContent = (apiUrl.match(/timings\/([\d-]+)/) || [])[1] || '';
-    $('apiUrlCity').textContent = cityUrl(apiUrl);
+    var src = sourceById(settings.source);
+    $('methodField').style.display = src.file ? 'none' : '';
+    $('adjBox').style.display = src.file ? 'none' : '';
+    $('calNote').hidden = !src.file;
+    apiUrl = src.file
+      ? new URL(src.file, location.href).href
+      : PT.aladhanUrl(options(), today.date);
+    $('dateSample').textContent = (apiUrl.match(/timings\/([\d-]+)/) || [])[1] || 'JJ-MM-AAAA';
+    $('apiUrlCity').textContent = src.file
+      ? 'Sans objet : le calendrier de la mosquée remplace l’API.'
+      : cityUrl(apiUrl);
     renderCopyList();
     tick();
   }
@@ -495,13 +624,17 @@
   var PRAYER_KEYS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
   function copyValues() {
+    var fromCal = !!sourceById(settings.source).file;
     return [
       { k: '1 · Filtre : étiquette contient', v: 'Athan' },
       { k: '3 · Adresse à interroger', v: apiUrl },
-      { k: '3 · Format de date personnalisé', v: 'dd-MM-yyyy' },
+      { k: fromCal ? '3bis · Format de date (clé du jour)' : '3 · Format de date personnalisé',
+        v: fromCal ? 'dd-MM' : 'dd-MM-yyyy' },
       { k: '4 · Texte des cinq prières (sans espace après la virgule)', v: PRAYER_KEYS.join(',') },
       { k: '5 · Séparateur personnalisé — une virgule, rien d’autre', v: ',' },
-      { k: '6a · Clé, puis variable « Élément de répétition »', v: 'data.timings.' },
+      { k: fromCal ? '6a · Clé : rien à taper, juste la variable Élément'
+                   : '6a · Clé, puis variable « Élément de répétition »',
+        v: fromCal ? '' : 'data.timings.', skip: fromCal },
       { k: '6b · Étiquette, puis variable « Élément de répétition »', v: 'Athan ',
         show: 'Athan<span class="sp">␣</span>' }
     ];
@@ -511,6 +644,7 @@
     var rows = copyValues();
     var html = '';
     for (var i = 0; i < rows.length; i++) {
+      if (rows[i].skip) continue;
       html += '<button class="copyrow" type="button" data-i="' + i + '">' +
         '<span><span class="k">' + rows[i].k + '</span>' +
         '<span class="v">' + (rows[i].show || escapeHtml(rows[i].v)) + '</span></span>' +
@@ -540,7 +674,7 @@
 
   function tick() {
     var now = new Date();
-    var next = PT.nextPrayer(options(), now);
+    var next = findNext(now);
     if (!next) { $('nextWho').textContent = '—'; return; }
 
     $('nextWho').innerHTML = 'Prochaine : <b>' + next.label + '</b> <span class="ar">' + next.ar + '</span>';
@@ -757,14 +891,22 @@
       '2. Supprimer les alarmes   (entrée = les alarmes trouvées)',
       '3. Obtenir le contenu de l’URL :',
       '   ' + apiUrl,
-      '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable',
-      '     « Date actuelle » au format personnalisé dd-MM-yyyy',
+      (sourceById(settings.source).file
+        ? '3bis. Obtenir la valeur du dictionnaire\n' +
+          '      clé : variable « Date actuelle » au format personnalisé dd-MM\n' +
+          '      dans : Contenu de l’URL   → les horaires du jour'
+        : '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable\n' +
+          '     « Date actuelle » au format personnalisé dd-MM-yyyy'),
       '4. Texte : Fajr,Dhuhr,Asr,Maghrib,Isha   (sans espace)',
       '5. Scinder le texte → séparateur Personnalisé → une virgule',
       '6. Répéter avec chaque élément dans : Texte scindé  (PAS Contenu de l’URL)',
-      '     a. Obtenir la valeur du dictionnaire',
-      '        clé : data.timings.[Élément de répétition]   (timings avec un s)',
-      '        dans : Contenu de l’URL',
+      (sourceById(settings.source).file
+        ? '     a. Obtenir la valeur du dictionnaire\n' +
+          '        clé : [Élément de répétition]\n' +
+          '        dans : la valeur du jour (étape 3bis)'
+        : '     a. Obtenir la valeur du dictionnaire\n' +
+          '        clé : data.timings.[Élément de répétition]   (timings avec un s)\n' +
+          '        dans : Contenu de l’URL'),
       '     b. Ajouter une alarme à cette valeur,',
       '        étiquette : Athan [Élément de répétition]',
       '',
@@ -805,18 +947,31 @@
       sel.appendChild(o);
     });
 
+    var srcSel = $('source');
+    SOURCES.forEach(function (src) {
+      var o = document.createElement('option');
+      o.value = src.id; o.textContent = src.label;
+      srcSel.appendChild(o);
+    });
+
     loadSettings();
     if (!settings.adjust || typeof settings.adjust !== 'object') settings.adjust = {};
     buildAdjGrid();
     fillForm();
     $('watch').checked = false; // on ne réactive jamais le son sans geste de l'utilisateur
-    render();
+    loadCalendar();  // rend la page, avec ou sans calendrier
     setInterval(tick, 1000);
 
     ['place', 'lat', 'lon', 'method', 'madhab', 'highlats'].forEach(function (id) {
       $(id).addEventListener('change', readForm);
     });
     PT.PRAYERS.forEach(function (p) { $('adj-' + p.key).addEventListener('change', readForm); });
+
+    $('source').addEventListener('change', function () {
+      settings.source = this.value;
+      saveSettings();
+      loadCalendar();
+    });
 
     $('adjReset').addEventListener('click', function () {
       settings.adjust = {};
