@@ -3,246 +3,146 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Athan — horaires de prière & appel sonore</title>
-<meta name="description" content="Horaires de prière calculés hors ligne, athan qui sonne même en mode silencieux (mode veilleur + réveils Horloge via Raccourcis).">
+<title>Athan — l'appel à la prière sur votre iPhone</title>
+<meta name="description" content="Les horaires de votre mosquée, et l'athan qui sonne chaque jour sur iPhone, même en mode silencieux.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Athan">
 <meta name="theme-color" content="#0f1512">
 <style>
   :root {
-    --gold: #c9a227;
-    --green: #0f8b6c;
-    --bg: #f3f6f4;
-    --card: #ffffff;
-    --text: #16201c;
-    --muted: #63736c;
-    --line: #e2ebe6;
-    --mono-bg: #f0f5f2;
-    --ok: #12833b;
-    --ok-bg: #e3f6ea;
-    --warn: #8a6100;
-    --warn-bg: #fdf3d7;
-    --err: #b3261e;
-    --err-bg: #fdecea;
+    --gold: #c9a227; --green: #0f8b6c;
+    --bg: #f3f6f4; --card: #fff; --text: #16201c; --muted: #63736c;
+    --line: #e2ebe6; --soft: #f0f5f2;
+    --ok: #12833b; --ok-bg: #e3f6ea; --warn: #8a6100; --warn-bg: #fdf3d7;
+    --err: #b3261e; --err-bg: #fdecea;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0c1210;
-      --card: #16201c;
-      --text: #eef5f1;
-      --muted: #93a49c;
-      --line: #24332d;
-      --mono-bg: #1d2925;
-      --ok: #5ad189;
-      --ok-bg: #123324;
-      --warn: #f0c34e;
-      --warn-bg: #332a10;
-      --err: #ff8a80;
-      --err-bg: #3a1512;
+      --bg: #0c1210; --card: #16201c; --text: #eef5f1; --muted: #93a49c;
+      --line: #24332d; --soft: #1d2925;
+      --ok: #5ad189; --ok-bg: #123324; --warn: #f0c34e; --warn-bg: #332a10;
+      --err: #ff8a80; --err-bg: #3a1512;
     }
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0;
-    padding: 24px 16px 40px;
+    margin: 0; padding: 26px 16px 40px; min-height: 100dvh;
     background:
       radial-gradient(60% 40% at 15% 0%, color-mix(in srgb, var(--green) 16%, transparent), transparent 70%),
       radial-gradient(60% 40% at 85% 0%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%),
       var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    min-height: 100dvh;
   }
   .wrap { max-width: 520px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 20px; }
-  h1 { font-size: 1.65rem; margin: 0 0 6px; letter-spacing: -0.02em; }
+  header { text-align: center; margin-bottom: 22px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; letter-spacing: -0.02em; }
   .sub { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
   .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 18px;
-    box-shadow: 0 10px 30px rgba(10, 40, 30, 0.08);
-    margin-bottom: 16px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+    padding: 20px; box-shadow: 0 10px 30px rgba(10, 40, 30, 0.08); margin-bottom: 16px;
   }
-  h2 { font-size: 1.02rem; margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
-  h2 .tag {
-    margin-left: auto; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; color: var(--muted); background: var(--mono-bg);
-    border: 1px solid var(--line); padding: 4px 8px; border-radius: 999px;
-  }
-  label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
-  .row { display: flex; gap: 8px; }
-  .row > * { flex: 1; min-width: 0; }
-  .field { margin-bottom: 12px; }
+  h2 { font-size: 1.15rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h3 { font-size: 0.88rem; margin: 20px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  p.lede { margin: 0 0 16px; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+  .hint { font-size: 0.83rem; color: var(--muted); margin: 10px 0 0; line-height: 1.5; }
+  .hint a { color: inherit; font-weight: 700; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86em;
+         background: var(--soft); padding: 1px 5px; border-radius: 6px; }
+
   input, select {
-    width: 100%;
-    padding: 12px 13px;
-    border-radius: 12px;
-    border: 1.5px solid var(--line);
-    background: var(--mono-bg);
-    color: var(--text);
-    font: inherit;
-    font-size: 0.95rem;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
+    width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: var(--soft); color: var(--text); font: inherit; outline: none;
+    -webkit-appearance: none; appearance: none;
   }
-  select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: right 16px center, right 11px center; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 34px; }
   input:focus, select:focus { border-color: var(--green); }
-  button {
-    font: inherit;
-    border: 1.5px solid var(--line);
-    cursor: pointer;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-weight: 600;
-    color: var(--text);
-    background: var(--mono-bg);
-  }
-  button:active { transform: scale(0.98); }
-  button.primary { color: #fff; border: none; background: linear-gradient(90deg, var(--green), #14a884); }
-  button.wide { width: 100%; }
-  .tuto-step .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
-  .tuto-step .actions > * { flex: 1 1 46%; }
-  a.go {
-    display: block; text-align: center; text-decoration: none;
-    padding: 12px 10px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
-    color: var(--text); background: var(--mono-bg); border: 1.5px solid var(--line);
-  }
-  a.go:active { transform: scale(0.98); }
+  .row { display: flex; gap: 8px; }
 
-  a.install {
-    display: block; text-align: center; text-decoration: none;
-    padding: 14px; border-radius: 12px; font-weight: 700; font-size: 1.02rem;
-    color: #fff; background: linear-gradient(90deg, var(--green), #14a884);
+  button, a.btn {
+    font: inherit; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none;
+    border: 1.5px solid var(--line); border-radius: 12px; padding: 14px;
+    background: var(--soft); color: var(--text); display: block; width: 100%;
   }
-  button.danger { color: var(--err); }
-  .hint { font-size: 0.82rem; color: var(--muted); margin: 8px 0 0; line-height: 1.45; }
-  .hint code, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; background: var(--mono-bg); padding: 1px 5px; border-radius: 6px; }
+  button:active, a.btn:active { transform: scale(0.985); }
+  button.primary, a.btn.primary { color: #fff; border: none; background: linear-gradient(90deg, var(--green), #14a884); }
+  button.ghost { background: transparent; border-color: transparent; color: var(--muted); padding: 12px; }
+  button + button, button + a.btn, a.btn + button, a.btn + a.btn { margin-top: 8px; }
 
-  /* Prochaine prière */
-  .next { text-align: center; padding: 6px 0 4px; }
-  .next .who { font-size: 1.15rem; font-weight: 700; }
-  .next .who .ar { color: var(--gold); font-weight: 600; }
-  .next .count { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; margin: 2px 0; }
-  .next .at { color: var(--muted); font-size: 0.92rem; }
-
-  ul.times { list-style: none; margin: 14px 0 0; padding: 0; }
-  ul.times li {
-    display: flex; align-items: center; gap: 10px;
-    padding: 11px 12px; border-radius: 12px; border: 1.5px solid transparent;
+  /* Une mosquée dans la liste */
+  .m {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    padding: 12px 14px; margin-top: 8px; border-radius: 12px;
+    border: 1.5px solid var(--line); background: var(--soft); color: var(--text); font: inherit;
   }
-  ul.times li + li { margin-top: 2px; }
-  ul.times li.now { background: var(--ok-bg); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
-  ul.times li.past { opacity: 0.5; }
-  ul.times li.info { opacity: 0.65; font-style: italic; }
-  ul.times .name { font-weight: 700; }
+  .m .nom { font-weight: 700; font-size: 0.95rem; display: block; }
+  .m .ville { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 2px;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .m .km { margin-left: auto; flex: none; font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+  .m .pin { flex: none; font-size: 1.1rem; }
+  .m.absent { opacity: 0.5; }
+
+  /* Les horaires */
+  .source {
+    font-size: 0.9rem; line-height: 1.45; background: var(--soft); border: 1px solid var(--line);
+    border-radius: 12px; padding: 10px 12px; margin: 0 0 14px; color: var(--muted);
+  }
+  .source b { color: var(--text); }
+  .next { text-align: center; padding: 4px 0 8px; }
+  .next .who { font-size: 1.05rem; font-weight: 700; }
+  .next .who .ar { color: var(--gold); }
+  .next .count { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  ul.times { list-style: none; margin: 6px 0 18px; padding: 0; }
+  ul.times li { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; }
+  ul.times li.now { background: var(--ok-bg); }
+  ul.times li.past { opacity: 0.45; }
+  ul.times li.info { opacity: 0.6; font-style: italic; }
+  ul.times .n { font-weight: 700; }
   ul.times .ar { color: var(--muted); font-size: 0.88rem; }
-  ul.times .t { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.05rem; }
+  ul.times .t { margin-left: auto; font-weight: 700; font-size: 1.08rem; font-variant-numeric: tabular-nums; }
 
-  .status { font-size: 0.9rem; padding: 11px 13px; border-radius: 12px; margin-top: 12px; display: none; line-height: 1.45; }
+  .status { font-size: 0.9rem; padding: 12px 14px; border-radius: 12px; margin-top: 12px; display: none; line-height: 1.45; }
   .status.show { display: block; }
   .status.ok { background: var(--ok-bg); color: var(--ok); }
   .status.warn { background: var(--warn-bg); color: var(--warn); }
   .status.err { background: var(--err-bg); color: var(--err); }
 
-  .urlbox {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.76rem;
-    background: var(--mono-bg);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 11px 12px;
-    word-break: break-all;
-    line-height: 1.5;
+  /* Le tuto */
+  .step { border-top: 1px dashed var(--line); padding-top: 16px; margin-top: 16px; }
+  .step:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .step h4 { font-size: 1rem; margin: 0 0 8px; display: flex; align-items: baseline; gap: 9px; }
+  .step h4 .num {
+    flex: none; width: 25px; height: 25px; border-radius: 50%; background: var(--green);
+    color: #fff; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center;
   }
-  /* Valeurs à recopier dans Raccourcis : une touche = copié */
-  .copyrow {
-    display: flex; align-items: center; gap: 10px; width: 100%;
-    margin-top: 8px; padding: 10px 12px; text-align: left;
-    border: 1.5px solid var(--line); border-radius: 12px;
-    background: var(--mono-bg); color: var(--text); font: inherit; cursor: pointer;
-  }
-  .copyrow .k { display: block; font-size: 0.76rem; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
-  .copyrow .v {
-    display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.84rem; word-break: break-all; line-height: 1.4;
-  }
-  .copyrow .ico { margin-left: auto; flex: none; font-size: 1rem; opacity: 0.65; }
-  .copyrow.done { border-color: var(--ok); }
-  .copyrow.done .ico { opacity: 1; }
-  .copyrow .sp { opacity: 0.5; }
-
-  .mosque {
+  .step p { font-size: 0.9rem; line-height: 1.55; margin: 0 0 10px; color: var(--muted); }
+  .step p b { color: var(--text); }
+  .step img { display: block; width: 100%; max-width: 290px; margin: 12px auto;
+              border: 1px solid var(--line); border-radius: 14px; }
+  .copy {
     display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
-    margin-top: 8px; padding: 10px 12px; border: 1.5px solid var(--line);
-    border-radius: 12px; background: var(--mono-bg); color: var(--text); font: inherit; cursor: pointer;
+    padding: 12px 14px; margin: 8px 0 2px; border-radius: 12px;
+    border: 1.5px solid var(--line); background: var(--soft); color: var(--text); font: inherit;
   }
-  .mosque .nom { font-weight: 700; font-size: 0.92rem; }
-  .mosque .ville { display: block; font-weight: 400; font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-  .mosque .dist { margin-left: auto; flex: none; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
-  .mosque .pastille { flex: none; font-size: 0.9rem; }
-  .mosque.active { border-color: var(--ok); background: var(--ok-bg); }
+  .copy .k { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+  .copy .v { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+             font-size: 0.82rem; word-break: break-all; line-height: 1.4; }
+  .copy .ico { margin-left: auto; flex: none; opacity: 0.6; }
+  .copy.done { border-color: var(--ok); }
+  .copy.done .ico { opacity: 1; }
 
-  .sourceline {
-    margin: -6px 0 12px; font-size: 0.9rem; color: var(--muted);
-    background: var(--mono-bg); border: 1px solid var(--line);
-    border-radius: 10px; padding: 8px 11px; line-height: 1.4;
-  }
-  .sourceline b { color: var(--text); }
-  .tuto-step { border-top: 1px dashed var(--line); padding-top: 14px; margin-top: 14px; }
-  .tuto-step:first-child { border-top: none; padding-top: 0; margin-top: 0; }
-  .tuto-step h3 {
-    font-size: 0.98rem; margin: 0 0 8px; display: flex; align-items: baseline; gap: 8px;
-  }
-  .tuto-step h3 .num {
-    flex: none; width: 24px; height: 24px; border-radius: 50%;
-    background: var(--green); color: #fff; font-size: 0.8rem;
-    display: inline-flex; align-items: center; justify-content: center;
-  }
-  .tuto-step p { font-size: 0.9rem; line-height: 1.5; margin: 0 0 10px; color: var(--muted); }
-  .tuto-step p b { color: var(--text); }
-  .tuto-step img {
-    display: block; width: 100%; max-width: 300px; margin: 10px auto;
-    border: 1px solid var(--line); border-radius: 14px; background: var(--mono-bg);
-  }
-
-  .adjgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .adjgrid label { margin-bottom: 4px; }
-  .stepper { display: flex; align-items: stretch; gap: 6px; }
-  .stepper input {
-    padding: 10px 4px; text-align: center; font-variant-numeric: tabular-nums;
-    min-width: 0; flex: 1;
-  }
-  .stepper .step {
-    flex: none; width: 40px; padding: 0; font-size: 1.15rem; font-weight: 700; line-height: 1;
-  }
-
-  ol.steps { margin: 0; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; }
-  ol.steps li { margin-bottom: 8px; }
-  ol.steps b { color: var(--green); }
-  @media (prefers-color-scheme: dark) { ol.steps b { color: #4fd3ae; } }
-  details { border-top: 1px dashed var(--line); margin-top: 14px; padding-top: 12px; }
+  details { border-top: 1px dashed var(--line); margin-top: 16px; padding-top: 14px; }
   summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--muted); }
   details[open] summary { margin-bottom: 12px; }
-  footer { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 22px; line-height: 1.6; }
+  label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  .field { margin-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stepper { display: flex; gap: 6px; }
+  .stepper input { text-align: center; padding: 10px 2px; font-variant-numeric: tabular-nums; }
+  .stepper button { flex: none; width: 42px; padding: 0; font-size: 1.2rem; font-weight: 700; }
+  footer { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 24px; line-height: 1.7; }
   footer a { color: inherit; }
-  .switch { display: flex; align-items: center; gap: 12px; }
-  .switch .lbl { font-weight: 700; }
-  .switch .lbl span { display: block; font-weight: 400; font-size: 0.83rem; color: var(--muted); margin-top: 2px; }
-  .switch input[type="checkbox"] {
-    width: 52px; height: 31px; flex: none; margin: 0; border-radius: 999px;
-    background: var(--line); border: none; position: relative; transition: background 0.2s;
-  }
-  .switch input[type="checkbox"]::after {
-    content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px;
-    border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.3); transition: transform 0.2s;
-  }
-  .switch input[type="checkbox"]:checked { background: var(--green); }
-  .switch input[type="checkbox"]:checked::after { transform: translateX(21px); }
 </style>
 </head>
 <body>
@@ -250,171 +150,71 @@
 
   <header>
     <h1>🕌 Athan</h1>
-    <p class="sub">Les horaires de votre mosquée, et l'appel qui sonne <b>même en mode silencieux</b>.</p>
+    <p class="sub">Les horaires de votre mosquée, et l'appel qui sonne chaque jour — <b>même en mode silencieux</b>.</p>
   </header>
 
-  <!-- ÉCRAN 1 — une seule question ------------------------------------- -->
-  <section class="card" id="screenSearch">
-    <h2>📍 Où voulez-vous prier ?</h2>
-    <div class="field">
-      <label for="q">Indiquez votre adresse ou la mosquée de votre choix</label>
-      <div class="row">
-        <input id="q" type="text" autocomplete="off" enterkeyhint="search"
-               placeholder="12 rue Godefroy Cavaignac, ou « Ayoub »">
-        <button id="qGo" type="button" style="flex:none">🔎</button>
-      </div>
-      <button id="useGeo" class="wide" type="button" style="margin-top:8px">📍 Utiliser ma position</button>
+  <!-- 1 — l'adresse ---------------------------------------------------- -->
+  <section class="card" id="s1">
+    <h2>Où habitez-vous ?</h2>
+    <p class="lede">Pour trouver les mosquées autour de vous.</p>
+    <div class="row">
+      <input id="addr" type="text" autocomplete="off" enterkeyhint="search"
+             placeholder="12 rue Godefroy Cavaignac, Paris">
+      <button id="addrGo" type="button" style="flex:none; width:auto; padding:14px 18px">🔎</button>
     </div>
-    <div id="results"></div>
-    <div id="geoStatus" class="status"></div>
-    <p class="hint" id="searchHint">Une adresse donne des horaires calculés pour ce point.
-      Une mosquée donne <b>ses horaires officiels</b>, ceux de son calendrier.</p>
+    <button id="geo" type="button" style="margin-top:8px">📍 Utiliser ma position</button>
+    <div id="s1status" class="status"></div>
   </section>
 
-  <!-- ÉCRAN 2 — les horaires, puis la question -------------------------- -->
-  <section class="card" id="screenTimes" hidden>
-    <h2>🕰️ Aujourd'hui <span class="tag" id="dayTag">—</span></h2>
-    <p class="sourceline" id="sourceLine">—</p>
-    <div id="sourceWarn" class="status warn" style="margin-bottom:12px"></div>
+  <!-- 2 — la source ---------------------------------------------------- -->
+  <section class="card" id="s2" hidden>
+    <h2>Vos horaires</h2>
+    <p class="lede" id="lieu">—</p>
+    <h3>Mosquées autour de vous</h3>
+    <div id="mosques"></div>
+    <p class="hint" id="mosquesHint"></p>
+    <h3>Sinon</h3>
+    <button id="useCalc" type="button">🧭 Horaires calculés pour cette adresse</button>
+    <button id="backAddr" class="ghost" type="button">← Changer d'adresse</button>
+  </section>
+
+  <!-- 3 — vérification -------------------------------------------------- -->
+  <section class="card" id="s3" hidden>
+    <h2>Ces horaires sont-ils les bons ?</h2>
+    <p class="source" id="source">—</p>
     <div class="next">
-      <div class="who" id="nextWho">—</div>
-      <div class="count" id="nextCount">--:--:--</div>
-      <div class="at" id="nextAt">&nbsp;</div>
+      <div class="who" id="who">—</div>
+      <div class="count" id="count">--:--:--</div>
     </div>
     <ul class="times" id="times"></ul>
-
-    <div style="margin-top:18px">
-      <button id="goTuto" class="primary wide" type="button">✅ Ces horaires me conviennent — obtenir les alarmes</button>
-      <button id="backSearch" class="wide" type="button" style="margin-top:8px">✏️ Ils ne correspondent pas — changer de lieu</button>
-    </div>
-
-    <details id="advBox">
-      <summary>Réglages fins (méthode, madhhab, décalages)</summary>
+    <a id="mawaqit" class="btn" href="#" target="_blank" rel="noopener" hidden>🔎 Comparer sur Mawaqit</a>
+    <p class="hint" id="verifHint"></p>
+    <details id="affiner" hidden>
+      <summary>Affiner le calcul</summary>
       <div class="field">
-        <label for="place">Nom du lieu (étiquette)</label>
-        <input id="place" type="text" placeholder="Paris 11e" autocomplete="off">
-      </div>
-      <div class="row field">
-        <div>
-          <label for="lat">Latitude</label>
-          <input id="lat" type="text" inputmode="text" autocomplete="off" placeholder="48.8566">
-        </div>
-        <div>
-          <label for="lon">Longitude</label>
-          <input id="lon" type="text" inputmode="text" autocomplete="off" placeholder="2.3522">
-        </div>
-      </div>
-      <div class="field">
-        <label for="source">Source des horaires</label>
-        <select id="source"></select>
-      </div>
-      <div class="field" id="methodField">
-        <label for="method">Méthode de calcul</label>
+        <label for="method">Méthode</label>
         <select id="method"></select>
       </div>
-      <div class="row field">
-        <div>
-          <label for="madhab">Asr</label>
-          <select id="madhab">
-            <option value="standard">Majorité (ombre ×1)</option>
-            <option value="hanafi">Hanafi (ombre ×2)</option>
-          </select>
-        </div>
-        <div>
-          <label for="highlats">Hautes latitudes</label>
-          <select id="highlats">
-            <option value="angle">Angle (défaut)</option>
-            <option value="seventh">1/7 de nuit</option>
-            <option value="night">Milieu de nuit</option>
-            <option value="none">Aucune</option>
-          </select>
-        </div>
-      </div>
-      <details id="adjBox">
-        <summary>Décaler prière par prière (± minutes)</summary>
-        <p class="hint" style="margin-top:0">Compare avec le calendrier de ta mosquée et corrige ce
-          qui diffère. Le Fajr et l'Ichaa sont les plus variables : chaque mosquée choisit son angle
-          de crépuscule. Ces minutes partent aussi dans le raccourci (paramètre <code>tune</code>),
-          donc <b>les alarmes suivront</b>.</p>
-        <div class="adjgrid" id="adjGrid"></div>
-        <button id="adjReset" type="button" style="margin-top:10px">Tout remettre à zéro</button>
-      </details>
+      <label>Décaler chaque prière (± minutes)</label>
+      <div class="grid" id="adjGrid"></div>
     </details>
-
-    <details id="watchBox">
-      <summary>🔊 Mode veilleur — faire sonner l'athan dans cette page</summary>
-      <div class="switch">
-        <input type="checkbox" id="watch">
-        <div class="lbl">Faire sonner l'athan ici
-          <span>L'onglet reste ouvert et l'écran allumé ; le son passe le bouton silencieux.</span>
-        </div>
-      </div>
-      <div id="watchStatus" class="status"></div>
-      <div class="field" style="margin-top:14px">
-        <label for="file">Fichier de l'athan (mp3 / m4a)</label>
-        <div class="row">
-          <input id="file" type="file" accept="audio/*">
-          <button id="test" type="button" style="flex:none">▶︎ Tester</button>
-        </div>
-      </div>
-      <p class="hint" id="fileHint">Aucun fichier : un simple carillon de secours est utilisé.</p>
-      <button id="forget" class="danger" type="button" style="display:none; margin-top:8px">Oublier le fichier</button>
-      <audio id="player" preload="auto" playsinline></audio>
-    </details>
+    <div style="margin-top:18px">
+      <button id="ok" class="primary" type="button">✅ Oui — obtenir les alarmes</button>
+      <button id="backSrc" class="ghost" type="button">✏️ Non — changer de mosquée ou d'adresse</button>
+    </div>
   </section>
 
-  <!-- ÉCRAN 3 — le tuto, adapté à la source ----------------------------- -->
-  <section class="card" id="screenTuto" hidden>
-    <h2>📲 Les alarmes sur votre iPhone</h2>
-    <p class="sourceline" id="tutoSource">—</p>
-    <div id="tutoSteps"></div>
-    <button id="backTimes" class="wide" type="button" style="margin-top:16px">← Revenir aux horaires</button>
-
-    <details>
-      <summary>Construire le raccourci soi-même (dépannage)</summary>
-      <ol class="steps">
-        <li><b>Première action</b> : <b>Rechercher des alarmes</b> (Étiquette <i>contient</i>
-          <code>Athan</code>), puis <b>Supprimer les alarmes</b> — avant les créations, sinon elles
-          effacent ce qui vient d'être créé.</li>
-        <li><b>Texte</b> avec les paramètres, puis <b>Définir la variable</b> <code>Paramètres</code>.</li>
-        <li><b>Obtenir le contenu de l'URL</b> (voir la valeur ci-dessous).</li>
-        <li><b>Texte</b> <code>Fajr,Dhuhr,Asr,Maghrib,Isha</code> → <b>Scinder le texte</b>,
-          séparateur <b>Personnalisé</b>, une virgule.</li>
-        <li><b>Répéter avec chaque élément dans</b> <i>Texte scindé</i> : dedans,
-          <b>Obtenir la valeur du dictionnaire</b> puis <b>Ajouter une alarme</b>,
-          étiquette <code>Athan </code> + <b>Élément de répétition</b>.</li>
-      </ol>
-      <p class="hint" id="calNote" hidden>📅 <b>Source calendrier</b> : l'URL pointe sur le fichier
-        JSON de la mosquée, et une action de plus s'intercale — <b>Obtenir la valeur du dictionnaire</b>
-        avec pour clé la <b>Date actuelle</b> au format <code>dd-MM</code>. Dans la boucle, la clé
-        n'est plus que l'<b>Élément de répétition</b>.</p>
-      <h2 style="margin-top:20px">📋 Valeurs à copier <span class="tag">touche = copié</span></h2>
-      <div id="copyList"></div>
-      <p class="hint">⚠️ Dans l'URL AlAdhan, la date <code id="dateSample">—</code> doit être la
-        variable <b>Date actuelle</b> au format <code>dd-MM-yyyy</code>.</p>
-      <button id="copyRecipe" class="wide" type="button" style="margin-top:10px">📋 Copier la recette entière</button>
-      <details>
-        <summary>Variante sans coordonnées (par ville)</summary>
-        <div class="urlbox" id="apiUrlCity">—</div>
-        <button id="copyUrlCity" type="button" style="margin-top:10px">📋 Copier cette adresse</button>
-      </details>
-    </details>
-
-    <details>
-      <summary>Pourquoi des alarmes plutôt qu'une notification ?</summary>
-      <p class="hint" style="margin-top:0">
-        Les notifications (web ou app) sont muettes quand le bouton silencieux est mis : seules les
-        <i>alertes critiques</i> passent, réservées à des apps autorisées par Apple. Les alarmes de
-        l'app Horloge, elles, sonnent toujours — d'où le détour. Leur volume suit le curseur
-        <b>Sonnerie et alertes</b>, pas le volume multimédia.
-      </p>
-    </details>
+  <!-- 4 — installation --------------------------------------------------- -->
+  <section class="card" id="s4" hidden>
+    <h2>Installer les alarmes</h2>
+    <p class="source" id="source4">—</p>
+    <div id="steps"></div>
+    <button id="backTimes" class="ghost" type="button" style="margin-top:16px">← Revenir aux horaires</button>
   </section>
 
   <footer>
-    Horaires de mosquée recopiés tels quels ; sinon calcul astronomique local,
-    aligné à ±1 min sur l'API AlAdhan.<br>
-    Vérifie toujours avec le calendrier de ta mosquée. 🤲
+    Horaires des mosquées recopiés de leur calendrier ; sinon calcul astronomique local.<br>
+    Vérifiez avec votre mosquée. 🤲 · <a href="v1/">ancienne version</a>
   </footer>
 </div>
 
@@ -425,780 +225,18 @@
 
   var PT = window.PrayerTimes;
   var $ = function (id) { return document.getElementById(id); };
-  var STORE = 'athan.settings.v1';
   var TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var STORE = 'athan.v2';
 
-  /*
-   * Deux façons d'obtenir les horaires : le calcul astronomique, ou le
-   * calendrier publié par une mosquée — un fichier JSON du dépôt, servi à côté
-   * de la page. Le calendrier gagne toujours quand il couvre le jour demandé.
-   */
-  /*
-   * Lien iCloud du raccourci, à coller une fois qu'il est construit :
-   * Raccourcis → le raccourci → Partager → Copier le lien iCloud.
-   * Rempli, la page propose un bouton d'installation ; vide, elle se contente
-   * de la recette pas à pas.
-   */
-  var SHORTCUT_URL = 'https://www.icloud.com/shortcuts/2b8ff86ac89e4dbbadb114af385ff42f';
-  var SHORTCUT_URL_MOSQUEE = '';   // à remplir après import + repartage du fichier généré
-  var SHORTCUT_FILE_MOSQUEE = 'raccourcis/athan-mosquee.shortcut';
-  var SHORTCUT_NAME = 'Athan';   // sert aux liens shortcuts://…?name=
-
-  /*
-   * Safari ne suit plus les liens vers un panneau de Réglages, mais l'action
-   * « Ouvrir les URL » d'un raccourci y arrive encore. D'où ce petit raccourci
-   * d'une seule action : une fois importé et repartagé depuis l'iPhone, coller
-   * son lien iCloud ici transforme l'étape 3 en un seul tap.
-   */
-  var SHORTCUT_URL_REGLAGES = '';
-  var SHORTCUT_FILE_REGLAGES = 'raccourcis/reglages-raccourcis.shortcut';
-  var SHORTCUT_NAME_REGLAGES = 'Réglages Raccourcis';
-
-  var SOURCES = [{ id: 'calcul', label: 'Calcul astronomique (méthode ci-dessous)' }];
-  var SOURCES_INDEX = 'calendriers/index.json';
-  var calendar = null;
-
-  /*
-   * La liste des mosquées vient d'un manifeste du dépôt, alimenté par
-   * scripts/import-mawaqit.js : ajouter une mosquée ne demande donc pas de
-   * toucher à cette page. On garde le manifeste en cache pour l'afficher même
-   * hors ligne.
-   */
-  function applySources(list) {
-    if (!Array.isArray(list)) return false;
-    var known = {};
-    SOURCES.forEach(function (s) { known[s.id] = true; });
-    var added = false;
-    list.forEach(function (e) {
-      if (!e || !e.id || !e.file || known[e.id]) return;
-      SOURCES.push({ id: e.id, label: e.label || e.id, file: e.file, slug: e.slug });
-      added = true;
-    });
-    return added;
-  }
-
-  function fillSourceSelect() {
-    var sel = $('source');
-    sel.innerHTML = '';
-    SOURCES.forEach(function (src) {
-      var o = document.createElement('option');
-      o.value = src.id; o.textContent = src.label;
-      sel.appendChild(o);
-    });
-    sel.value = sourceById(settings.source).id;
-  }
-
-  /* ---------------------------------------------------------------- */
-  /* Annuaire des mosquées : trouver la sienne sans quitter la page      */
-  /* ---------------------------------------------------------------- */
-
-  var DIRECTORY = 'calendriers/mosquees.json';
+  /* Deux raccourcis : celui qui interroge AlAdhan (adresse) et celui qui lit
+     un calendrier de mosquée. Le second attend son lien iCloud. */
+  var SHORTCUT_ALADHAN = 'https://www.icloud.com/shortcuts/2b8ff86ac89e4dbbadb114af385ff42f';
+  var SHORTCUT_MOSQUEE = '';
+  var SHORTCUT_NAME = 'Athan';
+  var FICHIER_MOSQUEE = 'raccourcis/athan-mosquee.shortcut';
   var REPO = 'https://github.com/ossamabenjemaa/athan';
-  var mosques = null;
 
-  function loadDirectory() {
-    try {
-      var cached = localStorage.getItem('athan.mosquees');
-      if (cached) mosques = JSON.parse(cached);
-    } catch (e) { /* cache illisible */ }
-    fetch(DIRECTORY, { cache: 'no-cache' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (json) {
-        if (!json || !json.mosquees) return;
-        mosques = json.mosquees;
-        try { localStorage.setItem('athan.mosquees', JSON.stringify(mosques)); } catch (e) {}
-        if (!$('screenSearch').hidden) runSearch();
-      })
-      .catch(function () { /* hors ligne : le cache fera l'affaire */ });
-  }
-
-  /* Distance à vol d'oiseau, en km — assez juste à cette échelle. */
-  function distanceKm(lat1, lon1, lat2, lon2) {
-    var p = Math.PI / 180;
-    var x = (lat2 - lat1) * p;
-    var y = (lon2 - lon1) * p * Math.cos((lat1 + lat2) / 2 * p);
-    return 6371 * Math.sqrt(x * x + y * y);
-  }
-
-  function normalize(s) {
-    return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  }
-
-  /*
-   * Sans texte : les dix plus proches du lieu réglé. Avec texte : on filtre sur
-   * le nom et la ville, en classant quand même par distance.
-   */
-  function pickMosques(query) {
-    if (!mosques) return null;
-    var q = normalize(query);
-    var list = mosques.map(function (m) {
-      return { m: m, d: distanceKm(settings.latitude, settings.longitude, m.lat, m.lon) };
-    });
-    if (q) {
-      list = list.filter(function (e) {
-        return normalize(e.m.nom).indexOf(q) >= 0 || normalize(e.m.ville).indexOf(q) >= 0;
-      });
-    }
-    list.sort(function (a, b) { return a.d - b.d; });
-    return list.slice(0, 10);
-  }
-
-  function calendarIdFor(slug) {
-    for (var i = 0; i < SOURCES.length; i++) {
-      if (SOURCES[i].slug === slug || SOURCES[i].id === slug) return SOURCES[i].id;
-    }
-    return null;
-  }
-
-  /*
-   * Un seul champ pour deux besoins : on propose donc les deux familles de
-   * réponses, la forme du texte décidant seulement de l'ordre. Un numéro, un
-   * code postal ou « rue / avenue » sent l'adresse ; le reste sent la mosquée.
-   */
-  function looksLikeAddress(q) {
-    return /\d/.test(q) || /\b(rue|avenue|av|bd|boulevard|impasse|place|chemin|route|all[ée]e|quai)\b/i.test(q);
-  }
-
-  function runSearch() {
-    var q = $('q').value.trim();
-    var box = $('results');
-    var html = '';
-
-    var mosquesFound = q ? pickMosques(q) : (settings.latitude ? pickMosques('') : null);
-    var addressRow = q && !/^\s*$/.test(q)
-      ? '<button class="mosque" type="button" data-address="1">' +
-        '<span class="pastille">📍</span>' +
-        '<span><span class="nom">Utiliser cette adresse</span>' +
-        '<span class="ville">' + escapeHtml(q) + '</span></span>' +
-        '<span class="dist">→</span></button>'
-      : '';
-
-    var mosquesHtml = '';
-    if (mosquesFound && mosquesFound.length) {
-      for (var i = 0; i < mosquesFound.length; i++) {
-        var m = mosquesFound[i].m;
-        var ready = calendarIdFor(m.slug);
-        mosquesHtml += '<button class="mosque" type="button" data-slug="' + escapeHtml(m.slug) + '">' +
-          '<span class="pastille">' + (ready ? '📅' : '➕') + '</span>' +
-          '<span><span class="nom">' + escapeHtml(m.nom) + '</span>' +
-          '<span class="ville">' + escapeHtml(m.ville || '') + '</span></span>' +
-          '<span class="dist">' + fmtKm(mosquesFound[i].d) + '</span></button>';
-      }
-    }
-
-    if (!q) {
-      html = mosquesHtml ? '<p class="hint">Mosquées les plus proches :</p>' + mosquesHtml : '';
-    } else if (looksLikeAddress(q)) {
-      html = addressRow + (mosquesHtml ? '<p class="hint">Ou une mosquée :</p>' + mosquesHtml : '');
-    } else {
-      html = mosquesHtml + (mosquesHtml ? '<p class="hint">Ou :</p>' : '') + addressRow;
-    }
-    box.innerHTML = html;
-
-    $('searchHint').innerHTML = mosques
-      ? '📅 horaires officiels de la mosquée · ➕ mosquée connue, calendrier pas encore importé · ' +
-        '📍 horaires calculés pour une adresse.'
-      : 'Annuaire des mosquées indisponible hors ligne : la recherche par adresse reste possible.';
-  }
-
-  function fmtKm(d) {
-    if (!isFinite(d)) return '';
-    return d < 10 ? d.toFixed(1) + ' km' : Math.round(d) + ' km';
-  }
-
-  function calendarIdFor(slug) {
-    for (var i = 0; i < SOURCES.length; i++) {
-      if (SOURCES[i].slug === slug || SOURCES[i].id === slug) return SOURCES[i].id;
-    }
-    return null;
-  }
-
-  /* Géocodage d'une adresse libre — AlAdhan rend latitude et longitude. */
-  function chooseAddress(q) {
-    var el = $('geoStatus');
-    el.className = 'status show';
-    el.textContent = 'Recherche de « ' + q + ' »…';
-    fetch('https://api.aladhan.com/v1/addressInfo?address=' + encodeURIComponent(q))
-      .then(function (r) { return r.json(); })
-      .then(function (j) {
-        if (!j || j.code !== 200 || !j.data || !isFinite(j.data.latitude)) {
-          throw new Error((j && j.data) ? String(j.data) : 'adresse introuvable');
-        }
-        settings.latitude = Math.round(j.data.latitude * 10000) / 10000;
-        settings.longitude = Math.round(j.data.longitude * 10000) / 10000;
-        settings.place = q;
-        settings.source = 'calcul';
-        settings.pendingMosque = null;
-        saveSettings(); fillForm(); fillSourceSelect();
-        el.className = 'status'; el.textContent = '';
-        loadCalendar();
-        showScreen('times');
-      })
-      .catch(function (e) {
-        el.className = 'status show err';
-        el.textContent = 'Adresse introuvable (' + e.message + '). Essaie « ville, pays », ' +
-          'ou touche 📍 Utiliser ma position.';
-      });
-  }
-
-  function chooseMosque(slug) {
-    var m = null;
-    for (var i = 0; mosques && i < mosques.length; i++) if (mosques[i].slug === slug) m = mosques[i];
-    if (!m) return;
-
-    settings.latitude = m.lat;
-    settings.longitude = m.lon;
-    settings.place = m.nom;
-    var id = calendarIdFor(slug);
-    settings.source = id || 'calcul';
-    // Sans calendrier, on garde le nom pour pouvoir le dire franchement.
-    settings.pendingMosque = id ? null : { slug: m.slug, nom: m.nom };
-    saveSettings(); fillForm(); fillSourceSelect(); loadCalendar();
-    showScreen('times');
-  }
-
-  function loadSources() {
-    try {
-      var cached = localStorage.getItem('athan.sources');
-      if (cached) applySources(JSON.parse(cached));
-    } catch (e) { /* cache illisible */ }
-    fillSourceSelect();
-
-    return fetch(SOURCES_INDEX, { cache: 'no-cache' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (list) {
-        if (!list) return;
-        try { localStorage.setItem('athan.sources', JSON.stringify(list)); } catch (e) {}
-        if (applySources(list)) fillSourceSelect();
-      })
-      .catch(function () { /* hors ligne : le cache suffit */ });
-  }
-
-  function sourceById(id) {
-    for (var i = 0; i < SOURCES.length; i++) if (SOURCES[i].id === id) return SOURCES[i];
-    return SOURCES[0];
-  }
-
-  var settings = {
-    source: 'calcul',
-    place: '', latitude: 48.8566, longitude: 2.3522,
-    methodId: 3, madhab: 'standard', highLats: 'angle', watch: false,
-    adjust: {} // minutes par prière, pour coller au calendrier de la mosquée
-  };
-
-  /* ---------------------------------------------------------------- */
-  /* Réglages : URL (?lat=…) puis localStorage                          */
-  /* ---------------------------------------------------------------- */
-
-  function loadSettings() {
-    try {
-      var saved = JSON.parse(localStorage.getItem(STORE) || '{}');
-      for (var k in saved) if (k in settings) settings[k] = saved[k];
-    } catch (e) { /* stockage indisponible : on garde les défauts */ }
-    var q = new URLSearchParams(location.search);
-    if (q.get('lat')) settings.latitude = Number(q.get('lat'));
-    if (q.get('lon')) settings.longitude = Number(q.get('lon'));
-    if (q.get('method')) settings.methodId = Number(q.get('method'));
-    if (q.get('madhab')) settings.madhab = q.get('madhab');
-    if (q.get('place')) settings.place = q.get('place');
-  }
-
-  function saveSettings() {
-    try { localStorage.setItem(STORE, JSON.stringify(settings)); } catch (e) {}
-  }
-
-  function readForm() {
-    settings.place = $('place').value.trim();
-    var lat = parseFloat($('lat').value), lon = parseFloat($('lon').value);
-    if (isFinite(lat) && Math.abs(lat) <= 90) settings.latitude = lat;
-    if (isFinite(lon) && Math.abs(lon) <= 180) settings.longitude = lon;
-    settings.methodId = Number($('method').value);
-    settings.madhab = $('madhab').value;
-    settings.highLats = $('highlats').value;
-    PT.PRAYERS.forEach(function (p) {
-      var el = $('adj-' + p.key);
-      var v = el ? Math.round(Number(el.value)) : 0;
-      if (v) settings.adjust[p.key] = v; else delete settings.adjust[p.key];
-    });
-    saveSettings();
-    render();
-  }
-
-  function fillForm() {
-    $('place').value = settings.place;
-    $('lat').value = settings.latitude;
-    $('lon').value = settings.longitude;
-    $('method').value = settings.methodId;
-    $('madhab').value = settings.madhab;
-    $('highlats').value = settings.highLats;
-    PT.PRAYERS.forEach(function (p) {
-      var el = $('adj-' + p.key);
-      if (el) el.value = settings.adjust[p.key] || 0;
-    });
-  }
-
-  /* Les six champs d'ajustement, construits depuis la liste des prières. */
-  function buildAdjGrid() {
-    var html = '';
-    PT.PRAYERS.forEach(function (p) {
-      html += '<div><label for="adj-' + p.key + '">' + p.label + '</label>' +
-        '<div class="stepper">' +
-        '<button type="button" class="step" data-key="' + p.key + '" data-delta="-1">−</button>' +
-        '<input id="adj-' + p.key + '" type="text" inputmode="text" autocomplete="off" value="0">' +
-        '<button type="button" class="step" data-key="' + p.key + '" data-delta="1">+</button>' +
-        '</div></div>';
-    });
-    $('adjGrid').innerHTML = html;
-  }
-
-  /* ---------------------------------------------------------------- */
-  /* Affichage                                                         */
-  /* ---------------------------------------------------------------- */
-
-  function options() {
-    return {
-      latitude: settings.latitude, longitude: settings.longitude,
-      methodId: settings.methodId, madhab: settings.madhab,
-      highLats: settings.highLats, adjustments: settings.adjust, timeZone: TZ
-    };
-  }
-
-  var today = null;
-
-  /*
-   * Les horaires d'un jour donné, quelle que soit la source. Le calendrier
-   * d'une mosquée est en heure locale de sa ville : on fabrique les instants
-   * dans le fuseau du téléphone, ce qui suppose d'être dans le même fuseau
-   * qu'elle (c'est le cas quand on prie derrière elle).
-   */
-  function dayTimes(date) {
-    var src = sourceById(settings.source);
-    if (src.file && calendar) {
-      var p = dateParts(date);
-      var row = calendar[pad2(p.day) + '-' + pad2(p.month)];
-      if (row) return calendarDay(p, row);
-    }
-    return PT.computeTimes(assign(options(), { date: date }));
-  }
-
-  function calendarDay(p, row) {
-    var list = [];
-    var times = {};
-    for (var i = 0; i < PT.PRAYERS.length; i++) {
-      var pr = PT.PRAYERS[i];
-      var raw = row[pr.key.charAt(0).toUpperCase() + pr.key.slice(1)];
-      var date = null;
-      if (raw) {
-        var hm = raw.split(':');
-        date = new Date(p.year, p.month - 1, p.day, Number(hm[0]), Number(hm[1]), 0, 0);
-      }
-      times[pr.key] = date;
-      list.push({ key: pr.key, label: pr.label, ar: pr.ar, sub: pr.sub, silent: !!pr.silent, date: date });
-    }
-    return { times: times, list: list, date: p, fromCalendar: true };
-  }
-
-  function pad2(n) { return (n < 10 ? '0' : '') + n; }
-
-  function dateParts(d) {
-    var s = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
-      .format(d).split('-');
-    return { year: Number(s[0]), month: Number(s[1]), day: Number(s[2]) };
-  }
-
-  /* Prochaine prière : aujourd'hui, sinon le Fajr de demain. */
-  function findNext(now) {
-    for (var offset = 0; offset <= 1; offset++) {
-      var day = dayTimes(new Date(now.getTime() + offset * 86400000));
-      for (var i = 0; i < day.list.length; i++) {
-        var item = day.list[i];
-        if (item.silent || !item.date) continue;
-        if (item.date.getTime() > now.getTime()) {
-          return { key: item.key, label: item.label, ar: item.ar, date: item.date, tomorrow: offset === 1 };
-        }
-      }
-    }
-    return null;
-  }
-
-  /*
-   * Le calendrier est un fichier statique servi à côté de la page : on le garde
-   * en cache local pour que la page reste utilisable hors ligne, tout en
-   * rafraîchissant en arrière-plan.
-   */
-  function loadCalendar() {
-    var src = sourceById(settings.source);
-    if (!src.file) { calendar = null; render(); return; }
-    var cacheKey = 'athan.cal.' + src.id;
-    try {
-      var cached = localStorage.getItem(cacheKey);
-      if (cached) { calendar = JSON.parse(cached); }
-    } catch (e) { /* cache illisible : on retéléchargera */ }
-    render();
-    fetch(src.file, { cache: 'no-cache' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (json) {
-        calendar = json;
-        try { localStorage.setItem(cacheKey, JSON.stringify(json)); } catch (e) {}
-        render();
-        var meta = json._meta || {};
-        srcStatus('ok', '📅 ' + (meta.mosquee || src.label) + (meta.annee ? ' — calendrier ' + meta.annee : '') +
-          ' : ' + (Object.keys(json).length - 1) + ' jours chargés.');
-      })
-      .catch(function (e) {
-        if (calendar) srcStatus('warn', 'Calendrier hors ligne : version enregistrée sur l’appareil.');
-        else srcStatus('err', 'Calendrier introuvable (' + e.message + '). Repasse en calcul astronomique.');
-      });
-  }
-
-  function srcStatus(kind, msg) {
-    var el = $('geoStatus');
-    el.className = 'status show ' + kind;
-    el.textContent = msg;
-  }
-
-  function render() {
-    var now = new Date();
-    today = dayTimes(now);
-
-    $('dayTag').textContent = new Intl.DateTimeFormat('fr-FR', {
-      weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ
-    }).format(now);
-
-    var next = findNext(now);
-    var html = '';
-    for (var i = 0; i < today.list.length; i++) {
-      var p = today.list[i];
-      var isNext = next && !next.tomorrow && next.key === p.key;
-      var cls = p.silent ? 'info' : (isNext ? 'now' : (p.date && p.date < now ? 'past' : ''));
-      html += '<li class="' + cls + '">' +
-        '<span class="name">' + p.label + '</span>' +
-        '<span class="ar">' + p.ar + '</span>' +
-        '<span class="t">' + PT.formatTime(p.date, TZ) + '</span></li>';
-    }
-    $('times').innerHTML = html;
-
-    var src = sourceById(settings.source);
-    $('methodField').style.display = src.file ? 'none' : '';
-    $('adjBox').style.display = src.file ? 'none' : '';
-    $('calNote').hidden = !src.file;
-    apiUrl = src.file
-      ? new URL(src.file, location.href).href
-      : PT.aladhanUrl(options(), today.date);
-    $('dateSample').textContent = (apiUrl.match(/timings\/([\d-]+)/) || [])[1] || 'JJ-MM-AAAA';
-    $('apiUrlCity').textContent = src.file
-      ? 'Sans objet : le calendrier de la mosquée remplace l’API.'
-      : cityUrl(apiUrl);
-    renderCopyList();
-    $('sourceLine').innerHTML = sourceLabel();
-    renderWarning();
-    tick();
-  }
-
-  /*
-   * Les valeurs à recopier dans Raccourcis, chacune sur une ligne touchable.
-   * `show` sert quand l'affichage doit différer de ce qu'on copie : sauts de
-   * ligne rendus visibles, espace final matérialisé.
-   */
-  var apiUrl = '';
-  var PRAYER_KEYS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
-
-  function copyValues() {
-    var fromCal = !!sourceById(settings.source).file;
-    return [
-      { k: '1 · Filtre : étiquette contient', v: 'Athan' },
-      { k: '3 · Adresse à interroger', v: apiUrl },
-      { k: fromCal ? '3bis · Format de date (clé du jour)' : '3 · Format de date personnalisé',
-        v: fromCal ? 'dd-MM' : 'dd-MM-yyyy' },
-      { k: '4 · Texte des cinq prières (sans espace après la virgule)', v: PRAYER_KEYS.join(',') },
-      { k: '5 · Séparateur personnalisé — une virgule, rien d’autre', v: ',' },
-      { k: fromCal ? '6a · Clé : rien à taper, juste la variable Élément'
-                   : '6a · Clé, puis variable « Élément de répétition »',
-        v: fromCal ? '' : 'data.timings.', skip: fromCal },
-      { k: '6b · Étiquette, puis variable « Élément de répétition »', v: 'Athan ',
-        show: 'Athan<span class="sp">␣</span>' }
-    ];
-  }
-
-  function renderCopyList() {
-    var rows = copyValues();
-    var html = '';
-    for (var i = 0; i < rows.length; i++) {
-      if (rows[i].skip) continue;
-      html += '<button class="copyrow" type="button" data-i="' + i + '">' +
-        '<span><span class="k">' + rows[i].k + '</span>' +
-        '<span class="v">' + (rows[i].show || escapeHtml(rows[i].v)) + '</span></span>' +
-        '<span class="ico">⧉</span></button>';
-    }
-    $('copyList').innerHTML = html;
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
-  /*
-   * Même adresse, mais avec « Ville, Pays » au lieu des coordonnées : plus court
-   * à taper à la main dans le raccourci. On réutilise la date et les réglages de
-   * l'adresse principale pour que les deux ne divergent jamais.
-   */
-  function cityUrl(url) {
-    var parts = settings.place.split(',');
-    var country = parts.length > 1 ? parts.pop().trim() : '';
-    var city = parts.join(',').trim();
-    if (!city || !country) return 'Écris « Ville, Pays » dans le champ du haut (ex. Marseille, France) pour obtenir cette variante.';
-    return url
-      .replace('/timings/', '/timingsByCity/')
-      .replace(/\?latitude=[^&]*&longitude=[^&]*/, '?city=' + encodeURIComponent(city) + '&country=' + encodeURIComponent(country));
-  }
-
-  function tick() {
-    var now = new Date();
-    var next = findNext(now);
-    if (!next) { $('nextWho').textContent = '—'; return; }
-
-    $('nextWho').innerHTML = 'Prochaine : <b>' + next.label + '</b> <span class="ar">' + next.ar + '</span>';
-    $('nextAt').textContent = PT.formatTime(next.date, TZ) +
-      (next.tomorrow ? ' (demain)' : '') + (settings.place ? ' · ' + settings.place : '');
-
-    var left = Math.max(0, Math.round((next.date - now) / 1000));
-    var h = Math.floor(left / 3600), m = Math.floor((left % 3600) / 60), s = left % 60;
-    $('nextCount').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
-
-    if (settings.watch) checkDue(now);
-    if (lastDay !== dayKey(now)) { lastDay = dayKey(now); fired = {}; render(); }
-  }
-
-  function pad(n) { return (n < 10 ? '0' : '') + n; }
-  function dayKey(d) { return d.toISOString().slice(0, 10); }
-  function assign(a, b) { for (var k in b) a[k] = b[k]; return a; }
-
-  /* ---------------------------------------------------------------- */
-  /* Déclenchement de l'athan (mode veilleur)                           */
-  /* ---------------------------------------------------------------- */
-
-  var fired = {};
-  var lastDay = dayKey(new Date());
-
-  /*
-   * On ne se fie pas au timer seul : un onglet mis en veille par iOS peut
-   * « sauter » quelques secondes. On regarde donc si une prière est tombée
-   * dans les 2 dernières minutes sans avoir encore sonné.
-   */
-  function checkDue(now) {
-    if (!today) return;
-    for (var i = 0; i < today.list.length; i++) {
-      var p = today.list[i];
-      if (p.silent || !p.date) continue;
-      var late = (now - p.date) / 1000;
-      var id = dayKey(p.date) + ':' + p.key;
-      if (late >= 0 && late < 120 && !fired[id]) {
-        fired[id] = true;
-        playAthan(p.label);
-      }
-    }
-  }
-
-  function playAthan(label) {
-    var player = $('player');
-    player.currentTime = 0;
-    player.play().then(function () {
-      watchStatus('ok', '🔊 Athan — ' + (label || '') + ' (' + PT.formatTime(new Date(), TZ) + ')');
-    }).catch(function (err) {
-      watchStatus('err', 'Lecture refusée par le navigateur : ' + err.message + '. Touche « Tester » une fois pour l’autoriser.');
-    });
-  }
-
-  function watchStatus(kind, msg) {
-    var el = $('watchStatus');
-    el.className = 'status show ' + kind;
-    el.textContent = msg;
-  }
-
-  /* ---------------------------------------------------------------- */
-  /* Écran allumé + onglet vivant                                      */
-  /* ---------------------------------------------------------------- */
-
-  var wakeLock = null;
-
-  function requestWakeLock() {
-    if (!('wakeLock' in navigator)) return Promise.resolve(null);
-    return navigator.wakeLock.request('screen').then(function (lock) {
-      wakeLock = lock;
-      lock.addEventListener('release', function () { wakeLock = null; });
-      return lock;
-    }).catch(function () { return null; });
-  }
-
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') {
-      if (settings.watch && !wakeLock) requestWakeLock();
-      render(); // rattrapage après un retour d'arrière-plan
-    }
-  });
-
-  $('watch').addEventListener('change', function () {
-    settings.watch = $('watch').checked;
-    saveSettings();
-    if (!settings.watch) {
-      if (wakeLock) { wakeLock.release(); wakeLock = null; }
-      watchStatus('warn', 'Veilleur arrêté.');
-      return;
-    }
-    // Le geste de l'utilisateur sert à « débloquer » la lecture audio :
-    // Safari n'autorise le son que s'il a été amorcé par une interaction.
-    unlockAudio().then(function (ok) {
-      requestWakeLock().then(function (lock) {
-        watchStatus(ok ? 'ok' : 'warn',
-          (ok ? 'Veilleur actif. ' : 'Veilleur actif, mais le son n’a pas pu être amorcé — touche « Tester ». ') +
-          (lock ? 'L’écran restera allumé tant que la page est au premier plan.'
-                : 'Garde la page ouverte et l’écran allumé (réglage Verrouillage auto : Jamais).'));
-      });
-    });
-  });
-
-  function unlockAudio() {
-    var player = $('player');
-    player.muted = true;
-    return player.play().then(function () {
-      player.pause();
-      player.currentTime = 0;
-      player.muted = false;
-      return true;
-    }).catch(function () { player.muted = false; return false; });
-  }
-
-  /* ---------------------------------------------------------------- */
-  /* Le son : fichier choisi (gardé en IndexedDB) ou carillon de secours */
-  /* ---------------------------------------------------------------- */
-
-  var DB = 'athan-db', SHELF = 'files';
-
-  function withDB(mode, fn) {
-    return new Promise(function (resolve, reject) {
-      var req = indexedDB.open(DB, 1);
-      req.onupgradeneeded = function () { req.result.createObjectStore(SHELF); };
-      req.onerror = function () { reject(req.error); };
-      req.onsuccess = function () {
-        var db = req.result;
-        var tx = db.transaction(SHELF, mode);
-        var out = fn(tx.objectStore(SHELF));
-        tx.oncomplete = function () { db.close(); resolve(out && out.result); };
-        tx.onerror = function () { db.close(); reject(tx.error); };
-      };
-    });
-  }
-
-  function saveAudio(file) { return withDB('readwrite', function (s) { return s.put(file, 'athan'); }); }
-  function readAudio() { return withDB('readonly', function (s) { return s.get('athan'); }); }
-  function dropAudio() { return withDB('readwrite', function (s) { return s.delete('athan'); }); }
-
-  function useBlob(blob, name) {
-    var player = $('player');
-    if (player.dataset.objectUrl) URL.revokeObjectURL(player.dataset.objectUrl);
-    var url = URL.createObjectURL(blob);
-    player.dataset.objectUrl = url;
-    player.src = url;
-    $('fileHint').textContent = '🎵 ' + (name || 'athan enregistré') + ' — gardé sur cet appareil.';
-    $('forget').style.display = '';
-  }
-
-  function useFallback() {
-    var player = $('player');
-    if (player.dataset.objectUrl) { URL.revokeObjectURL(player.dataset.objectUrl); delete player.dataset.objectUrl; }
-    player.src = chimeDataUri();
-    $('fileHint').textContent = 'Aucun fichier : un simple carillon de secours est utilisé. Le fichier choisi est gardé sur l’appareil (rien n’est envoyé nulle part).';
-    $('forget').style.display = 'none';
-  }
-
-  /*
-   * Carillon de secours : un petit WAV fabriqué en JavaScript. On passe par un
-   * <audio> (et pas par la Web Audio API) car sur iPhone seuls les éléments
-   * média franchissent le bouton silencieux.
-   */
-  var chimeCache = null;
-  function chimeDataUri() {
-    if (chimeCache) return chimeCache;
-    var rate = 22050, seconds = 4, n = rate * seconds;
-    var notes = [[0, 587.33], [0.55, 440], [1.1, 587.33], [1.9, 293.66]]; // ré–la–ré–ré grave
-    var pcm = new Int16Array(n);
-    for (var i = 0; i < n; i++) {
-      var t = i / rate, v = 0;
-      for (var k = 0; k < notes.length; k++) {
-        var dt = t - notes[k][0];
-        if (dt < 0) continue;
-        var env = Math.exp(-dt * 1.6);
-        var f = notes[k][1];
-        v += env * (Math.sin(2 * Math.PI * f * dt) + 0.35 * Math.sin(4 * Math.PI * f * dt));
-      }
-      pcm[i] = Math.max(-1, Math.min(1, v * 0.28)) * 32767;
-    }
-    var head = new DataView(new ArrayBuffer(44));
-    var bytes = pcm.length * 2;
-    writeStr(head, 0, 'RIFF'); head.setUint32(4, 36 + bytes, true); writeStr(head, 8, 'WAVE');
-    writeStr(head, 12, 'fmt '); head.setUint32(16, 16, true); head.setUint16(20, 1, true);
-    head.setUint16(22, 1, true); head.setUint32(24, rate, true); head.setUint32(28, rate * 2, true);
-    head.setUint16(32, 2, true); head.setUint16(34, 16, true);
-    writeStr(head, 36, 'data'); head.setUint32(40, bytes, true);
-    var all = new Uint8Array(44 + bytes);
-    all.set(new Uint8Array(head.buffer), 0);
-    all.set(new Uint8Array(pcm.buffer), 44);
-    var bin = '';
-    for (var j = 0; j < all.length; j += 8192) bin += String.fromCharCode.apply(null, all.subarray(j, j + 8192));
-    chimeCache = 'data:audio/wav;base64,' + btoa(bin);
-    return chimeCache;
-  }
-
-  function writeStr(view, at, s) { for (var i = 0; i < s.length; i++) view.setUint8(at + i, s.charCodeAt(i)); }
-
-  /* ---------------------------------------------------------------- */
-  /* Les trois écrans                                                   */
-  /* ---------------------------------------------------------------- */
-
-  var SCREENS = { search: 'screenSearch', times: 'screenTimes', tuto: 'screenTuto' };
-
-  function showScreen(name) {
-    for (var key in SCREENS) $(SCREENS[key]).hidden = (key !== name);
-    if (name === 'times') { render(); }
-    if (name === 'tuto') { buildTuto(); }
-    if (name === 'search') { runSearch(); }
-    window.scrollTo(0, 0);
-  }
-
-  /*
-   * Le cas qui trompe : une mosquée trouvée dans l'annuaire mais dont le
-   * calendrier n'est pas encore importé. On affichait alors un calcul sans
-   * prévenir assez fort — de quoi croire qu'on a les horaires de la mosquée.
-   */
-  function renderWarning() {
-    var el = $('sourceWarn');
-    var attente = settings.pendingMosque;
-    if (!attente || sourceById(settings.source).file) {
-      el.className = 'status warn';
-      el.innerHTML = '';
-      return;
-    }
-    el.className = 'status warn show';
-    el.innerHTML = '⚠️ Le calendrier de <b>' + escapeHtml(attente.nom) + '</b> n’est pas encore dans ' +
-      'l’app : ces horaires sont un <b>calcul</b> fait à son emplacement, pas ses horaires officiels. ' +
-      '<a href="' + REPO + '/actions/workflows/calendriers.yml" target="_blank" rel="noopener">' +
-      'Demander son import</a> (quelques minutes), ou continuez avec le calcul.';
-  }
-
-  /* « Mosquée X — calendrier officiel » ou « Calcul à Y — méthode Z ». */
-  function sourceLabel() {
-    var src = sourceById(settings.source);
-    if (src.file) return '📅 <b>' + escapeHtml(src.label) + '</b> — horaires officiels de la mosquée';
-    var method = PT.methodById(settings.methodId);
-    return '📍 Calcul pour <b>' + escapeHtml(settings.place || 'votre position') + '</b> — ' +
-      escapeHtml(method.name) + (Object.keys(settings.adjust || {}).length ? ', avec vos décalages' : '');
-  }
-
-  /* ---------------------------------------------------------------- */
-  /* Le tuto, adapté à la source choisie                                */
-  /* ---------------------------------------------------------------- */
-
-  var TUTO_IMAGES = {
+  var IMAGES = {
     installer: 'tuto/1-installer.svg',
     installerMosquee: 'tuto/1-installer-mosquee.svg',
     parametres: 'tuto/2-parametres.svg',
@@ -1207,344 +245,516 @@
     verifier: 'tuto/5-verifier.svg'
   };
 
-  /* La ligne de paramètres du raccourci AlAdhan : tout ce qui suit le « ? ». */
-  function paramString() {
-    var url = PT.aladhanUrl(options(), today ? today.date : null);
+  /* ---------------------------------------------------------------- */
+  /* L'état : un lieu, éventuellement une mosquée, de quoi calculer     */
+  /* ---------------------------------------------------------------- */
+
+  var state = {
+    place: '', latitude: null, longitude: null,
+    mosque: null,           // { slug, nom, ville, file } quand une mosquée est choisie
+    methodId: 3, adjust: {}
+  };
+
+  var annuaire = null;      // mosquées connues : nom, ville, position, slug
+  var calendriers = {};     // slug → { id, label, file }
+  var calendrier = null;    // le calendrier de la mosquée choisie
+  var jour = null;          // les horaires du jour, quelle que soit la source
+
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+
+  function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE) || '{}');
+      for (var k in state) if (k in saved) state[k] = saved[k];
+      if (!state.adjust || typeof state.adjust !== 'object') state.adjust = {};
+    } catch (e) { /* stockage indisponible */ }
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Les quatre écrans                                                 */
+  /* ---------------------------------------------------------------- */
+
+  var ECRANS = ['s1', 's2', 's3', 's4'];
+
+  function ecran(id) {
+    ECRANS.forEach(function (e) { $(e).hidden = (e !== id); });
+    if (id === 's2') listerMosquees();
+    if (id === 's3') afficherHoraires();
+    if (id === 's4') { afficherHoraires(); construireTuto(); }
+    window.scrollTo(0, 0);
+  }
+
+  function statut(genre, message) {
+    var el = $('s1status');
+    el.className = 'status' + (genre ? ' show ' + genre : (message ? ' show' : ''));
+    el.innerHTML = message || '';
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* 1. L'adresse                                                      */
+  /* ---------------------------------------------------------------- */
+
+  function chercherAdresse(q) {
+    if (!q) return;
+    statut('', 'Recherche de « ' + echapper(q) + ' »…');
+    fetch('https://api.aladhan.com/v1/addressInfo?address=' + encodeURIComponent(q))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (!j || j.code !== 200 || !j.data || !isFinite(j.data.latitude)) {
+          throw new Error((j && j.data) ? String(j.data) : 'adresse introuvable');
+        }
+        poser(q, j.data.latitude, j.data.longitude);
+      })
+      .catch(function (e) {
+        statut('err', 'Adresse introuvable (' + echapper(e.message) + '). Essayez « ville, pays », ' +
+          'ou touchez 📍 Utiliser ma position.');
+      });
+  }
+
+  function poser(nom, lat, lon) {
+    state.place = nom;
+    state.latitude = Math.round(lat * 10000) / 10000;
+    state.longitude = Math.round(lon * 10000) / 10000;
+    state.mosque = null;
+    calendrier = null;
+    save();
+    statut('', '');
+    ecran('s2');
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* 2. Les mosquées autour                                            */
+  /* ---------------------------------------------------------------- */
+
+  function distanceKm(lat1, lon1, lat2, lon2) {
+    var p = Math.PI / 180;
+    var x = (lat2 - lat1) * p;
+    var y = (lon2 - lon1) * p * Math.cos((lat1 + lat2) / 2 * p);
+    return 6371 * Math.sqrt(x * x + y * y);
+  }
+
+  /*
+   * Les huit plus proches, celles dont on a le calendrier d'abord : proposer
+   * une mosquée dont on ne sait pas donner les horaires n'aide personne.
+   */
+  function proches() {
+    if (!annuaire || state.latitude == null) return [];
+    var liste = annuaire.map(function (m) {
+      return { m: m, d: distanceKm(state.latitude, state.longitude, m.lat, m.lon), pret: !!calendriers[m.slug] };
+    });
+    liste.sort(function (a, b) {
+      if (a.pret !== b.pret) return a.pret ? -1 : 1;
+      return a.d - b.d;
+    });
+    // Une même mosquée se retrouve parfois sous deux slugs chez Mawaqit : on
+    // ne garde que la première, celle dont on a le calendrier étant devant.
+    var vus = {}, propre = [];
+    for (var i = 0; i < liste.length && propre.length < 8; i++) {
+      var cle = normaliser(liste[i].m.nom) + '|' + liste[i].m.lat.toFixed(3) + ',' + liste[i].m.lon.toFixed(3);
+      if (vus[cle]) continue;
+      vus[cle] = true;
+      propre.push(liste[i]);
+    }
+    return propre;
+  }
+
+  function listerMosquees() {
+    $('lieu').textContent = '📍 ' + state.place;
+    var liste = proches();
+    var html = '';
+    liste.forEach(function (e) {
+      html += '<button class="m' + (e.pret ? '' : ' absent') + '" type="button" ' +
+        'data-slug="' + echapper(e.m.slug) + '"' + (e.pret ? '' : ' disabled') + '>' +
+        '<span class="pin">' + (e.pret ? '🕌' : '·') + '</span>' +
+        '<span style="min-width:0"><span class="nom">' + echapper(e.m.nom) + '</span>' +
+        '<span class="ville">' + echapper(e.pret ? (e.m.ville || '') : 'calendrier pas encore disponible') +
+        '</span></span><span class="km">' + fmtKm(e.d) + '</span></button>';
+    });
+    $('mosques').innerHTML = html || '<p class="hint">Aucune mosquée connue autour de ce point.</p>';
+    $('mosquesHint').innerHTML = annuaire
+      ? 'Les horaires seront ceux de son calendrier, tels qu\'elle les publie. Mosquée absente ? ' +
+        '<a href="' + REPO + '/actions/workflows/calendriers.yml" target="_blank" rel="noopener">ajoutez-la</a>.'
+      : 'Annuaire indisponible — vérifiez votre connexion.';
+  }
+
+  function fmtKm(d) { return d < 10 ? d.toFixed(1) + ' km' : Math.round(d) + ' km'; }
+
+  function normaliser(s) {
+    return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '');
+  }
+
+  function choisirMosquee(slug) {
+    var trouvee = null;
+    for (var i = 0; annuaire && i < annuaire.length; i++) if (annuaire[i].slug === slug) trouvee = annuaire[i];
+    var cal = calendriers[slug];
+    if (!trouvee || !cal) return;
+    state.mosque = { slug: slug, nom: trouvee.nom, ville: trouvee.ville, file: cal.file };
+    save();
+    chargerCalendrier(cal.file).then(function () { ecran('s3'); });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Les données : annuaire, manifeste, calendrier                      */
+  /* ---------------------------------------------------------------- */
+
+  function charger(url, cle) {
+    var cache = null;
+    try { var v = localStorage.getItem(cle); cache = v ? JSON.parse(v) : null; } catch (e) {}
+    var reseau = fetch(url, { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (j) { try { localStorage.setItem(cle, JSON.stringify(j)); } catch (e) {} }
+        return j;
+      })
+      .catch(function () { return null; });
+    // Le cache répond tout de suite ; le réseau rafraîchit pour la prochaine fois.
+    return cache ? (reseau, Promise.resolve(cache)) : reseau;
+  }
+
+  function chargerDonnees() {
+    return Promise.all([
+      charger('calendriers/mosquees.json', 'athan.v2.annuaire').then(function (j) {
+        annuaire = j && j.mosquees ? j.mosquees : null;
+      }),
+      charger('calendriers/index.json', 'athan.v2.index').then(function (liste) {
+        calendriers = {};
+        (liste || []).forEach(function (e) { if (e.slug) calendriers[e.slug] = e; });
+      })
+    ]);
+  }
+
+  function chargerCalendrier(file) {
+    return charger(file, 'athan.v2.cal.' + file).then(function (j) {
+      calendrier = j || null;
+      if (!calendrier) state.mosque = null;   // pas de calendrier : on ne fait pas semblant
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* 3. Les horaires du jour                                           */
+  /* ---------------------------------------------------------------- */
+
+  function options() {
+    return {
+      latitude: state.latitude, longitude: state.longitude,
+      methodId: state.methodId, madhab: 'standard', highLats: 'angle',
+      adjustments: state.adjust, timeZone: TZ
+    };
+  }
+
+  function partiesDate(d) {
+    var s = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' })
+      .format(d).split('-');
+    return { year: +s[0], month: +s[1], day: +s[2] };
+  }
+
+  /* Le calendrier de la mosquée l'emporte quand il couvre le jour demandé. */
+  function horairesDu(date) {
+    if (state.mosque && calendrier) {
+      var p = partiesDate(date);
+      var ligne = calendrier[pad(p.day) + '-' + pad(p.month)];
+      if (ligne) {
+        var liste = [], times = {};
+        PT.PRAYERS.forEach(function (pr) {
+          var brut = ligne[pr.key.charAt(0).toUpperCase() + pr.key.slice(1)];
+          var quand = null;
+          if (brut) {
+            var hm = brut.split(':');
+            quand = new Date(p.year, p.month - 1, p.day, +hm[0], +hm[1], 0, 0);
+          }
+          times[pr.key] = quand;
+          liste.push({ key: pr.key, label: pr.label, ar: pr.ar, silent: !!pr.silent, date: quand });
+        });
+        return { list: liste, times: times, date: p };
+      }
+    }
+    var res = PT.computeTimes(assign(options(), { date: date }));
+    return { list: res.list, times: res.times, date: res.date };
+  }
+
+  function prochaine(maintenant) {
+    for (var j = 0; j <= 1; j++) {
+      var d = horairesDu(new Date(maintenant.getTime() + j * 86400000));
+      for (var i = 0; i < d.list.length; i++) {
+        var p = d.list[i];
+        if (p.silent || !p.date) continue;
+        if (p.date.getTime() > maintenant.getTime()) return { p: p, demain: j === 1 };
+      }
+    }
+    return null;
+  }
+
+  function afficherHoraires() {
+    var maintenant = new Date();
+    jour = horairesDu(maintenant);
+
+    $('source').innerHTML = libelleSource();
+    $('source4').innerHTML = libelleSource();
+    $('affiner').hidden = !!state.mosque;
+
+    var suivante = prochaine(maintenant);
+    var html = '';
+    jour.list.forEach(function (p) {
+      var active = suivante && !suivante.demain && suivante.p.key === p.key;
+      var classe = p.silent ? 'info' : (active ? 'now' : (p.date && p.date < maintenant ? 'past' : ''));
+      html += '<li class="' + classe + '"><span class="n">' + p.label + '</span>' +
+        '<span class="ar">' + p.ar + '</span>' +
+        '<span class="t">' + PT.formatTime(p.date, TZ) + '</span></li>';
+    });
+    $('times').innerHTML = html;
+
+    var lien = $('mawaqit');
+    if (state.mosque) {
+      lien.hidden = false;
+      lien.href = 'https://mawaqit.net/fr/' + state.mosque.slug;
+      $('verifHint').textContent = 'Comparez avec ce qu\'affiche Mawaqit pour cette mosquée : ' +
+        'ce doit être identique, minute pour minute.';
+    } else {
+      lien.hidden = true;
+      $('verifHint').textContent = 'Horaires calculés pour votre position. Si votre mosquée en ' +
+        'annonce d\'autres, revenez en arrière pour la choisir — ou ajustez le calcul ci-dessous.';
+    }
+    battement();
+  }
+
+  function libelleSource() {
+    if (state.mosque) {
+      return '🕌 <b>' + echapper(state.mosque.nom) + '</b><br>horaires officiels de la mosquée' +
+        (state.mosque.ville ? ' · ' + echapper(state.mosque.ville) : '');
+    }
+    return '🧭 Calcul pour <b>' + echapper(state.place || 'votre position') + '</b><br>' +
+      echapper(PT.methodById(state.methodId).name) +
+      (Object.keys(state.adjust || {}).length ? ', avec vos décalages' : '');
+  }
+
+  function battement() {
+    if ($('s3').hidden && $('s4').hidden) return;
+    var maintenant = new Date();
+    var suivante = prochaine(maintenant);
+    if (!suivante) return;
+    $('who').innerHTML = 'Prochaine : <b>' + suivante.p.label + '</b> <span class="ar">' +
+      suivante.p.ar + '</span>';
+    var reste = Math.max(0, Math.round((suivante.p.date - maintenant) / 1000));
+    $('count').textContent = pad(Math.floor(reste / 3600)) + ':' + pad(Math.floor(reste % 3600 / 60)) +
+      ':' + pad(reste % 60);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* 4. Le tuto                                                        */
+  /* ---------------------------------------------------------------- */
+
+  /* Ce qu'il y aura à coller : une URL de calendrier, ou la ligne de
+     paramètres qui suit le « ? » de l'adresse AlAdhan. */
+  function valeurACopier() {
+    if (state.mosque) return new URL(state.mosque.file, location.href).href;
+    var url = PT.aladhanUrl(options(), jour ? jour.date : null);
     return url.slice(url.indexOf('?') + 1);
   }
 
-  function tutoValue() {
-    var src = sourceById(settings.source);
-    return src.file ? new URL(src.file, location.href).href : paramString();
-  }
-
-  function buildTuto() {
-    var src = sourceById(settings.source);
-    var lien = src.file ? SHORTCUT_URL_MOSQUEE : SHORTCUT_URL;
-    var valeur = tutoValue();
+  function construireTuto() {
+    var mosquee = !!state.mosque;
+    var lien = mosquee ? SHORTCUT_MOSQUEE : SHORTCUT_ALADHAN;
     var nom = encodeURIComponent(SHORTCUT_NAME);
+    var etapes = [];
 
-    $('tutoSource').innerHTML = sourceLabel();
-
-    var steps = [];
-
-    steps.push({
+    etapes.push({
       titre: 'Installer le raccourci',
-      image: (!lien && src.file) ? TUTO_IMAGES.installerMosquee : TUTO_IMAGES.installer,
+      image: (mosquee && !lien) ? IMAGES.installerMosquee : IMAGES.installer,
       html: lien
-        ? '<p>Ouvrez ce lien depuis votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
+        ? '<p>Ouvrez ce lien sur votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
           'Deux touches, rien à construire.</p>'
-        : '<p>Les horaires de mosquée demandent une variante du raccourci, qui n\'a pas encore de ' +
-          'lien iCloud. Un fichier <code>.shortcut</code> peut s\'installer, mais seulement après ' +
-          'avoir activé <b>Réglages → Apps → Raccourcis → Autoriser les raccourcis non fiables</b> ' +
-          '(sur iOS 17 et avant : <b>Réglages → Raccourcis</b>) — bascule qui n\'apparaît qu\'une fois ' +
-          'un premier raccourci lancé, et le fichier arrive dans <b>Fichiers → Téléchargements</b>, ' +
-          'où il faut le toucher pour l\'ouvrir. <b>Plus simple : partir du raccourci Athan que vous ' +
-          'avez déjà</b> :</p>' +
-          '<ol class="steps" style="margin-bottom:10px">' +
-          '<li>Raccourcis → appui long sur <b>' + escapeHtml(SHORTCUT_NAME) + '</b> → <b>Dupliquer</b>, ' +
-          'et renommez la copie (par exemple <i>Athan mosquée</i>).</li>' +
-          '<li>Dans la copie, l\'action <b>Texte</b> de tête : remplacez la ligne de paramètres par ' +
-          'l\'<b>adresse du calendrier</b> (étape 2 ci-dessous).</li>' +
-          '<li>Action <b>Obtenir le contenu de l\'URL</b> : effacez tout le champ et mettez-y la ' +
-          'seule variable <b>Texte</b> — plus d\'adresse AlAdhan, plus de date.</li>' +
-          '<li>Juste après, ajoutez <b>Obtenir la valeur du dictionnaire</b> : clé = la variable ' +
-          '<b>Date actuelle</b> au format personnalisé <code>dd-MM</code>, dans <b>Contenu de l\'URL</b>. ' +
-          'Vous obtenez les six horaires du jour.</li>' +
-          '<li>Puis <b>Définir la variable</b>, nommée <code>Jour</code> : sans ce nom, deux actions ' +
-          's\'appelleront « Valeur du dictionnaire » et vous choisirez la mauvaise à l\'étape suivante.</li>' +
-          '<li>Dans la boucle, l\'action <b>Obtenir la valeur du dictionnaire</b> : touchez le champ ' +
-          '<b>Clé</b> et <b>effacez le texte <code>data.timings.</code></b> lettre par lettre — il ne ' +
-          'doit rester que le jeton bleu <b>Élément de répétition</b>. Puis le champ « dans » : ' +
-          'remplacez <i>Contenu de l\'URL</i> par la variable <code>Jour</code>. Oublier ce ménage ' +
-          'donne l\'erreur « Impossible d\'évaluer le chemin d\'accès à la clé ».</li>' +
-          '</ol>' +
-          '<p class="hint" style="margin:0">Une fois qu\'elle tourne, partagez-la : ' +
-          '<b>Partager → Copier le lien iCloud</b>. Ce lien-là s\'installe en deux touches chez ' +
-          'n\'importe qui, et remplacera tout ce pavé.</p>',
-      actions: lien
-        ? [{ label: '⬇️ Installer « ' + SHORTCUT_NAME + ' »', href: lien, primary: true, externe: true }]
-        : [{ label: '✏️ Ouvrir Raccourcis', href: 'shortcuts://', primary: true },
-           { label: '⬇️ Le fichier (si vous savez)', href: SHORTCUT_FILE_MOSQUEE, download: true }]
+        : '<p>Le raccourci qui lit les calendriers de mosquée n\'a pas encore de lien iCloud. ' +
+          'En attendant, dupliquez le raccourci <b>' + echapper(SHORTCUT_NAME) + '</b> et ' +
+          'remplacez-y l\'adresse interrogée par celle de l\'étape 2 — ou récupérez le fichier, ' +
+          'qui demande <b>Réglages → Apps → Raccourcis → Autoriser les raccourcis non fiables</b> ' +
+          'et arrive dans <b>Fichiers → Téléchargements</b>.</p>',
+      liens: lien
+        ? [{ t: '⬇️ Installer « ' + SHORTCUT_NAME + ' »', h: lien, primary: true, externe: true }]
+        : [{ t: '✏️ Ouvrir Raccourcis', h: 'shortcuts://', primary: true },
+           { t: '⬇️ Le fichier', h: FICHIER_MOSQUEE, telecharger: true }]
     });
 
-    steps.push({
-      titre: src.file ? 'Coller l’adresse de votre mosquée' : 'Coller vos paramètres',
-      image: TUTO_IMAGES.parametres,
+    etapes.push({
+      titre: mosquee ? 'Coller l\'adresse de votre mosquée' : 'Coller vos paramètres',
+      image: IMAGES.parametres,
       html: '<p>Dans le raccourci, la <b>première action Texte</b> contient ' +
-        (src.file ? 'une adresse de calendrier' : 'une ligne de paramètres') +
-        '. Touchez la ligne ci-dessous pour copier la vôtre, puis ouvrez le raccourci et ' +
-        'remplacez le contenu de cette action.</p>',
-      copy: { k: src.file ? 'Adresse du calendrier' : 'Paramètres (action Texte)', v: valeur },
-      actions: [{ label: '✏️ Ouvrir le raccourci', href: 'shortcuts://open-shortcut?name=' + nom }]
+        (mosquee ? 'une adresse de calendrier' : 'une ligne de paramètres') +
+        '. Touchez la ligne ci-dessous pour la copier, puis remplacez ce qu\'elle contient.</p>',
+      copie: { k: mosquee ? 'Adresse du calendrier' : 'Paramètres', v: valeurACopier() },
+      liens: [{ t: '✏️ Ouvrir le raccourci', h: 'shortcuts://open-shortcut?name=' + nom }]
     });
 
-    steps.push({
-      titre: 'Deux réglages iOS, une fois pour toutes',
-      image: TUTO_IMAGES.reglages,
-      html: '<p><b>1.</b> Dans <b>Réglages</b> : <b>Apps → Raccourcis → Avancé</b> → activez ' +
-        '<b>Autoriser la suppression sans confirmation</b>. Sans ça, l\'automatisation reste bloquée ' +
-        'la nuit sur une demande de confirmation, et aucune alarme n\'est créée.</p>' +
-        '<p><b>2.</b> L\'athan comme sonnerie : importez votre mp3 dans <b>GarageBand</b>, coupez à ' +
-        '30 s, <b>Partager → Sonnerie</b>. Puis créez une alarme dans <b>Horloge</b> avec cette ' +
-        'sonnerie : les alarmes créées ensuite la reprennent.</p>' +
-        '<p class="hint" style="margin:0">Safari ne sait plus ouvrir un réglage précis (Apple a ' +
-        'fermé ces liens avec iOS 18) — mais un <b>raccourci</b>, si. ' +
-        (SHORTCUT_URL_REGLAGES
-          ? 'Le bouton ci-dessous vous y emmène directement.'
-          : 'Le petit raccourci ci-dessous ne fait que ça : ouvrir la bonne page des Réglages. ' +
-            'Son import demande d\'abord <b>Réglages → Raccourcis → Autoriser les raccourcis non ' +
-            'fiables</b> ; sinon, suivez l\'itinéraire à la main.') + '</p>',
-      copy: { k: 'Chemin du réglage', v: 'Réglages → Apps → Raccourcis → Avancé → Autoriser la suppression sans confirmation' },
-      actions: (SHORTCUT_URL_REGLAGES
-          ? [{ label: '🎛 Ouvrir le réglage', href: 'shortcuts://run-shortcut?name=' +
-               encodeURIComponent(SHORTCUT_NAME_REGLAGES), primary: true }]
-          : [{ label: '🎛 Raccourci « ouvrir le réglage »', href: SHORTCUT_FILE_REGLAGES, download: true }])
-        .concat([{ label: '🎹 Ouvrir GarageBand', href: 'garageband://' }])
+    etapes.push({
+      titre: 'Deux réglages, une fois pour toutes',
+      image: IMAGES.reglages,
+      html: '<p><b>1.</b> <b>Réglages → Apps → Raccourcis → Avancé</b> → activez ' +
+        '<b>Autoriser la suppression sans confirmation</b>. Sans ça, l\'automatisation se bloque ' +
+        'la nuit sur une question, et aucune alarme n\'est créée.</p>' +
+        '<p><b>2.</b> L\'athan comme sonnerie : importez votre mp3 dans <b>GarageBand</b>, coupez ' +
+        'à 30 s, <b>Partager → Sonnerie</b>. Puis créez une alarme dans <b>Horloge</b> avec cette ' +
+        'sonnerie — les suivantes la reprennent.</p>',
+      copie: { k: 'Chemin du réglage', v: 'Réglages → Apps → Raccourcis → Avancé → Autoriser la suppression sans confirmation' },
+      liens: [{ t: '🎹 Ouvrir GarageBand', h: 'garageband://' }]
     });
 
-    steps.push({
+    etapes.push({
       titre: 'Programmer le rendez-vous quotidien',
-      image: TUTO_IMAGES.automatisation,
-      html: '<p>Dans Raccourcis, onglet <b>Automatisation</b> → <b>+</b> → <b>Heure de la journée</b> ' +
-        '→ <b>00:05</b>, tous les jours → choisissez le raccourci <b>' + escapeHtml(SHORTCUT_NAME) +
-        '</b> → <b>Exécuter immédiatement</b> (décochez « Demander avant d\'exécuter »).</p>' +
-        '<p>Chaque nuit, il efface les alarmes de la veille et crée celles du jour.</p>',
-      actions: [{ label: '⏱ Ouvrir Raccourcis', href: 'shortcuts://' }]
+      image: IMAGES.automatisation,
+      html: '<p>Raccourcis → onglet <b>Automatisation</b> → <b>+</b> → <b>Heure de la journée</b> → ' +
+        '<b>00:05</b>, tous les jours → le raccourci <b>' + echapper(SHORTCUT_NAME) + '</b> → ' +
+        '<b>Exécuter immédiatement</b>.</p><p>Chaque nuit, il efface les alarmes de la veille et ' +
+        'crée celles du jour.</p>',
+      liens: [{ t: '⏱ Ouvrir Raccourcis', h: 'shortcuts://' }]
     });
 
-    steps.push({
-      titre: 'Vérifier tout de suite',
-      image: TUTO_IMAGES.verifier,
-      html: '<p>Lancez le raccourci une fois : cinq alarmes <code>Athan Fajr</code> à ' +
-        '<code>Athan Isha</code> doivent apparaître dans <b>Horloge</b>, aux horaires affichés ' +
-        'à l\'écran précédent.</p>' +
-        '<p>Le volume des alarmes suit <b>Réglages → Sons → Sonnerie et alertes</b>, ' +
-        'pas le volume multimédia.</p>',
-      actions: [{ label: '▶︎ Lancer le raccourci', href: 'shortcuts://run-shortcut?name=' + nom, primary: true }]
+    etapes.push({
+      titre: 'Vérifier',
+      image: IMAGES.verifier,
+      html: '<p>Lancez-le une fois : cinq alarmes <code>Athan Fajr</code> à <code>Athan Isha</code> ' +
+        'doivent apparaître dans <b>Horloge</b>, aux horaires de l\'écran précédent.</p>' +
+        '<p>Leur volume suit <b>Réglages → Sons → Sonnerie et alertes</b>, pas le volume multimédia.</p>',
+      liens: [{ t: '▶︎ Lancer le raccourci', h: 'shortcuts://run-shortcut?name=' + nom, primary: true }]
     });
 
     var html = '';
-    for (var i = 0; i < steps.length; i++) {
-      var st = steps[i];
-      html += '<div class="tuto-step"><h3><span class="num">' + (i + 1) + '</span>' +
-        escapeHtml(st.titre) + '</h3>' + st.html;
-      if (st.actions && st.actions.length) {
-        html += '<div class="actions">';
-        for (var k = 0; k < st.actions.length; k++) {
-          var a = st.actions[k];
-          html += '<a class="' + (a.primary ? 'install' : 'go') + '" href="' + a.href + '"' +
-            (a.externe ? ' target="_blank" rel="noopener"' : '') +
-            (a.download ? ' download' : '') + '>' + a.label + '</a>';
-        }
-        html += '</div>';
+    etapes.forEach(function (e, i) {
+      html += '<div class="step"><h4><span class="num">' + (i + 1) + '</span>' + e.titre + '</h4>' + e.html;
+      (e.liens || []).forEach(function (l) {
+        html += '<a class="btn' + (l.primary ? ' primary' : '') + '" href="' + l.h + '"' +
+          (l.externe ? ' target="_blank" rel="noopener"' : '') +
+          (l.telecharger ? ' download' : '') + '>' + l.t + '</a>';
+      });
+      if (e.copie) {
+        html += '<button class="copy" type="button" data-v="' + echapper(e.copie.v) + '">' +
+          '<span style="min-width:0"><span class="k">' + e.copie.k + '</span>' +
+          '<span class="v">' + echapper(e.copie.v) + '</span></span><span class="ico">⧉</span></button>';
       }
-      if (st.copy) {
-        html += '<button class="copyrow" type="button" data-value="' + escapeHtml(st.copy.v) + '">' +
-          '<span><span class="k">' + escapeHtml(st.copy.k) + '</span>' +
-          '<span class="v">' + escapeHtml(st.copy.v) + '</span></span>' +
-          '<span class="ico">⧉</span></button>';
-      }
-      html += '<img src="' + st.image + '" alt="" loading="lazy">';
-      html += '</div>';
-    }
-    $('tutoSteps').innerHTML = html;
+      html += '<img src="' + e.image + '" alt="" loading="lazy"></div>';
+    });
+    $('steps').innerHTML = html;
   }
 
-  /* ---------------------------------------------------------------- */
-  /* Câblage de l'interface                                            */
-  /* ---------------------------------------------------------------- */
-
-  function recipe() {
-    return [
-      'Athan — réveils automatiques (Raccourcis iOS)',
-      '',
-      'Automatisation : Heure de la journée → 00:05 → Tous les jours → Exécuter immédiatement.',
-      '',
-      'Avant tout : Réglages → Apps → Raccourcis → Avancé →',
-      'active « Autoriser la suppression sans confirmation ».',
-      '',
-      'L’ordre compte : la suppression doit venir AVANT les créations, sinon',
-      'elle efface les alarmes qui viennent d’être créées.',
-      '',
-      '1. Rechercher des alarmes  (Étiquette contient « Athan »)',
-      '2. Supprimer les alarmes   (entrée = les alarmes trouvées)',
-      '3. Obtenir le contenu de l’URL :',
-      '   ' + apiUrl,
-      (sourceById(settings.source).file
-        ? '3bis. Obtenir la valeur du dictionnaire\n' +
-          '      clé : variable « Date actuelle » au format personnalisé dd-MM\n' +
-          '      dans : Contenu de l’URL   → les horaires du jour'
-        : '   → dans l’URL, remplace la date ' + $('dateSample').textContent + ' par la variable\n' +
-          '     « Date actuelle » au format personnalisé dd-MM-yyyy'),
-      '4. Texte : Fajr,Dhuhr,Asr,Maghrib,Isha   (sans espace)',
-      '5. Scinder le texte → séparateur Personnalisé → une virgule',
-      '6. Répéter avec chaque élément dans : Texte scindé  (PAS Contenu de l’URL)',
-      (sourceById(settings.source).file
-        ? '     a. Obtenir la valeur du dictionnaire\n' +
-          '        clé : [Élément de répétition]\n' +
-          '        dans : la valeur du jour (étape 3bis)'
-        : '     a. Obtenir la valeur du dictionnaire\n' +
-          '        clé : data.timings.[Élément de répétition]   (timings avec un s)\n' +
-          '        dans : Contenu de l’URL'),
-      '     b. Ajouter une alarme à cette valeur,',
-      '        étiquette : Athan [Élément de répétition]',
-      '',
-      'La sonnerie utilisée est celle par défaut de l’app Horloge :',
-      'crée une alarme à la main une fois, choisis-y ton athan (importé via GarageBand).'
-    ].join('\n');
-  }
-
-  function writeClipboard(text) {
-    if (navigator.clipboard) return navigator.clipboard.writeText(text);
-    return Promise.reject(new Error('presse-papiers indisponible'));
-  }
-
-  function copy(text, button) {
-    writeClipboard(text).then(function () {
-      var old = button.textContent;
-      button.textContent = '✓ Copié';
-      setTimeout(function () { button.textContent = old; }, 1600);
-    }, function () { prompt('Copie manuelle :', text); });
-  }
-
-  /* Même chose pour une ligne de valeur : on ne touche qu'à l'icône, pour ne
-     pas détruire le contenu de la ligne. */
-  function copyRow(text, row) {
-    var ico = row.querySelector('.ico');
-    writeClipboard(text).then(function () {
-      row.classList.add('done');
+  function copier(texte, ligne) {
+    var ico = ligne.querySelector('.ico');
+    var fait = function () {
+      ligne.classList.add('done');
       ico.textContent = '✓';
-      setTimeout(function () { row.classList.remove('done'); ico.textContent = '⧉'; }, 1400);
-    }, function () { prompt('Copie manuelle :', text); });
+      setTimeout(function () { ligne.classList.remove('done'); ico.textContent = '⧉'; }, 1400);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(texte).then(fait, function () { prompt('Copie manuelle :', texte); });
+    else prompt('Copie manuelle :', texte);
   }
 
-  function init() {
-    var sel = $('method');
+  /* ---------------------------------------------------------------- */
+  /* Outils                                                            */
+  /* ---------------------------------------------------------------- */
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function assign(a, b) { for (var k in b) a[k] = b[k]; return a; }
+  function echapper(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Câblage                                                           */
+  /* ---------------------------------------------------------------- */
+
+  function construireAffiner() {
     PT.METHODS.forEach(function (m) {
       var o = document.createElement('option');
       o.value = m.id; o.textContent = m.name;
-      sel.appendChild(o);
+      $('method').appendChild(o);
+    });
+    $('method').value = state.methodId;
+    $('method').addEventListener('change', function () {
+      state.methodId = +this.value; save(); afficherHoraires();
     });
 
-    loadSettings();
-    if (!settings.adjust || typeof settings.adjust !== 'object') settings.adjust = {};
-    buildAdjGrid();
-    fillForm();
-    $('watch').checked = false; // on ne réactive jamais le son sans geste de l'utilisateur
-
-    loadSources().then(function () {
-      fillSourceSelect();
-      loadCalendar();
-      runSearch();
+    var html = '';
+    PT.PRAYERS.forEach(function (p) {
+      html += '<div><label for="adj-' + p.key + '">' + p.label + '</label><div class="stepper">' +
+        '<button type="button" data-key="' + p.key + '" data-d="-1">−</button>' +
+        '<input id="adj-' + p.key + '" type="text" inputmode="text" value="0">' +
+        '<button type="button" data-key="' + p.key + '" data-d="1">+</button></div></div>';
     });
-    loadCalendar();    // affichage immédiat, sans attendre le réseau
-    loadDirectory();
-    setInterval(tick, 1000);
-
-    // Réglages fins : ils ne changent que l'écran des horaires.
-    ['place', 'lat', 'lon', 'method', 'madhab', 'highlats'].forEach(function (id) {
-      $(id).addEventListener('change', readForm);
+    $('adjGrid').innerHTML = html;
+    PT.PRAYERS.forEach(function (p) {
+      $('adj-' + p.key).value = state.adjust[p.key] || 0;
+      $('adj-' + p.key).addEventListener('change', lireDecalages);
     });
-    PT.PRAYERS.forEach(function (p) { $('adj-' + p.key).addEventListener('change', readForm); });
 
-    // Les pavés numériques d'iOS n'offrent pas de signe moins : d'où les boutons.
+    // Les pavés numériques d'iOS n'ont pas de signe moins : d'où les boutons.
     $('adjGrid').addEventListener('click', function (e) {
-      var btn = e.target.closest ? e.target.closest('.step') : null;
-      if (!btn) return;
-      var champ = $('adj-' + btn.dataset.key);
-      var valeur = Math.round(Number(champ.value) || 0) + Number(btn.dataset.delta);
-      champ.value = Math.max(-90, Math.min(90, valeur));
-      readForm();
+      var b = e.target.closest ? e.target.closest('button') : null;
+      if (!b || !b.dataset.key) return;
+      var champ = $('adj-' + b.dataset.key);
+      champ.value = Math.max(-90, Math.min(90, (Math.round(+champ.value) || 0) + (+b.dataset.d)));
+      lireDecalages();
     });
-    $('source').addEventListener('change', function () {
-      settings.source = this.value;
-      saveSettings();
-      loadCalendar();
-    });
-    $('adjReset').addEventListener('click', function () {
-      settings.adjust = {};
-      saveSettings(); fillForm(); render();
-    });
+  }
 
-    /* --- écran 1 : le champ unique --- */
-    $('q').addEventListener('input', runSearch);
-    $('q').addEventListener('keydown', function (e) {
+  function lireDecalages() {
+    PT.PRAYERS.forEach(function (p) {
+      var v = Math.round(+$('adj-' + p.key).value) || 0;
+      if (v) state.adjust[p.key] = v; else delete state.adjust[p.key];
+    });
+    save();
+    afficherHoraires();
+  }
+
+  function init() {
+    load();
+    construireAffiner();
+    setInterval(battement, 1000);
+
+    $('addrGo').addEventListener('click', function () { chercherAdresse($('addr').value.trim()); });
+    $('addr').addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') return;
-      e.preventDefault(); this.blur();
-      var q = this.value.trim();
-      if (q && looksLikeAddress(q)) chooseAddress(q); else runSearch();
-    });
-    $('qGo').addEventListener('click', function () {
-      var q = $('q').value.trim();
-      if (q && looksLikeAddress(q)) chooseAddress(q); else runSearch();
-    });
-    $('results').addEventListener('click', function (e) {
-      var row = e.target.closest ? e.target.closest('.mosque') : null;
-      if (!row) return;
-      if (row.dataset.address) chooseAddress($('q').value.trim());
-      else chooseMosque(row.dataset.slug);
+      e.preventDefault(); this.blur(); chercherAdresse(this.value.trim());
     });
 
-    $('useGeo').addEventListener('click', function () {
-      var el = $('geoStatus');
-      if (!navigator.geolocation) { el.className = 'status show err'; el.textContent = 'Géolocalisation indisponible.'; return; }
-      el.className = 'status show'; el.textContent = 'Localisation en cours…';
+    $('geo').addEventListener('click', function () {
+      if (!navigator.geolocation) return statut('err', 'Géolocalisation indisponible.');
+      statut('', 'Localisation en cours…');
       navigator.geolocation.getCurrentPosition(function (pos) {
-        settings.latitude = Math.round(pos.coords.latitude * 10000) / 10000;
-        settings.longitude = Math.round(pos.coords.longitude * 10000) / 10000;
-        settings.place = settings.place || 'ma position';
-        settings.source = 'calcul';
-        saveSettings(); fillForm(); fillSourceSelect(); loadCalendar();
-        el.className = 'status'; el.textContent = '';
-        runSearch();          // la liste des mosquées proches devient utile
-        showScreen('times');
+        poser('ma position', pos.coords.latitude, pos.coords.longitude);
       }, function (err) {
-        el.className = 'status show err';
-        el.textContent = 'Position refusée ou indisponible (' + err.message + '). Saisis plutôt ton adresse.';
+        statut('err', 'Position indisponible (' + echapper(err.message) + '). ' +
+          'Saisissez plutôt votre adresse.');
       }, { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
     });
 
-    /* --- écran 2 : la question --- */
-    $('goTuto').addEventListener('click', function () { showScreen('tuto'); });
-    $('backSearch').addEventListener('click', function () { showScreen('search'); });
-    $('backTimes').addEventListener('click', function () { showScreen('times'); });
-
-    /* --- écran 3 : les valeurs à copier --- */
-    $('tutoSteps').addEventListener('click', function (e) {
-      var row = e.target.closest ? e.target.closest('.copyrow') : null;
-      if (row && row.dataset.value) copyRow(row.dataset.value, row);
+    $('mosques').addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.m') : null;
+      if (b && b.dataset.slug) choisirMosquee(b.dataset.slug);
     });
-    $('copyList').addEventListener('click', function (e) {
-      var row = e.target.closest ? e.target.closest('.copyrow') : null;
-      if (!row || !row.dataset.i) return;
-      var value = copyValues()[Number(row.dataset.i)];
-      if (value) copyRow(value.v, row);
-    });
-    $('copyUrlCity').addEventListener('click', function () { copy($('apiUrlCity').textContent, this); });
-    $('copyRecipe').addEventListener('click', function () { copy(recipe(), this); });
 
-    /* --- mode veilleur --- */
-    $('file').addEventListener('change', function () {
-      var f = this.files && this.files[0];
-      if (!f) return;
-      useBlob(f, f.name);
-      saveAudio(f).catch(function () { /* pas de stockage : le fichier vaut pour la session */ });
+    $('useCalc').addEventListener('click', function () {
+      state.mosque = null; calendrier = null; save(); ecran('s3');
     });
-    $('forget').addEventListener('click', function () {
-      dropAudio().catch(function () {});
-      $('file').value = '';
-      useFallback();
+    $('backAddr').addEventListener('click', function () { ecran('s1'); });
+    $('backSrc').addEventListener('click', function () { ecran('s2'); });
+    $('ok').addEventListener('click', function () { ecran('s4'); });
+    $('backTimes').addEventListener('click', function () { ecran('s3'); });
+
+    $('steps').addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.copy') : null;
+      if (b) copier(b.dataset.v, b);
     });
-    $('test').addEventListener('click', function () { playAthan('test'); });
 
-    readAudio().then(function (blob) {
-      if (blob) useBlob(blob, blob.name);
-      else useFallback();
-    }).catch(useFallback);
-
-    // On revient là où l'on en était : un lieu déjà choisi mène droit aux horaires.
-    showScreen(settings.place || settings.source !== 'calcul' ? 'times' : 'search');
+    // On reprend où l'on s'était arrêté : un lieu connu mène droit aux horaires.
+    chargerDonnees().then(function () {
+      if (state.latitude == null) return ecran('s1');
+      $('addr').value = state.place;
+      if (state.mosque && calendriers[state.mosque.slug]) {
+        chargerCalendrier(state.mosque.file).then(function () { ecran('s3'); });
+      } else {
+        state.mosque = null;
+        ecran('s3');
+      }
+    });
   }
 
   init();

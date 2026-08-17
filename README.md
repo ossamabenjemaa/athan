@@ -4,7 +4,8 @@ Horaires de prière calculés **hors ligne** sur le téléphone, et surtout : de
 sonner l'athan **sans jamais toucher au bouton silencieux physique de l'iPhone**.
 
 ```
-index.html      — la page : chercher, vérifier, installer
+index.html      — la page : adresse, mosquée, vérification, installation
+v1/             — la version précédente, archivée et toujours en ligne
 prayer-times.js — le calcul astronomique (navigateur + Node, zéro dépendance)
 cli.js          — les mêmes horaires en ligne de commande
 calendriers/    — calendriers de mosquée, manifeste index.json, annuaire mosquees.json
@@ -13,21 +14,22 @@ tuto/           — les illustrations du tuto, remplaçables par de vraies captu
 scripts/        — import-mawaqit.js, crawl-mosquees.js, build-raccourci.py
 ```
 
-## 🧭 Le parcours, en trois écrans
+## 🧭 Le parcours, en quatre écrans
 
-1. **Un seul champ** — « Indiquez votre adresse ou la mosquée de votre choix ». La saisie
-   alimente les deux pistes : les mosquées de l'annuaire (avec la distance) et « utiliser cette
-   adresse » (géocodage). La forme du texte décide seulement de l'ordre — un numéro ou un mot
-   de voirie fait passer l'adresse en tête.
-2. **Les horaires du jour**, avec la source en toutes lettres : *horaires officiels de la
-   mosquée* ou *calcul pour tel lieu, telle méthode*. Puis la question :
-   **« Ces horaires me conviennent — obtenir les alarmes »** ou
-   **« Ils ne correspondent pas — changer de lieu »**.
-3. **Le tuto**, adapté à ce qui a été choisi : installer le raccourci, coller **la seule valeur
-   à changer**, les deux réglages iOS, l'automatisation de 00:05, la vérification.
+1. **Où habitez-vous ?** — une adresse, ou la position du téléphone. Géocodage par l'API
+   publique d'AlAdhan, sans clé.
+2. **Vos horaires** — les huit mosquées les plus proches, triées par distance, celles dont on a
+   le calendrier en tête de liste ; et un bouton pour des horaires simplement calculés.
+3. **Ces horaires sont-ils les bons ?** — les horaires du jour, la source nommée, et pour une
+   mosquée un bouton **Comparer sur Mawaqit** qui ouvre sa page officielle. C'est le moment de
+   vérifier avant d'installer quoi que ce soit. Pour un calcul, un repli *Affiner* donne la
+   méthode et les décalages ± minutes.
+4. **Installer les alarmes** — cinq étapes, chacune avec son bouton : installer le raccourci,
+   coller **la seule valeur qui change** (l'adresse du calendrier, ou la ligne de paramètres),
+   les deux réglages iOS, l'automatisation de 00:05, la vérification.
 
-Les réglages d'expert (méthode, madhhab, hautes latitudes, décalages, mode veilleur) sont
-toujours là, repliés dans l'écran des horaires.
+Ce qui n'y est plus — mode veilleur, madhhab, hautes latitudes, recette de construction du
+raccourci — reste en ligne dans la **[version 1](v1/)**, qui partage les mêmes calendriers.
 
 ## 📲 Les deux raccourcis
 
@@ -41,62 +43,18 @@ proche a à changer, et la page la lui donne en un tap.
 
 Le second est **dérivé du premier** par `scripts/build-raccourci.py` : même enchaînement, mais
 l'URL n'est plus celle d'AlAdhan et une action s'intercale pour extraire les horaires du jour
-(clé = date au format `dd-MM`).
+(clé = date au format `dd-MM`, rangée dans une variable `Jour`).
 
 ```bash
 python3 scripts/build-raccourci.py             # régénère la variante mosquée
-python3 scripts/build-raccourci.py --verifier  # relit les deux et décrit chaque action
+python3 scripts/build-raccourci.py --verifier  # relit et décrit chaque action
 ```
 
-**Un fichier `.shortcut` ne s'installe pas comme ça.** iOS n'importe un raccourci non signé
-qu'après avoir activé *Autoriser les raccourcis non fiables*, réglage qui n'apparaît qu'une fois
-un premier raccourci lancé — impasse pour la plupart des gens. Le fichier généré sert donc de
-référence ; **le chemin praticable est de dupliquer le raccourci existant et d'y faire trois
-retouches**, ce que le tuto détaille :
-
-| Action | Avant (AlAdhan) | Après (calendrier) |
-|---|---|---|
-| Texte de tête | `latitude=…&longitude=…` | l'URL du fichier JSON |
-| Obtenir le contenu de l'URL | `…/timings/[Date]?[Texte]` | la seule variable **Texte** |
-| *(nouvelle action)* | — | **Valeur du dictionnaire**, clé = **Date actuelle** au format `dd-MM` |
-| Valeur du dictionnaire (boucle) | clé `data.timings.[Élément]` | clé = **[Élément]**, dans la valeur du jour |
-
-Une fois la copie fonctionnelle, **Partager → Copier le lien iCloud** : ce lien signé s'installe
-en deux touches chez n'importe qui. Collé dans `SHORTCUT_URL_MOSQUEE` en tête du script de
-`index.html`, il remplace tout ce pavé par un bouton.
-
-## 🔗 Les liens du tuto
-
-Chaque étape porte au moins un bouton qui agit, plutôt qu'une consigne à suivre de tête :
-
-| Bouton | Lien | Fiable ? |
-|---|---|---|
-| Installer le raccourci | lien iCloud, ou téléchargement du `.shortcut` | ✅ |
-| Ouvrir le raccourci | `shortcuts://open-shortcut?name=Athan` | ✅ |
-| Ouvrir Raccourcis | `shortcuts://` | ✅ |
-| Lancer le raccourci | `shortcuts://run-shortcut?name=Athan` | ✅ |
-| Ouvrir GarageBand | `garageband://` | ✅ si l'app est installée |
-| Ouvrir le réglage | un raccourci d'une action | ✅ une fois installé |
-
-**Safari ne sait plus ouvrir un panneau de Réglages** — `App-Prefs:root=…` a été cassé par
-iOS 18 et n'a jamais vraiment été autorisé depuis le web. En revanche, l'action *Ouvrir les URL*
-d'un **raccourci** y arrive encore. D'où `raccourcis/reglages-raccourcis.shortcut` : deux actions,
-une URL (`App-prefs:com.apple.shortcuts`) et son ouverture, généré par le même script.
-
-L'étape 3 propose son téléchargement ; une fois importé puis repartagé depuis l'iPhone, coller
-son lien iCloud dans `SHORTCUT_URL_REGLAGES` remplace le téléchargement par un bouton
-**« Ouvrir le réglage »** qui lance le raccourci en un tap. L'itinéraire écrit reste affiché et
-copiable, pour qui préfère y aller à la main.
-
-Le nom du raccourci compte pour les liens `shortcuts://…?name=` : il est dans la constante
-`SHORTCUT_NAME` en tête du script de `index.html`. S'il est renommé sur l'iPhone, les deux
-boutons cessent de le trouver.
-
-## 🖼 Les illustrations du tuto
-
-`tuto/*.svg` sont des **schémas dessinés**, pas de vraies captures — ils portent la mention.
-Pour les remplacer : déposer les images dans `tuto/` et changer le tableau `TUTO_IMAGES` en tête
-du script de `index.html` (une ligne par étape).
+Un fichier `.shortcut` non signé demande *Autoriser les raccourcis non fiables* (Réglages → Apps
+→ Raccourcis) et arrive dans *Fichiers → Téléchargements*. Le chemin praticable reste de
+**dupliquer le raccourci existant** et d'y faire les retouches ci-dessus. Une fois la copie
+fonctionnelle, **Partager → Copier le lien iCloud** : ce lien se colle dans `SHORTCUT_MOSQUEE`,
+en tête du script de `index.html`, et l'étape 1 devient un simple bouton.
 
 ## 🚀 Essayer
 
