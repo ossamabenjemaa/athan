@@ -36,10 +36,17 @@ raccourci — reste en ligne dans la **[version 1](v1/)**, qui partage les même
 Le raccourci isole ses réglages dans une **action Texte** en tête : c'est la seule chose qu'un
 proche a à changer, et la page la lui donne en un tap.
 
-| Fichier | Pour | Valeur à coller |
+| Raccourci | Pour | Valeur à coller |
 |---|---|---|
-| `raccourcis/athan-aladhan.shortcut` | une adresse (calcul) | `latitude=…&longitude=…&method=…&school=…` |
-| `raccourcis/athan-mosquee.shortcut` | un calendrier de mosquée | l'URL du fichier JSON |
+| **[Athan Local](https://www.icloud.com/shortcuts/f0de58d9c1724db38dd72a2d1993bde5)** | une adresse (calcul) | `latitude=…&longitude=…&method=…&school=…` |
+| **[Athan Mosquée](https://www.icloud.com/shortcuts/d609405da0554b35a65f65102550148e)** | un calendrier de mosquée | l'URL du fichier JSON |
+
+Les deux liens sont signés par Apple : ils s'installent en deux touches, sans aucun réglage
+préalable. La page propose automatiquement celui qui correspond à la source choisie. **Un seul
+à la fois** : ils créent les mêmes alarmes `Athan …` et s'effaceraient mutuellement.
+
+Les fichiers `raccourcis/*.shortcut` restent dans le dépôt comme référence et point de départ
+pour en dériver d'autres.
 
 Le second est **dérivé du premier** par `scripts/build-raccourci.py` : même enchaînement, mais
 l'URL n'est plus celle d'AlAdhan et une action s'intercale pour extraire les horaires du jour
@@ -50,11 +57,12 @@ python3 scripts/build-raccourci.py             # régénère la variante mosqué
 python3 scripts/build-raccourci.py --verifier  # relit et décrit chaque action
 ```
 
-Un fichier `.shortcut` non signé demande *Autoriser les raccourcis non fiables* (Réglages → Apps
-→ Raccourcis) et arrive dans *Fichiers → Téléchargements*. Le chemin praticable reste de
-**dupliquer le raccourci existant** et d'y faire les retouches ci-dessus. Une fois la copie
-fonctionnelle, **Partager → Copier le lien iCloud** : ce lien se colle dans `SHORTCUT_MOSQUEE`,
-en tête du script de `index.html`, et l'étape 1 devient un simple bouton.
+Pour en dériver un nouveau : un fichier `.shortcut` non signé demande *Autoriser les raccourcis
+non fiables* (Réglages → Apps → Raccourcis) et arrive dans *Fichiers → Téléchargements* — plus
+simple, dupliquer un raccourci existant et le retoucher, puis **Partager → Copier le lien
+iCloud**. Les liens vivent dans la constante `RACCOURCIS` en tête du script de `index.html`,
+avec le **nom exact** de chacun : c'est lui qui fait marcher les boutons
+`shortcuts://run-shortcut?name=…`, donc renommer un raccourci sur l'iPhone casse ces liens.
 
 ## 🚀 Essayer
 

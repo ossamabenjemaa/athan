@@ -230,9 +230,12 @@
 
   /* Deux raccourcis : celui qui interroge AlAdhan (adresse) et celui qui lit
      un calendrier de mosquée. Le second attend son lien iCloud. */
-  var SHORTCUT_ALADHAN = 'https://www.icloud.com/shortcuts/2b8ff86ac89e4dbbadb114af385ff42f';
-  var SHORTCUT_MOSQUEE = '';
-  var SHORTCUT_NAME = 'Athan';
+  var RACCOURCIS = {
+    calcul:  { lien: 'https://www.icloud.com/shortcuts/f0de58d9c1724db38dd72a2d1993bde5',
+               nom: 'Athan Local' },
+    mosquee: { lien: 'https://www.icloud.com/shortcuts/d609405da0554b35a65f65102550148e',
+               nom: 'Athan Mosquée' }
+  };
   var FICHIER_MOSQUEE = 'raccourcis/athan-mosquee.shortcut';
   var REPO = 'https://github.com/ossamabenjemaa/athan';
 
@@ -554,25 +557,18 @@
 
   function construireTuto() {
     var mosquee = !!state.mosque;
-    var lien = mosquee ? SHORTCUT_MOSQUEE : SHORTCUT_ALADHAN;
-    var nom = encodeURIComponent(SHORTCUT_NAME);
+    var raccourci = mosquee ? RACCOURCIS.mosquee : RACCOURCIS.calcul;
+    var nom = encodeURIComponent(raccourci.nom);
     var etapes = [];
 
     etapes.push({
       titre: 'Installer le raccourci',
-      image: (mosquee && !lien) ? IMAGES.installerMosquee : IMAGES.installer,
-      html: lien
-        ? '<p>Ouvrez ce lien sur votre iPhone : l\'app Raccourcis propose de l\'ajouter. ' +
-          'Deux touches, rien à construire.</p>'
-        : '<p>Le raccourci qui lit les calendriers de mosquée n\'a pas encore de lien iCloud. ' +
-          'En attendant, dupliquez le raccourci <b>' + echapper(SHORTCUT_NAME) + '</b> et ' +
-          'remplacez-y l\'adresse interrogée par celle de l\'étape 2 — ou récupérez le fichier, ' +
-          'qui demande <b>Réglages → Apps → Raccourcis → Autoriser les raccourcis non fiables</b> ' +
-          'et arrive dans <b>Fichiers → Téléchargements</b>.</p>',
-      liens: lien
-        ? [{ t: '⬇️ Installer « ' + SHORTCUT_NAME + ' »', h: lien, primary: true, externe: true }]
-        : [{ t: '✏️ Ouvrir Raccourcis', h: 'shortcuts://', primary: true },
-           { t: '⬇️ Le fichier', h: FICHIER_MOSQUEE, telecharger: true }]
+      image: IMAGES.installer,
+      html: '<p>Ouvrez ce lien sur votre iPhone : l\'app Raccourcis propose d\'ajouter ' +
+        '<b>' + echapper(raccourci.nom) + '</b>. Deux touches, rien à construire.</p>' +
+        '<p>Il en existe deux, un par source d\'horaires — <b>n\'en gardez qu\'un</b> : ils ' +
+        'créent les mêmes alarmes et se les effaceraient mutuellement.</p>',
+      liens: [{ t: '⬇️ Installer « ' + raccourci.nom + ' »', h: raccourci.lien, primary: true, externe: true }]
     });
 
     etapes.push({
@@ -602,7 +598,7 @@
       titre: 'Programmer le rendez-vous quotidien',
       image: IMAGES.automatisation,
       html: '<p>Raccourcis → onglet <b>Automatisation</b> → <b>+</b> → <b>Heure de la journée</b> → ' +
-        '<b>00:05</b>, tous les jours → le raccourci <b>' + echapper(SHORTCUT_NAME) + '</b> → ' +
+        '<b>00:05</b>, tous les jours → le raccourci <b>' + echapper(raccourci.nom) + '</b> → ' +
         '<b>Exécuter immédiatement</b>.</p><p>Chaque nuit, il efface les alarmes de la veille et ' +
         'crée celles du jour.</p>',
       liens: [{ t: '⏱ Ouvrir Raccourcis', h: 'shortcuts://' }]
