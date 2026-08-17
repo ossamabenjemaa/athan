@@ -104,9 +104,26 @@ function sanity(cal) {
 function write(entry, cal) {
   fs.mkdirSync(DIR, { recursive: true });
   const file = entry.id + '.json';
+  const chemin = path.join(DIR, file);
   const out = { _meta: entry.meta };
   for (const key of Object.keys(cal).sort(byDate)) out[key] = cal[key];
-  fs.writeFileSync(path.join(DIR, file), JSON.stringify(out, null, 0));
+
+  /*
+   * Si les horaires n'ont pas bougé, on garde la date d'import précédente :
+   * sinon chaque passage mensuel réécrirait les 1 200 fichiers à l'identique,
+   * et le dépôt grossirait de 50 Mo pour rien.
+   */
+  if (fs.existsSync(chemin)) {
+    try {
+      const avant = JSON.parse(fs.readFileSync(chemin, 'utf8'));
+      const memesHoraires = Object.keys(cal).every(k => JSON.stringify(avant[k]) === JSON.stringify(cal[k]))
+        && Object.keys(avant).filter(k => k !== '_meta').length === Object.keys(cal).length;
+      if (memesHoraires && avant._meta && avant._meta.importe_le) {
+        out._meta = Object.assign({}, entry.meta, { importe_le: avant._meta.importe_le });
+      }
+    } catch (e) { /* fichier illisible : on réécrit */ }
+  }
+  fs.writeFileSync(chemin, JSON.stringify(out, null, 0));
 
   const index = fs.existsSync(INDEX) ? JSON.parse(fs.readFileSync(INDEX, 'utf8')) : [];
   const row = { id: entry.id, label: entry.label, file: 'calendriers/' + file, slug: entry.meta.slug };

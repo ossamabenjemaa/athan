@@ -8,10 +8,11 @@ index.html      — la page : adresse, mosquée, vérification, installation
 v1/             — la version précédente, archivée et toujours en ligne
 prayer-times.js — le calcul astronomique (navigateur + Node, zéro dépendance)
 cli.js          — les mêmes horaires en ligne de commande
-calendriers/    — calendriers de mosquée, manifeste index.json, annuaire mosquees.json
+calendriers/    — catalogue.json (ce que la page charge), calendriers de mosquée,
+                  + annuaire et manifeste, sources des scripts
 raccourcis/     — les deux raccourcis iOS (.shortcut)
 tuto/           — les illustrations du tuto, remplaçables par de vraies captures
-scripts/        — import-mawaqit.js, crawl-mosquees.js, build-raccourci.py
+scripts/        — import-mawaqit.js, crawl-mosquees.js, build-catalogue.js, build-raccourci.py
 ```
 
 ## 🧭 Le parcours, en quatre écrans
@@ -63,6 +64,24 @@ simple, dupliquer un raccourci existant et le retoucher, puis **Partager → Cop
 iCloud**. Les liens vivent dans la constante `RACCOURCIS` en tête du script de `index.html`,
 avec le **nom exact** de chacun : c'est lui qui fait marcher les boutons
 `shortcuts://run-shortcut?name=…`, donc renommer un raccourci sur l'iPhone casse ces liens.
+
+## 📦 Ce qui se télécharge
+
+| Au chargement | Compressé | Quand |
+|---|---|---|
+| `index.html` + `prayer-times.js` | 16 Ko | toujours |
+| `calendriers/catalogue.json` | 51 Ko | toujours (mis en cache) |
+| le calendrier d'**une** mosquée | ~5 Ko | seulement quand on la choisit |
+
+Le catalogue fusionne l'annuaire et le manifeste en un tableau de tableaux, sans noms de champs
+répétés, l'adresse réduite au code postal et à la commune : **51 Ko au lieu de 104**. Il se
+régénère par `node scripts/build-catalogue.js`, que les deux workflows lancent après un import.
+
+Les 1 200 calendriers ne sont **jamais** téléchargés en bloc : un seul l'est, à la demande, et
+reste en cache. C'est ce qui permet d'en avoir des milliers sans alourdir personne.
+
+Côté dépôt, l'import ne réécrit un calendrier que si ses horaires ont changé — sinon le passage
+mensuel produirait 1 200 fichiers identiques à chaque fois, et autant de poids dans l'historique.
 
 ## 🚀 Essayer
 

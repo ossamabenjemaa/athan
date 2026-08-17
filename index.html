@@ -141,6 +141,25 @@
   .stepper { display: flex; gap: 6px; }
   .stepper input { text-align: center; padding: 10px 2px; font-variant-numeric: tabular-nums; }
   .stepper button { flex: none; width: 42px; padding: 0; font-size: 1.2rem; font-weight: 700; }
+
+  table.cmp { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  table.cmp th, table.cmp td { padding: 7px 4px; text-align: right; border-bottom: 1px solid var(--line); }
+  table.cmp th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; }
+  table.cmp th:first-child, table.cmp td:first-child { text-align: left; font-weight: 700; }
+  table.cmp td.ecart { color: var(--muted); font-variant-numeric: tabular-nums; }
+  table.cmp td.ecart.fort { color: var(--warn); font-weight: 700; }
+
+  /* Suggestions sous le champ */
+  .sugg { margin-top: 8px; }
+  .sugg button {
+    display: flex; align-items: center; gap: 10px; text-align: left; padding: 11px 13px;
+    margin-top: 6px; font-weight: 400;
+  }
+  .sugg .quoi { flex: none; font-size: 1.05rem; }
+  .sugg .txt { min-width: 0; }
+  .sugg .t1 { display: block; font-weight: 700; font-size: 0.92rem; }
+  .sugg .t2 { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 2px;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   footer { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 24px; line-height: 1.7; }
   footer a { color: inherit; }
 </style>
@@ -155,13 +174,14 @@
 
   <!-- 1 — l'adresse ---------------------------------------------------- -->
   <section class="card" id="s1">
-    <h2>Où habitez-vous ?</h2>
-    <p class="lede">Pour trouver les mosquées autour de vous.</p>
+    <h2>Où voulez-vous prier ?</h2>
+    <p class="lede">Indiquez votre localisation, ou celle de la mosquée de votre choix.</p>
     <div class="row">
       <input id="addr" type="text" autocomplete="off" enterkeyhint="search"
-             placeholder="12 rue Godefroy Cavaignac, Paris">
+             placeholder="Une adresse, une ville, ou un nom de mosquée">
       <button id="addrGo" type="button" style="flex:none; width:auto; padding:14px 18px">🔎</button>
     </div>
+    <div id="sugg"></div>
     <button id="geo" type="button" style="margin-top:8px">📍 Utiliser ma position</button>
     <div id="s1status" class="status"></div>
   </section>
@@ -187,7 +207,11 @@
       <div class="count" id="count">--:--:--</div>
     </div>
     <ul class="times" id="times"></ul>
-    <a id="mawaqit" class="btn" href="#" target="_blank" rel="noopener" hidden>🔎 Comparer sur Mawaqit</a>
+    <details id="compare" hidden>
+      <summary>Comparer avec le calcul astronomique</summary>
+      <table class="cmp" id="cmpTable"></table>
+      <p class="hint" id="cmpNote"></p>
+    </details>
     <p class="hint" id="verifHint"></p>
     <details id="affiner" hidden>
       <summary>Affiner le calcul</summary>
@@ -255,7 +279,7 @@
   var state = {
     place: '', latitude: null, longitude: null,
     mosque: null,           // { slug, nom, ville, file } quand une mosquée est choisie
-    methodId: 3, adjust: {}
+    methodId: 12, adjust: {}   // UOIF — la méthode suivie en France
   };
 
   var annuaire = null;      // mosquées connues : nom, ville, position, slug
@@ -314,6 +338,61 @@
       });
   }
 
+  /*
+   * Deux sources de suggestions : les mosquées déjà connues (recherche locale,
+   * instantanée) et la Base Adresse Nationale (api-adresse.data.gouv.fr :
+   * ouverte, sans clé, et qui rend directement les coordonnées).
+   */
+  var minuteur = null;
+
+  function suggerer() {
+    var q = $('addr').value.trim();
+    clearTimeout(minuteur);
+    if (q.length < 3) { $('sugg').innerHTML = ''; return; }
+    minuteur = setTimeout(function () {
+      var mosquees = chercherMosquees(q);
+      afficherSuggestions(mosquees, []);
+      fetch('https://api-adresse.data.gouv.fr/search/?limit=4&autocomplete=1&q=' + encodeURIComponent(q))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (!j || !j.features || $('addr').value.trim() !== q) return;
+          afficherSuggestions(mosquees, j.features.map(function (f) {
+            return { label: f.properties.label, lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0] };
+          }));
+        })
+        .catch(function () { /* hors ligne : les mosquées suffisent */ });
+    }, 250);
+  }
+
+  function chercherMosquees(q) {
+    if (!annuaire) return [];
+    var n = normaliser(q);
+    var trouvees = [];
+    for (var i = 0; i < annuaire.length && trouvees.length < 4; i++) {
+      var m = annuaire[i];
+      if (!m.id) continue;                       // sans calendrier, on ne propose pas
+      if (normaliser(m.nom).indexOf(n) >= 0 || normaliser(m.ville).indexOf(n) >= 0) trouvees.push(m);
+    }
+    return trouvees;
+  }
+
+  function afficherSuggestions(mosquees, adresses) {
+    var html = '';
+    mosquees.forEach(function (m) {
+      html += '<button type="button" data-slug="' + echapper(m.slug) + '">' +
+        '<span class="quoi">🕌</span><span class="txt"><span class="t1">' + echapper(m.nom) +
+        '</span><span class="t2">' + echapper(m.ville) + '</span></span></button>';
+    });
+    adresses.forEach(function (a) {
+      html += '<button type="button" data-lat="' + a.lat + '" data-lon="' + a.lon +
+        '" data-label="' + echapper(a.label) + '">' +
+        '<span class="quoi">📍</span><span class="txt"><span class="t1">' + echapper(a.label) +
+        '</span><span class="t2">adresse</span></span></button>';
+    });
+    $('sugg').className = 'sugg';
+    $('sugg').innerHTML = html;
+  }
+
   function poser(nom, lat, lon) {
     state.place = nom;
     state.latitude = Math.round(lat * 10000) / 10000;
@@ -322,6 +401,7 @@
     calendrier = null;
     save();
     statut('', '');
+    $('sugg').innerHTML = '';
     ecran('s2');
   }
 
@@ -415,16 +495,22 @@
     return cache ? (reseau, Promise.resolve(cache)) : reseau;
   }
 
+  /*
+   * Un seul fichier au chargement : le catalogue, un tableau de tableaux
+   * [slug, nom, lieu, lat, lon, identifiant du calendrier]. Deux fichiers
+   * nommés coûtaient le double pour la même information.
+   */
   function chargerDonnees() {
-    return Promise.all([
-      charger('calendriers/mosquees.json', 'athan.v2.annuaire').then(function (j) {
-        annuaire = j && j.mosquees ? j.mosquees : null;
-      }),
-      charger('calendriers/index.json', 'athan.v2.index').then(function (liste) {
-        calendriers = {};
-        (liste || []).forEach(function (e) { if (e.slug) calendriers[e.slug] = e; });
-      })
-    ]);
+    return charger('calendriers/catalogue.json', 'athan.v2.catalogue').then(function (j) {
+      if (!j || !j.m) { annuaire = null; return; }
+      annuaire = j.m.map(function (l) {
+        return { slug: l[0], nom: l[1], ville: l[2], lat: l[3], lon: l[4], id: l[5] };
+      });
+      calendriers = {};
+      annuaire.forEach(function (m) {
+        if (m.id) calendriers[m.slug] = { file: 'calendriers/' + m.id + '.json' };
+      });
+    });
   }
 
   function chargerCalendrier(file) {
@@ -507,18 +593,51 @@
     });
     $('times').innerHTML = html;
 
-    var lien = $('mawaqit');
     if (state.mosque) {
-      lien.hidden = false;
-      lien.href = 'https://mawaqit.net/fr/' + state.mosque.slug;
-      $('verifHint').textContent = 'Comparez avec ce qu\'affiche Mawaqit pour cette mosquée : ' +
-        'ce doit être identique, minute pour minute.';
+      $('compare').hidden = false;
+      remplirComparaison(maintenant);
+      $('verifHint').innerHTML = 'Ces horaires sont recopiés du calendrier publié par la mosquée' +
+        (dateImport() ? ', relevé le <b>' + echapper(dateImport()) + '</b>' : '') + '. ' +
+        'En cas de doute, <a href="https://mawaqit.net/fr/' + echapper(state.mosque.slug) +
+        '" target="_blank" rel="noopener">voir sa page Mawaqit</a>.';
     } else {
-      lien.hidden = true;
+      $('compare').hidden = true;
       $('verifHint').textContent = 'Horaires calculés pour votre position. Si votre mosquée en ' +
         'annonce d\'autres, revenez en arrière pour la choisir — ou ajustez le calcul ci-dessous.';
     }
     battement();
+  }
+
+  function dateImport() {
+    return calendrier && calendrier._meta ? calendrier._meta.importe_le : '';
+  }
+
+  /*
+   * La comparaison qui compte, et qu'on peut faire sans réseau : les horaires
+   * de la mosquée face au calcul astronomique au même endroit. Un écart de
+   * quelques minutes est normal (chaque mosquée choisit son angle) ; un écart
+   * franc sur une seule prière mérite un coup d'œil.
+   */
+  function remplirComparaison(maintenant) {
+    var calcul = PT.computeTimes({
+      latitude: state.latitude, longitude: state.longitude,
+      methodId: state.methodId, madhab: 'standard', highLats: 'angle',
+      timeZone: TZ, date: maintenant
+    });
+    var html = '<tr><th>Prière</th><th>Mosquée</th><th>Calcul</th><th>Écart</th></tr>';
+    jour.list.forEach(function (p) {
+      if (!p.date || !calcul.times[p.key]) return;
+      var mosquee = PT.formatTime(p.date, TZ);
+      var calcule = PT.formatTime(calcul.times[p.key], TZ);
+      var ecart = Math.round((p.date - calcul.times[p.key]) / 60000);
+      html += '<tr><td>' + p.label + '</td><td>' + mosquee + '</td><td>' + calcule + '</td>' +
+        '<td class="ecart' + (Math.abs(ecart) >= 10 ? ' fort' : '') + '">' +
+        (ecart > 0 ? '+' : '') + ecart + ' min</td></tr>';
+    });
+    $('cmpTable').innerHTML = html;
+    $('cmpNote').textContent = 'Calcul de référence : ' + PT.methodById(state.methodId).name +
+      ', à l\'emplacement de la mosquée. Les écarts sur le Fajr et l\'Ichaa viennent de l\'angle ' +
+      'de crépuscule retenu, qui varie d\'une mosquée à l\'autre.';
   }
 
   function libelleSource() {
@@ -705,6 +824,13 @@
     construireAffiner();
     setInterval(battement, 1000);
 
+    $('addr').addEventListener('input', suggerer);
+    $('sugg').addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button') : null;
+      if (!b) return;
+      if (b.dataset.slug) { $('sugg').innerHTML = ''; choisirMosquee(b.dataset.slug); }
+      else if (b.dataset.lat) poser(b.dataset.label, +b.dataset.lat, +b.dataset.lon);
+    });
     $('addrGo').addEventListener('click', function () { chercherAdresse($('addr').value.trim()); });
     $('addr').addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') return;

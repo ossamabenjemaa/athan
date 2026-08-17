@@ -43,15 +43,16 @@ jobs:
           [ -n "$BBOX" ] && ARGS="$ARGS --bbox $BBOX"
           [ -n "$MAX" ] && ARGS="$ARGS --max $MAX"
           node scripts/crawl-mosquees.js $ARGS 2>&1 | tail -20 | tee -a "$GITHUB_STEP_SUMMARY"
+          node scripts/build-catalogue.js | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Commiter si l'annuaire a changé
         run: |
-          if git diff --quiet -- calendriers/mosquees.json; then
+          if git diff --quiet -- calendriers/mosquees.json calendriers/catalogue.json; then
             echo "Aucun changement." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add calendriers/mosquees.json
+          git add calendriers/mosquees.json calendriers/catalogue.json
           git commit -m "Met à jour l'annuaire des mosquées"
           git push

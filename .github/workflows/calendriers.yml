@@ -47,6 +47,7 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           rm -f sortie.txt
+          node scripts/build-catalogue.js | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Commiter si un calendrier a changé
         env:
